@@ -181,20 +181,126 @@ function isFullscreen() {
   );
 }
 
-function StickFigure({ highlight }) {
-  const style = (z) => ({
-    strokeWidth: highlight === z ? 10 : 6,
-    opacity: highlight === z ? 1 : 0.32,
-  });
+function GestureSilhouette({ variant = "standing", highlight = "hips" }) {
+  const zoneOpacity = (z) => (highlight === z ? 1 : 0.35);
+
+  const VAR = {
+    standing: {
+      g: { tx: 0, ty: 0, rot: 0 },
+      torso:
+        "M160 78 C148 90 142 112 144 132 C146 154 154 170 160 182 C166 170 174 154 176 132 C178 112 172 90 160 78 Z",
+      hip:
+        "M140 182 C148 196 172 196 180 182 C174 210 168 246 160 278 C152 246 146 210 140 182 Z",
+      leftLeg:
+        "M154 200 C146 226 130 268 120 294 L140 298 C150 270 162 236 170 206 Z",
+      rightLeg:
+        "M166 206 C174 236 186 270 196 298 L216 294 C206 268 190 226 182 200 Z",
+      leftArm:
+        "M144 126 C128 140 116 154 104 172 L118 184 C132 166 146 150 158 140 Z",
+      rightArm:
+        "M176 126 C192 140 204 154 216 172 L202 184 C188 166 174 150 162 140 Z",
+    },
+    seated: {
+      g: { tx: 0, ty: 10, rot: 0 },
+      torso:
+        "M160 84 C146 98 140 120 142 138 C144 158 154 170 160 176 C166 170 176 158 178 138 C180 120 174 98 160 84 Z",
+      hip:
+        "M138 176 C150 190 170 190 182 176 C186 196 188 214 186 230 C166 236 154 236 134 230 C132 214 134 196 138 176 Z",
+      leftLeg:
+        "M150 220 C136 238 124 252 110 264 L124 278 C140 266 156 250 170 232 Z",
+      rightLeg:
+        "M176 224 C196 238 212 250 228 262 L214 278 C196 266 180 252 164 236 Z",
+      leftArm:
+        "M146 132 C134 148 130 166 132 182 L150 182 C148 168 152 152 160 142 Z",
+      rightArm:
+        "M174 132 C186 148 190 166 188 182 L170 182 C172 168 168 152 160 142 Z",
+    },
+    wall: {
+      g: { tx: 0, ty: 0, rot: -6 },
+      torso:
+        "M160 80 C150 92 146 114 148 134 C150 154 156 170 160 180 C166 168 174 150 176 132 C178 112 172 90 160 80 Z",
+      hip:
+        "M142 180 C150 194 170 194 178 180 C176 204 172 236 166 276 L150 276 C146 236 142 204 142 180 Z",
+      leftLeg:
+        "M154 206 C148 238 142 268 138 298 L158 298 C162 270 166 240 170 210 Z",
+      rightLeg:
+        "M170 212 C176 238 184 268 194 298 L214 294 C202 266 190 234 182 206 Z",
+      leftArm:
+        "M146 126 C132 138 124 150 114 162 L128 176 C140 162 150 150 160 140 Z",
+      rightArm:
+        "M176 126 C190 138 202 150 212 162 L198 176 C186 162 176 150 166 140 Z",
+    },
+    table: {
+      g: { tx: 0, ty: 0, rot: 0 },
+      torso:
+        "M160 86 C146 98 140 118 142 136 C144 154 154 168 160 176 C166 168 176 154 178 136 C180 118 174 98 160 86 Z",
+      hip:
+        "M140 176 C150 188 170 188 180 176 C178 194 176 212 172 236 L148 236 C144 212 142 194 140 176 Z",
+      leftLeg:
+        "M152 236 C140 258 132 276 124 296 L144 300 C152 282 160 262 168 242 Z",
+      rightLeg:
+        "M168 242 C178 262 188 282 198 300 L218 296 C208 276 196 258 184 236 Z",
+      leftArm:
+        "M146 130 C132 146 126 162 126 176 L146 176 C146 160 152 148 160 140 Z",
+      rightArm:
+        "M174 130 C188 146 194 162 194 176 L174 176 C174 160 168 148 160 140 Z",
+    },
+    box: {
+      g: { tx: 0, ty: 8, rot: 4 },
+      torso:
+        "M160 86 C148 98 144 118 146 136 C148 154 156 166 160 172 C166 166 174 154 176 136 C178 118 172 98 160 86 Z",
+      hip:
+        "M140 172 C150 184 170 184 180 172 C184 190 186 212 186 236 C166 246 154 246 134 236 C134 212 136 190 140 172 Z",
+      leftLeg:
+        "M150 234 C138 246 126 256 112 266 L126 284 C140 272 156 258 170 244 Z",
+      rightLeg:
+        "M176 238 C190 250 206 262 224 274 L212 292 C194 280 178 268 164 254 Z",
+      leftArm:
+        "M146 130 C132 144 126 160 128 176 L146 176 C144 162 150 150 160 140 Z",
+      rightArm:
+        "M174 130 C188 144 194 160 192 176 L174 176 C176 162 170 150 160 140 Z",
+    },
+  };
+
+  const v = VAR[variant] ?? VAR.standing;
 
   return (
     <svg viewBox="0 0 320 320" className="w-full h-full">
-      <circle cx="160" cy="60" r="26" fill="none" stroke="currentColor" style={style("head")} />
-      <line x1="160" y1="90" x2="160" y2="180" stroke="currentColor" style={style("hips")} />
-      <line x1="120" y1="120" x2="200" y2="120" stroke="currentColor" style={style("arms")} />
-      <line x1="160" y1="180" x2="130" y2="280" stroke="currentColor" style={style("feet")} />
-      <line x1="160" y1="180" x2="190" y2="280" stroke="currentColor" style={style("feet")} />
-      <rect x="20" y="240" width="70" height="50" rx="10" fill="none" stroke="currentColor" style={style("motion")} />
+      <ellipse cx="160" cy="302" rx="86" ry="10" fill="currentColor" opacity="0.08" />
+
+      <g transform={`translate(${v.g.tx} ${v.g.ty}) rotate(${v.g.rot} 160 180)`}>
+        <g opacity="0.12" transform="translate(6 6)">
+          <path d={v.torso} fill="currentColor" />
+          <path d={v.hip} fill="currentColor" />
+          <path d={v.leftLeg} fill="currentColor" />
+          <path d={v.rightLeg} fill="currentColor" />
+          <path d={v.leftArm} fill="currentColor" />
+          <path d={v.rightArm} fill="currentColor" />
+          <circle cx="160" cy="56" r="22" fill="currentColor" />
+        </g>
+
+        <path d={v.torso} fill="currentColor" opacity={zoneOpacity("hips")} />
+        <path d={v.hip} fill="currentColor" opacity={zoneOpacity("hips")} />
+        <path d={v.leftLeg} fill="currentColor" opacity={zoneOpacity("feet")} />
+        <path d={v.rightLeg} fill="currentColor" opacity={zoneOpacity("feet")} />
+        <path d={v.leftArm} fill="currentColor" opacity={zoneOpacity("arms")} />
+        <path d={v.rightArm} fill="currentColor" opacity={zoneOpacity("arms")} />
+        <circle cx="160" cy="56" r="22" fill="currentColor" opacity={zoneOpacity("head")} />
+
+        <path
+          d="M160 76 C154 104 154 130 160 160 C166 190 170 220 166 266"
+          fill="none"
+          stroke="white"
+          strokeWidth="6"
+          opacity="0.22"
+          strokeLinecap="round"
+        />
+      </g>
+
+      <g opacity={zoneOpacity("motion") * 0.6}>
+        <rect x="18" y="238" width="78" height="58" rx="14" fill="none" stroke="currentColor" strokeWidth="6" />
+        <circle cx="57" cy="267" r="12" fill="none" stroke="currentColor" strokeWidth="6" />
+      </g>
     </svg>
   );
 }
@@ -320,7 +426,7 @@ export default function App() {
   }, [flow, idx]);
 
   const current = currentIndex >= 0 ? flow[currentIndex] : null;
-  const highlight = current?.highlight ?? "arms";
+  const highlight = current?.highlight ?? "hips";
 
   const strip = useMemo(() => {
     if (!flow || flow.length === 0) return [];
@@ -391,6 +497,13 @@ export default function App() {
     setEnded(false);
   }, [selectedBase]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const silhouetteVariant =
+    setId.includes("seated") ? "seated" :
+    setId.includes("wall") ? "wall" :
+    setId.includes("table") ? "table" :
+    setId.includes("box") ? "box" :
+    "standing";
+
   return (
     <div ref={shellRef} className="min-h-screen bg-white p-6 text-neutral-900">
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -408,7 +521,11 @@ export default function App() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <div className="text-xs text-neutral-500">Set</div>
-              <select className="mt-1 w-full border rounded-lg p-2" value={setId} onChange={(e) => setSetId(e.target.value)}>
+              <select
+                className="mt-1 w-full border rounded-lg p-2"
+                value={setId}
+                onChange={(e) => setSetId(e.target.value)}
+              >
                 {SETS.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -419,7 +536,11 @@ export default function App() {
 
             <div>
               <div className="text-xs text-neutral-500">Base</div>
-              <select className="mt-1 w-full border rounded-lg p-2" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
+              <select
+                className="mt-1 w-full border rounded-lg p-2"
+                value={baseId}
+                onChange={(e) => setBaseId(e.target.value)}
+              >
                 {selectedSet.bases.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -433,7 +554,12 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-neutral-500">Autoplay</div>
               <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={autoplayOn} onChange={(e) => setAutoplayOn(e.target.checked)} disabled={ended} />
+                <input
+                  type="checkbox"
+                  checked={autoplayOn}
+                  onChange={(e) => setAutoplayOn(e.target.checked)}
+                  disabled={ended}
+                />
                 On
               </label>
               <select
@@ -505,16 +631,10 @@ export default function App() {
         <div className="border rounded-2xl p-5">
           <div className="text-sm text-neutral-500">Guide</div>
           <div className="mt-2 aspect-square border rounded-xl flex items-center justify-center">
-            <StickFigure highlight={highlight} />
+            <GestureSilhouette variant={silhouetteVariant} highlight={highlight} />
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-/*
-4. Validation
-- Internally consistent: set->base->flow remains fixed; cues unchanged.
-- Changelog: added Expression Module Integration UI; added fixed expression options state; displayed expression beside pose ID.
-*/
