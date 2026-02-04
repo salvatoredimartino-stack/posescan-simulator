@@ -159,95 +159,195 @@ const GENRES = [
   },
 
   {
-    id: "genre_50_plus",
+    id: "fifty_plus",
     name: "50+",
     sets: [
       {
-        id: "50p_set1_apple_box",
+        id: "50p_set1_apple_box_bright_gold",
         name: "SET 1 — APPLE BOX (BRIGHT / GOLD)",
         bases: [
           {
             id: "50p_base1",
             name: "Base Pose 1",
             flow: [
-              { uid: "50p_set1_base1_step1", label: "Base Pose 1", cue: "Seated tall, apple box, chin around, fingertips light" },
-              { uid: "50p_set1_base1_step2", label: "Pose 2", cue: "Hands together, shoulders down and forward" },
-              { uid: "50p_set1_base1_step3", label: "Pose 3", cue: "Remove second box, maintain spine length" },
-              { uid: "50p_set1_base1_step4", label: "Pose 4", cue: "Baby smile, eyes steady" },
-              { uid: "50p_set1_base1_step5", label: "Pose 5", cue: "Tighter crop, same body" },
-              { uid: "50p_set1_base1_step6", label: "Pose 6", cue: "Horizontal frame, hold expression" },
+              {
+                uid: "50p_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: "Seated tall, apple box, chin around, fingertips light",
+              },
+              {
+                uid: "50p_set1_base1_step2",
+                label: "Pose 2",
+                cue: `Hands together and down and forward
+Shoulders dropped
+Remove the second box`,
+              },
+              { uid: "50p_set1_base1_step3", label: "Pose 3", cue: "Comp 1 Baby smile" },
+              { uid: "50p_set1_base1_step4", label: "Pose 4", cue: "Comp 2" },
             ],
           },
         ],
       },
       {
-        id: "50p_set2_wall_white",
+        id: "50p_set2_wall_white_bright",
         name: "SET 2 — WALL (WHITE / BRIGHT)",
         bases: [
           {
             id: "50p_base2",
             name: "Base Pose 2",
             flow: [
-              { uid: "50p_set2_base2_step1", label: "Base Pose 2", cue: "Body angled off wall, weight back, knee forward" },
+              {
+                uid: "50p_set2_base2_step1",
+                label: "Base Pose 2",
+                cue: `Take your body away from the wall
+45 degrees
+Touch body with your hands
+Lean with your body
+Touch up and back
+Chin around
+Tilt the camera`,
+              },
               { uid: "50p_set2_base2_step2", label: "Pose 3", cue: "Chin around, soften eyes" },
               { uid: "50p_set2_base2_step3", label: "Pose 4", cue: "Chin down, baby smile" },
-              { uid: "50p_set2_base2_step4", label: "Pose 5", cue: "Hands cross low, shoulder drop" },
-              { uid: "50p_set2_base2_step5", label: "Pose 6", cue: "Pull back, widen frame" },
-              { uid: "50p_set2_base2_step6", label: "Pose 7", cue: "Hands around body, relaxed wrap" },
+              { uid: "50p_set2_base2_step4", label: "Pose 5", cue: "Chin down and horizontal" },
+              {
+                uid: "50p_set2_base2_step5",
+                label: "Pose 6",
+                cue: `Keep your shoulder drop to me
+Roll your shoulder back to the wall
+Change weight to the other foot`,
+              },
+              {
+                uid: "50p_set2_base2_step6",
+                label: "Pose 7",
+                cue: `Hold hands around the body
+Shoulders down to me`,
+              },
             ],
           },
         ],
       },
       {
-        id: "50p_set3_couch_dark",
-        name: "SET 3 — COUCH (BLACK / DARK)",
-        bases: [
-          {
-            id: "50p_base3",
-            name: "Base Pose 3",
-            flow: [
-              { uid: "50p_set3_base3_step1", label: "Base Pose 3", cue: "Recline on couch, elbow down, neck long" },
-              { uid: "50p_set3_base3_step2", label: "Pose 4", cue: "Lean back slightly, eyes to light" },
-              { uid: "50p_set3_base3_step3", label: "Pose 5", cue: "Hands cross gently, wrists soft" },
-              { uid: "50p_set3_base3_step4", label: "Pose 6", cue: "Hand to hair, elbow wide" },
-              { uid: "50p_set3_base3_step5", label: "Pose 7", cue: "Rotate torso, maintain recline" },
-              { uid: "50p_set3_base3_step6", label: "Pose 8", cue: "Tight crop, quiet expression" },
-            ],
-          },
-        ],
-      },
-      {
-        id: "50p_set4_bar_stool_side_light",
-        name: "SET 4 — BAR STOOL (BLACK / SIDE LIGHT)",
-        bases: [
-          {
-            id: "50p_base4",
-            name: "Base Pose 4",
-            flow: [
-              { uid: "50p_set4_base4_step1", label: "Base Pose 4", cue: "Perch on stool, legs crossed, torso angled" },
-              { uid: "50p_set4_base4_step2", label: "Pose 5", cue: "Hands on lap, shoulders relaxed" },
-              { uid: "50p_set4_base4_step3", label: "Pose 6", cue: "Rotate away, chin to camera" },
-              { uid: "50p_set4_base4_step4", label: "Pose 7", cue: "Elbow back, open chest" },
-              { uid: "50p_set4_base4_step5", label: "Pose 8", cue: "Smile soft, hold structure" },
-              { uid: "50p_set4_base4_step6", label: "Pose 9", cue: "Horizontal frame, same pose" },
-            ],
-          },
-        ],
-      },
-      {
-        id: "50p_set5_standing_gold",
+        id: "50p_set5_standing_bright_gold",
         name: "SET 5 — STANDING (BRIGHT / GOLD)",
         bases: [
           {
             id: "50p_base5",
             name: "Base Pose 5",
             flow: [
-              { uid: "50p_set5_base5_step1", label: "Base Pose 5", cue: "Feet grounded, hip shift, hands down" },
-              { uid: "50p_set5_base5_step2", label: "Pose 6", cue: "Touch elbow back, shoulder drop" },
+              {
+                uid: "50p_set5_base5_step1",
+                label: "Base Pose 5",
+                cue: `Hands down
+Touch
+Elbow back
+Foot towards me
+Chin forward and down
+Drop shoulder down
+Tilt camera`,
+              },
+              { uid: "50p_set5_base5_step2", label: "Pose 6", cue: "Horizontal" },
               { uid: "50p_set5_base5_step3", label: "Pose 7", cue: "Chin forward and down" },
               { uid: "50p_set5_base5_step4", label: "Pose 8", cue: "More air, chin around" },
-              { uid: "50p_set5_base5_step5", label: "Pose 9", cue: "Cover-girl stance, hands to waist" },
-              { uid: "50p_set5_base5_step6", label: "Pose 10", cue: "Horizontal crop, hold gaze" },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    id: "personal_branding_man",
+    name: "Personal Branding (Man)",
+    sets: [
+      {
+        id: "pbm_set1_stool_dark_side_light",
+        name: "SET 1 — STOOL (DARK / SIDE LIGHT)",
+        bases: [
+          {
+            id: "pbm_base1",
+            name: "Base Pose 1",
+            flow: [
+              {
+                uid: "pbm_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: `Sitting on a stool
+45 degrees
+One foot raised
+Hands together
+Sit upright
+Chin towards me`,
+              },
+              { uid: "pbm_set1_base1_step2", label: "Pose 2", cue: "Step back, easy smile" },
+              {
+                uid: "pbm_set1_base1_step3",
+                label: "Pose 3",
+                cue: `Lean onto that knee a bit more
+Drop right back shoulder
+Chin forward
+Soft smile`,
+              },
+              { uid: "pbm_set1_base1_step4", label: "Pose 4", cue: "Relax your posture and chin around to me" },
+              { uid: "pbm_set1_base1_step5", label: "Pose 5", cue: "More smile" },
+              { uid: "pbm_set1_base1_step6", label: "Pose 6", cue: "Hands on your thigh, easy smile" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "pbm_set2_real_casual_armani",
+        name: "SET 2 — REAL CASUAL (ARMANI)",
+        bases: [
+          {
+            id: "pbm_base2",
+            name: "Base Pose 2",
+            flow: [
+              { uid: "pbm_set2_base2_step1", label: "Base Pose 2", cue: "Same pose but go down, fingers together" },
+              { uid: "pbm_set2_base2_step2", label: "Pose 3", cue: "Hands together" },
+              { uid: "pbm_set2_base2_step3", label: "Pose 4", cue: "Easy smile, show me some teeth" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "pbm_set3_more_casual_wall_standing",
+        name: "SET 3 — MORE CASUAL LOOK, STANDING ON THE WALL",
+        bases: [
+          {
+            id: "pbm_base3",
+            name: "Base Pose 3",
+            flow: [
+              { uid: "pbm_set3_base3_step1", label: "Base Pose 3", cue: "45 degrees, weight on the back foot, arms crossed" },
+              { uid: "pbm_set3_base3_step2", label: "Pose 4", cue: "Arms crossed low, weight settled" },
+              { uid: "pbm_set3_base3_step3", label: "Pose 5", cue: "Arms down, open shoulders" },
+              {
+                uid: "pbm_set3_base3_step4",
+                label: "Pose 6",
+                cue: `Stand away from the wall
+Feet apart
+Shoulders to me`,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "pbm_set4_seated_chair",
+        name: "SET 4 — SEATED (CHAIR)",
+        bases: [
+          {
+            id: "pbm_base4",
+            name: "Base Pose 4",
+            flow: [
+              {
+                uid: "pbm_set4_base4_step1",
+                label: "Base Pose 4",
+                cue: `Sit tall, 45 degrees
+Back foot on a half box
+Hands on thigh, loose`,
+              },
+              { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture" },
+              { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile" },
             ],
           },
         ],
@@ -263,7 +363,8 @@ function requestFullscreen(el) {
 }
 
 function exitFullscreen() {
-  const fn = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  const fn =
+    document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
   if (fn) fn.call(document);
 }
 
@@ -311,7 +412,10 @@ export default function App() {
     setSetId(genre.sets[0]?.id ?? "");
   }, [genreId]);
 
-  const selectedSet = useMemo(() => genre.sets.find((s) => s.id === setId) ?? genre.sets[0] ?? null, [genre, setId]);
+  const selectedSet = useMemo(
+    () => genre.sets.find((s) => s.id === setId) ?? genre.sets[0] ?? null,
+    [genre, setId]
+  );
 
   const [baseId, setBaseId] = useState(selectedSet?.bases[0]?.id ?? "");
   useEffect(() => {
@@ -488,11 +592,7 @@ export default function App() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <div className="text-xs text-neutral-500">Genre</div>
-              <select
-                className="mt-1 w-full border rounded-lg p-2"
-                value={genreId}
-                onChange={(e) => setGenreId(e.target.value)}
-              >
+              <select className="mt-1 w-full border rounded-lg p-2" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
                 {GENRES.map((g) => (
                   <option key={g.id} value={g.id}>
                     {g.name}
@@ -555,7 +655,8 @@ export default function App() {
                     x.index === currentIndex ? "bg-neutral-900 text-white" : "bg-neutral-50"
                   }`}
                 >
-                  <span className="font-semibold">{x.label}</span> {x.cue}
+                  <span className="font-semibold">{x.label}</span>{" "}
+                  <span className="whitespace-pre-line">{x.cue}</span>
                 </div>
               ))}
             </div>
@@ -565,7 +666,7 @@ export default function App() {
             {!ended && current && (
               <>
                 <div className="text-xs text-neutral-500">{current.label}</div>
-                <div className="mt-2 text-xl font-semibold">{current.cue}</div>
+                <div className="mt-2 text-xl font-semibold whitespace-pre-line">{current.cue}</div>
               </>
             )}
             {ended && (
