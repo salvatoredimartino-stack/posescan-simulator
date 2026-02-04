@@ -181,84 +181,110 @@ function isFullscreen() {
   );
 }
 
-function GestureSilhouette({ variant = "standing", highlight = "hips" }) {
+function FemaleEditorialFigure({ variant = "standing", highlight = "hips", expression }) {
+  // Single-state rendering only. No ghosting. No transparency stacking between frames.
+  // Minimal tonal depth: base fill + subtle shadow offset + light face marks.
+
   const zoneOpacity = (z) => (highlight === z ? 1 : 0.35);
+
+  const FACE = {
+    relaxed: { mouth: "M154 60 Q160 62 166 60", brow: "M150 50 Q160 46 170 50" },
+    smirk: { mouth: "M152 60 Q162 58 168 62", brow: "M150 50 Q160 48 170 50" },
+    "smile with eyes": { mouth: "M152 58 Q160 68 168 58", brow: "M150 50 Q160 46 170 50" },
+    "smile + smirk": { mouth: "M152 58 Q164 66 168 60", brow: "M150 50 Q160 46 170 50" },
+    "bigger smile / laugh": { mouth: "M152 58 Q160 74 168 58", brow: "M150 50 Q160 44 170 50" },
+  };
+
+  const f = FACE[expression] ?? FACE.relaxed;
 
   const VAR = {
     standing: {
       g: { tx: 0, ty: 0, rot: 0 },
+      hair: "M160 22 C142 22 132 34 132 52 C132 70 142 80 160 80 C178 80 188 70 188 52 C188 34 178 22 160 22 Z M136 54 C140 38 150 32 160 32 C170 32 180 38 184 54 C178 44 170 40 160 40 C150 40 142 44 136 54 Z",
+      head: "M160 34 C144 34 132 46 132 62 C132 78 144 90 160 90 C176 90 188 78 188 62 C188 46 176 34 160 34 Z",
+      neck: "M154 88 L166 88 L170 104 L150 104 Z",
       torso:
-        "M160 78 C148 90 142 112 144 132 C146 154 154 170 160 182 C166 170 174 154 176 132 C178 112 172 90 160 78 Z",
-      hip:
-        "M140 182 C148 196 172 196 180 182 C174 210 168 246 160 278 C152 246 146 210 140 182 Z",
-      leftLeg:
-        "M154 200 C146 226 130 268 120 294 L140 298 C150 270 162 236 170 206 Z",
-      rightLeg:
-        "M166 206 C174 236 186 270 196 298 L216 294 C206 268 190 226 182 200 Z",
+        "M160 104 C140 112 128 134 128 156 C128 188 146 206 160 214 C174 206 192 188 192 156 C192 134 180 112 160 104 Z",
+      pelvis: "M132 206 C144 224 176 224 188 206 C182 238 174 270 160 296 C146 270 138 238 132 206 Z",
       leftArm:
-        "M144 126 C128 140 116 154 104 172 L118 184 C132 166 146 150 158 140 Z",
+        "M132 150 C118 166 112 184 114 206 L136 206 C134 190 140 172 152 160 Z",
       rightArm:
-        "M176 126 C192 140 204 154 216 172 L202 184 C188 166 174 150 162 140 Z",
+        "M188 150 C202 166 208 184 206 206 L184 206 C186 190 180 172 168 160 Z",
+      leftHand: "M114 206 C110 214 112 222 120 226 C128 230 138 224 140 214 C142 204 124 198 114 206 Z",
+      rightHand: "M206 206 C210 214 208 222 200 226 C192 230 182 224 180 214 C178 204 196 198 206 206 Z",
+      leftLeg: "M154 224 C140 252 124 280 110 304 L132 312 C146 288 162 260 176 236 Z",
+      rightLeg: "M166 236 C180 260 196 288 210 312 L232 304 C218 280 202 252 188 224 Z",
     },
     seated: {
-      g: { tx: 0, ty: 10, rot: 0 },
+      g: { tx: 0, ty: 8, rot: 0 },
+      hair: "M160 22 C142 22 132 34 132 52 C132 70 142 80 160 80 C178 80 188 70 188 52 C188 34 178 22 160 22 Z M136 54 C140 38 150 32 160 32 C170 32 180 38 184 54 C178 44 170 40 160 40 C150 40 142 44 136 54 Z",
+      head: "M160 34 C144 34 132 46 132 62 C132 78 144 90 160 90 C176 90 188 78 188 62 C188 46 176 34 160 34 Z",
+      neck: "M154 88 L166 88 L170 104 L150 104 Z",
       torso:
-        "M160 84 C146 98 140 120 142 138 C144 158 154 170 160 176 C166 170 176 158 178 138 C180 120 174 98 160 84 Z",
-      hip:
-        "M138 176 C150 190 170 190 182 176 C186 196 188 214 186 230 C166 236 154 236 134 230 C132 214 134 196 138 176 Z",
-      leftLeg:
-        "M150 220 C136 238 124 252 110 264 L124 278 C140 266 156 250 170 232 Z",
-      rightLeg:
-        "M176 224 C196 238 212 250 228 262 L214 278 C196 266 180 252 164 236 Z",
+        "M160 104 C142 114 132 134 132 154 C132 182 148 198 160 206 C172 198 188 182 188 154 C188 134 178 114 160 104 Z",
+      pelvis:
+        "M132 198 C144 214 176 214 188 198 C192 214 194 232 192 248 C172 256 148 256 128 248 C126 232 128 214 132 198 Z",
       leftArm:
-        "M146 132 C134 148 130 166 132 182 L150 182 C148 168 152 152 160 142 Z",
+        "M136 148 C124 162 120 178 122 194 L144 194 C142 180 148 166 156 156 Z",
       rightArm:
-        "M174 132 C186 148 190 166 188 182 L170 182 C172 168 168 152 160 142 Z",
+        "M184 148 C196 162 200 178 198 194 L176 194 C178 180 172 166 164 156 Z",
+      leftHand: "M122 194 C118 202 120 210 128 214 C136 218 146 212 148 202 C150 192 132 186 122 194 Z",
+      rightHand: "M198 194 C202 202 200 210 192 214 C184 218 174 212 172 202 C170 192 188 186 198 194 Z",
+      leftLeg: "M150 240 C132 254 118 268 104 282 L122 300 C138 284 156 268 174 252 Z",
+      rightLeg: "M170 252 C188 266 206 284 222 300 L240 282 C226 268 208 254 190 240 Z",
     },
     wall: {
       g: { tx: 0, ty: 0, rot: -6 },
+      hair: "M160 22 C142 22 132 34 132 52 C132 70 142 80 160 80 C178 80 188 70 188 52 C188 34 178 22 160 22 Z M136 54 C140 38 150 32 160 32 C170 32 180 38 184 54 C178 44 170 40 160 40 C150 40 142 44 136 54 Z",
+      head: "M160 34 C144 34 132 46 132 62 C132 78 144 90 160 90 C176 90 188 78 188 62 C188 46 176 34 160 34 Z",
+      neck: "M154 88 L166 88 L170 104 L150 104 Z",
       torso:
-        "M160 80 C150 92 146 114 148 134 C150 154 156 170 160 180 C166 168 174 150 176 132 C178 112 172 90 160 80 Z",
-      hip:
-        "M142 180 C150 194 170 194 178 180 C176 204 172 236 166 276 L150 276 C146 236 142 204 142 180 Z",
-      leftLeg:
-        "M154 206 C148 238 142 268 138 298 L158 298 C162 270 166 240 170 210 Z",
-      rightLeg:
-        "M170 212 C176 238 184 268 194 298 L214 294 C202 266 190 234 182 206 Z",
+        "M160 104 C142 112 130 132 130 154 C130 184 148 202 160 210 C172 202 190 184 190 154 C190 132 178 112 160 104 Z",
+      pelvis: "M134 204 C146 220 174 220 186 204 C184 232 180 266 172 304 L148 304 C140 266 136 232 134 204 Z",
       leftArm:
-        "M146 126 C132 138 124 150 114 162 L128 176 C140 162 150 150 160 140 Z",
+        "M136 148 C122 160 114 174 108 190 L126 204 C136 186 146 172 156 162 Z",
       rightArm:
-        "M176 126 C190 138 202 150 212 162 L198 176 C186 162 176 150 166 140 Z",
+        "M184 148 C198 160 206 174 212 190 L194 204 C184 186 174 172 164 162 Z",
+      leftHand: "M108 190 C102 198 104 208 112 214 C120 220 132 214 134 204 C136 194 118 186 108 190 Z",
+      rightHand: "M212 190 C218 198 216 208 208 214 C200 220 188 214 186 204 C184 194 202 186 212 190 Z",
+      leftLeg: "M154 236 C150 266 146 292 142 312 L166 312 C168 292 170 266 172 238 Z",
+      rightLeg: "M172 238 C180 266 192 292 206 312 L228 304 C214 284 202 260 194 236 Z",
     },
     table: {
       g: { tx: 0, ty: 0, rot: 0 },
+      hair: "M160 22 C142 22 132 34 132 52 C132 70 142 80 160 80 C178 80 188 70 188 52 C188 34 178 22 160 22 Z M136 54 C140 38 150 32 160 32 C170 32 180 38 184 54 C178 44 170 40 160 40 C150 40 142 44 136 54 Z",
+      head: "M160 34 C144 34 132 46 132 62 C132 78 144 90 160 90 C176 90 188 78 188 62 C188 46 176 34 160 34 Z",
+      neck: "M154 88 L166 88 L170 104 L150 104 Z",
       torso:
-        "M160 86 C146 98 140 118 142 136 C144 154 154 168 160 176 C166 168 176 154 178 136 C180 118 174 98 160 86 Z",
-      hip:
-        "M140 176 C150 188 170 188 180 176 C178 194 176 212 172 236 L148 236 C144 212 142 194 140 176 Z",
-      leftLeg:
-        "M152 236 C140 258 132 276 124 296 L144 300 C152 282 160 262 168 242 Z",
-      rightLeg:
-        "M168 242 C178 262 188 282 198 300 L218 296 C208 276 196 258 184 236 Z",
+        "M160 104 C142 112 132 130 132 150 C132 178 148 196 160 204 C172 196 188 178 188 150 C188 130 178 112 160 104 Z",
+      pelvis:
+        "M136 198 C148 210 172 210 184 198 C182 214 180 234 176 258 L144 258 C140 234 138 214 136 198 Z",
       leftArm:
-        "M146 130 C132 146 126 162 126 176 L146 176 C146 160 152 148 160 140 Z",
+        "M140 146 C126 160 120 176 120 192 L146 192 C146 176 152 164 160 156 Z",
       rightArm:
-        "M174 130 C188 146 194 162 194 176 L174 176 C174 160 168 148 160 140 Z",
+        "M180 146 C194 160 200 176 200 192 L174 192 C174 176 168 164 160 156 Z",
+      leftHand: "M120 192 C114 200 116 210 124 216 C132 222 146 216 148 206 C150 196 132 188 120 192 Z",
+      rightHand: "M200 192 C206 200 204 210 196 216 C188 222 174 216 172 206 C170 196 188 188 200 192 Z",
+      leftLeg: "M152 258 C140 278 132 294 124 312 L148 316 C156 298 164 282 172 264 Z",
+      rightLeg: "M168 264 C176 282 184 298 192 316 L216 312 C208 294 200 278 188 258 Z",
     },
     box: {
-      g: { tx: 0, ty: 8, rot: 4 },
+      g: { tx: 0, ty: 6, rot: 4 },
+      hair: "M160 22 C142 22 132 34 132 52 C132 70 142 80 160 80 C178 80 188 70 188 52 C188 34 178 22 160 22 Z M136 54 C140 38 150 32 160 32 C170 32 180 38 184 54 C178 44 170 40 160 40 C150 40 142 44 136 54 Z",
+      head: "M160 34 C144 34 132 46 132 62 C132 78 144 90 160 90 C176 90 188 78 188 62 C188 46 176 34 160 34 Z",
+      neck: "M154 88 L166 88 L170 104 L150 104 Z",
       torso:
-        "M160 86 C148 98 144 118 146 136 C148 154 156 166 160 172 C166 166 174 154 176 136 C178 118 172 98 160 86 Z",
-      hip:
-        "M140 172 C150 184 170 184 180 172 C184 190 186 212 186 236 C166 246 154 246 134 236 C134 212 136 190 140 172 Z",
-      leftLeg:
-        "M150 234 C138 246 126 256 112 266 L126 284 C140 272 156 258 170 244 Z",
-      rightLeg:
-        "M176 238 C190 250 206 262 224 274 L212 292 C194 280 178 268 164 254 Z",
+        "M160 104 C144 112 134 130 134 150 C134 176 148 192 160 200 C172 192 186 176 186 150 C186 130 176 112 160 104 Z",
+      pelvis:
+        "M136 196 C148 206 172 206 184 196 C188 214 190 236 190 260 C170 270 150 270 130 260 C130 236 132 214 136 196 Z",
       leftArm:
-        "M146 130 C132 144 126 160 128 176 L146 176 C144 162 150 150 160 140 Z",
+        "M140 146 C128 160 124 176 126 192 L150 192 C148 178 154 166 160 156 Z",
       rightArm:
-        "M174 130 C188 144 194 160 192 176 L174 176 C176 162 170 150 160 140 Z",
+        "M180 146 C192 160 196 176 194 192 L170 192 C172 178 166 166 160 156 Z",
+      leftHand: "M126 192 C120 200 122 210 130 216 C138 222 152 216 154 206 C156 196 138 188 126 192 Z",
+      rightHand: "M194 192 C200 200 198 210 190 216 C182 222 168 216 166 206 C164 196 182 188 194 192 Z",
+      leftLeg: "M150 258 C136 270 124 280 110 290 L128 310 C144 294 160 282 176 270 Z",
+      rightLeg: "M170 270 C186 282 202 294 218 310 L236 290 C222 280 210 270 196 258 Z",
     },
   };
 
@@ -266,33 +292,52 @@ function GestureSilhouette({ variant = "standing", highlight = "hips" }) {
 
   return (
     <svg viewBox="0 0 320 320" className="w-full h-full">
-      <ellipse cx="160" cy="302" rx="86" ry="10" fill="currentColor" opacity="0.08" />
+      <ellipse cx="160" cy="306" rx="96" ry="11" fill="currentColor" opacity="0.06" />
 
       <g transform={`translate(${v.g.tx} ${v.g.ty}) rotate(${v.g.rot} 160 180)`}>
-        <g opacity="0.12" transform="translate(6 6)">
+        <g opacity="0.10" transform="translate(6 6)">
+          <path d={v.hair} fill="currentColor" />
+          <path d={v.head} fill="currentColor" />
+          <path d={v.neck} fill="currentColor" />
           <path d={v.torso} fill="currentColor" />
-          <path d={v.hip} fill="currentColor" />
-          <path d={v.leftLeg} fill="currentColor" />
-          <path d={v.rightLeg} fill="currentColor" />
+          <path d={v.pelvis} fill="currentColor" />
           <path d={v.leftArm} fill="currentColor" />
           <path d={v.rightArm} fill="currentColor" />
-          <circle cx="160" cy="56" r="22" fill="currentColor" />
+          <path d={v.leftHand} fill="currentColor" />
+          <path d={v.rightHand} fill="currentColor" />
+          <path d={v.leftLeg} fill="currentColor" />
+          <path d={v.rightLeg} fill="currentColor" />
         </g>
 
-        <path d={v.torso} fill="currentColor" opacity={zoneOpacity("hips")} />
-        <path d={v.hip} fill="currentColor" opacity={zoneOpacity("hips")} />
         <path d={v.leftLeg} fill="currentColor" opacity={zoneOpacity("feet")} />
         <path d={v.rightLeg} fill="currentColor" opacity={zoneOpacity("feet")} />
+
+        <path d={v.pelvis} fill="currentColor" opacity={zoneOpacity("hips")} />
+        <path d={v.torso} fill="currentColor" opacity={zoneOpacity("hips")} />
+
         <path d={v.leftArm} fill="currentColor" opacity={zoneOpacity("arms")} />
         <path d={v.rightArm} fill="currentColor" opacity={zoneOpacity("arms")} />
-        <circle cx="160" cy="56" r="22" fill="currentColor" opacity={zoneOpacity("head")} />
+        <path d={v.leftHand} fill="currentColor" opacity={zoneOpacity("arms")} />
+        <path d={v.rightHand} fill="currentColor" opacity={zoneOpacity("arms")} />
+
+        <path d={v.hair} fill="currentColor" opacity={zoneOpacity("head")} />
+        <path d={v.head} fill="currentColor" opacity={zoneOpacity("head")} />
+        <path d={v.neck} fill="currentColor" opacity={zoneOpacity("head")} />
+
+        <g opacity={zoneOpacity("head") * 0.55}>
+          <path d={f.brow} fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+          <circle cx="152" cy="56" r="2.2" fill="white" />
+          <circle cx="168" cy="56" r="2.2" fill="white" />
+          <path d="M160 56 L160 61" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" />
+          <path d={f.mouth} fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
+        </g>
 
         <path
-          d="M160 76 C154 104 154 130 160 160 C166 190 170 220 166 266"
+          d="M160 110 C152 140 154 170 160 196 C166 222 170 252 166 292"
           fill="none"
           stroke="white"
           strokeWidth="6"
-          opacity="0.22"
+          opacity="0.18"
           strokeLinecap="round"
         />
       </g>
@@ -497,7 +542,7 @@ export default function App() {
     setEnded(false);
   }, [selectedBase]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const silhouetteVariant =
+  const figureVariant =
     setId.includes("seated") ? "seated" :
     setId.includes("wall") ? "wall" :
     setId.includes("table") ? "table" :
@@ -521,11 +566,7 @@ export default function App() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <div className="text-xs text-neutral-500">Set</div>
-              <select
-                className="mt-1 w-full border rounded-lg p-2"
-                value={setId}
-                onChange={(e) => setSetId(e.target.value)}
-              >
+              <select className="mt-1 w-full border rounded-lg p-2" value={setId} onChange={(e) => setSetId(e.target.value)}>
                 {SETS.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -536,11 +577,7 @@ export default function App() {
 
             <div>
               <div className="text-xs text-neutral-500">Base</div>
-              <select
-                className="mt-1 w-full border rounded-lg p-2"
-                value={baseId}
-                onChange={(e) => setBaseId(e.target.value)}
-              >
+              <select className="mt-1 w-full border rounded-lg p-2" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                 {selectedSet.bases.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -554,12 +591,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-neutral-500">Autoplay</div>
               <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={autoplayOn}
-                  onChange={(e) => setAutoplayOn(e.target.checked)}
-                  disabled={ended}
-                />
+                <input type="checkbox" checked={autoplayOn} onChange={(e) => setAutoplayOn(e.target.checked)} disabled={ended} />
                 On
               </label>
               <select
@@ -631,7 +663,7 @@ export default function App() {
         <div className="border rounded-2xl p-5">
           <div className="text-sm text-neutral-500">Guide</div>
           <div className="mt-2 aspect-square border rounded-xl flex items-center justify-center">
-            <GestureSilhouette variant={silhouetteVariant} highlight={highlight} />
+            <FemaleEditorialFigure variant={figureVariant} highlight={highlight} expression={expression} />
           </div>
         </div>
       </div>
