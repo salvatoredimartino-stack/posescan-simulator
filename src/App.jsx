@@ -153,6 +153,14 @@ const SETS = [
   },
 ];
 
+const EXPRESSION_OPTIONS = [
+  "relaxed",
+  "smirk",
+  "smile with eyes",
+  "smile + smirk",
+  "bigger smile / laugh",
+];
+
 function requestFullscreen(el) {
   if (!el) return;
   const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
@@ -233,16 +241,15 @@ export default function App() {
 
   const flow = selectedBase?.flow ?? [];
 
-  // index in flow array
   const [idx, setIdx] = useState(0);
   const [ended, setEnded] = useState(false);
 
-  // autoplay
   const [autoplayOn, setAutoplayOn] = useState(false);
   const [autoplaySec, setAutoplaySec] = useState(8);
 
+  const [expression, setExpression] = useState(EXPRESSION_OPTIONS[0]);
+
   useEffect(() => {
-    // reset on base change
     setIdx(0);
     setEnded(false);
     setAutoplayOn(false);
@@ -315,7 +322,6 @@ export default function App() {
   const current = currentIndex >= 0 ? flow[currentIndex] : null;
   const highlight = current?.highlight ?? "arms";
 
-  // Flow-map mini strip: current + next 3 only
   const strip = useMemo(() => {
     if (!flow || flow.length === 0) return [];
 
@@ -338,7 +344,6 @@ export default function App() {
     return out;
   }, [flow, currentIndex]);
 
-  // Manual swipe only when autoplay is off
   const touchRef = useRef({ x: 0, y: 0, t: 0 });
   const onTouchStart = (e) => {
     if (autoplayOn) return;
@@ -363,7 +368,6 @@ export default function App() {
     else back();
   };
 
-  // failsafe: if base has no related poses, end flow (after base)
   useEffect(() => {
     if (!selectedBase) {
       setEnded(true);
@@ -385,7 +389,7 @@ export default function App() {
 
     setIdx(first);
     setEnded(false);
-  }, [selectedBase]);
+  }, [selectedBase]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div ref={shellRef} className="min-h-screen bg-white p-6 text-neutral-900">
@@ -404,11 +408,7 @@ export default function App() {
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <div className="text-xs text-neutral-500">Set</div>
-              <select
-                className="mt-1 w-full border rounded-lg p-2"
-                value={setId}
-                onChange={(e) => setSetId(e.target.value)}
-              >
+              <select className="mt-1 w-full border rounded-lg p-2" value={setId} onChange={(e) => setSetId(e.target.value)}>
                 {SETS.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -419,11 +419,7 @@ export default function App() {
 
             <div>
               <div className="text-xs text-neutral-500">Base</div>
-              <select
-                className="mt-1 w-full border rounded-lg p-2"
-                value={baseId}
-                onChange={(e) => setBaseId(e.target.value)}
-              >
+              <select className="mt-1 w-full border rounded-lg p-2" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                 {selectedSet.bases.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.name}
@@ -437,12 +433,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div className="text-xs text-neutral-500">Autoplay</div>
               <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={autoplayOn}
-                  onChange={(e) => setAutoplayOn(e.target.checked)}
-                  disabled={ended}
-                />
+                <input type="checkbox" checked={autoplayOn} onChange={(e) => setAutoplayOn(e.target.checked)} disabled={ended} />
                 On
               </label>
               <select
@@ -465,7 +456,9 @@ export default function App() {
               {strip.map((x) => (
                 <div
                   key={`${x.index}-${x.id}`}
-                  className={`rounded-full border px-3 py-1 text-xs ${x.index === currentIndex ? "bg-neutral-900 text-white" : "bg-neutral-50"}`}
+                  className={`rounded-full border px-3 py-1 text-xs ${
+                    x.index === currentIndex ? "bg-neutral-900 text-white" : "bg-neutral-50"
+                  }`}
                 >
                   <span className="font-semibold">{x.id}</span> {x.cue}
                 </div>
@@ -473,14 +466,30 @@ export default function App() {
             </div>
           </div>
 
-          <div
-            className="mt-4 border rounded-xl p-5"
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-          >
+          <div className="mt-4 border rounded-xl p-4">
+            <div className="text-sm font-semibold">Expression Module Integration</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {EXPRESSION_OPTIONS.map((opt) => (
+                <button
+                  key={opt}
+                  className={`rounded-full border px-3 py-2 text-xs ${
+                    expression === opt ? "bg-neutral-900 text-white border-neutral-900" : "bg-white border-neutral-300"
+                  }`}
+                  onClick={() => setExpression(opt)}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 border rounded-xl p-5" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
             {!ended && current && (
               <>
-                <div className="text-xs text-neutral-500">{current.id}</div>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="text-xs text-neutral-500">{current.id}</div>
+                  <div className="text-xs text-neutral-500">{expression}</div>
+                </div>
                 <div className="mt-2 text-xl font-semibold">{current.cue}</div>
               </>
             )}
@@ -503,3 +512,9 @@ export default function App() {
     </div>
   );
 }
+
+/*
+4. Validation
+- Internally consistent: set->base->flow remains fixed; cues unchanged.
+- Changelog: added Expression Module Integration UI; added fixed expression options state; displayed expression beside pose ID.
+*/
