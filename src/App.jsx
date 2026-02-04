@@ -1,92 +1,182 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
-/**
- * FLOW‑BASED POSE TRAINER v1.1
- * ---------------------------------
- * PURPOSE
- * • Start from a base pose
- * • Move through a predefined flow of pose changes
- * • No typing, no decisions, no randomness
- * • Click NEXT and the app walks you through the session
- * • Endless loop (last step → back to base)
- *
- * ADDITIONS (v1.1)
- * • Operator cues tightened to 7–10 words (display only)
- * • Autoplay toggle (6–10 seconds)
- * • Full‑screen button (session use)
- * • Flow map strip (next 3 steps)
- */
-
-/* =========================
-   FLOW DEFINITIONS
-   ========================= */
-
-// Rule: cues are 7–10 words, imperative, no theory.
-const FLOWS = {
-  seated: {
-    name: "Seated Flow (Stool)",
-    base: {
-      title: "Base — Seated on Stool",
-      cue: "Sit tall. Feet down. Hands resting on lap.",
-      highlight: "feet",
-    },
-    steps: [
-      { id: 1, cue: "Slide hands between legs. Keep shoulders down.", highlight: "arms" },
-      { id: 2, cue: "Rotate side‑on. Keep spine tall, chin forward.", highlight: "hips" },
-      { id: 3, cue: "Tighten crop: mid‑arms to top of head.", highlight: "motion" },
-      { id: 4, cue: "Turn camera horizontal. Hold pose. Breathe once.", highlight: "motion" },
-      { id: 5, cue: "Left foot on box. Lean torso slightly forward.", highlight: "feet" },
-      { id: 6, cue: "Arms on left knee. Right hand flat thigh.", highlight: "arms" },
-      { id: 7, cue: "Right hand to left elbow. Bring left hand forward.", highlight: "arms" },
-      { id: 8, cue: "Left hand to chin. Soften jaw, eyes steady.", highlight: "head" },
-      { id: 9, cue: "Big smile. Add small head tilt. Hold.", highlight: "head" },
-      { id: 10, cue: "Lean forward. Cross legs. Stagger arms on knee.", highlight: "hips" },
+const SETS = [
+  {
+    id: "set1_seated_stool",
+    name: "SET 1 — SEATED (STOOL)",
+    bases: [
+      {
+        id: "base1",
+        name: "Base Pose 1",
+        flow: [
+          { id: "Base Pose 1", cue: "Edge of stool, 45°, feet down, hands flat", highlight: "feet" },
+          { id: "Pose 2", cue: "Hands between legs, elbows relaxed inward", highlight: "arms" },
+          { id: "Pose 3", cue: "Rotate side-on, maintain torso length", highlight: "hips" },
+          { id: "Pose 4", cue: "Change composition, tighten crop", highlight: "motion" },
+          { id: "Pose 5", cue: "Horizontal camera, same body position", highlight: "motion" },
+          { id: "Pose 6", cue: "Alternate composition, hold expression", highlight: "motion" },
+        ],
+      },
+      {
+        id: "base2",
+        name: "Base Pose 2",
+        flow: [
+          { id: "Base Pose 2", cue: "Left foot raised, elbow on knee, torso forward", highlight: "feet" },
+          { id: "Pose 10", cue: "Cup fingers softly, relax wrists", highlight: "arms" },
+          { id: "Pose 11", cue: "Right hand back pocket, chest open", highlight: "arms" },
+          { id: "Pose 12", cue: "Hands between legs, weight grounded", highlight: "arms" },
+          { id: "Pose 13", cue: "Lean back slightly, tilt, compose wide", highlight: "hips" },
+          { id: "Pose 14", cue: "Elbow out, knee support maintained", highlight: "arms" },
+          { id: "Pose 15", cue: "Hands forward, connect elbows visually", highlight: "arms" },
+        ],
+      },
+      {
+        id: "base3",
+        name: "Base Pose 3",
+        flow: [
+          { id: "Base Pose 3", cue: "Open to camera, elbow on knee, hand on thigh", highlight: "hips" },
+          { id: "Pose 17", cue: "Hand to chin, thoughtful pause", highlight: "head" },
+          { id: "Pose 18", cue: "Big smile, hold structure", highlight: "head" },
+          { id: "Pose 19", cue: "Tilt head, smile, hands crossed low", highlight: "head" },
+        ],
+      },
+      {
+        id: "base4",
+        name: "Base Pose 4",
+        flow: [
+          { id: "Base Pose 4", cue: "Body forward, legs crossed, arms staggered", highlight: "hips" },
+          { id: "Pose 21", cue: "Hand to chin, other grounded", highlight: "head" },
+          { id: "Pose 22", cue: "Smoking-style fingers, relaxed wrist", highlight: "arms" },
+          { id: "Pose 23", cue: "Hands down, big smile, head tilt", highlight: "head" },
+        ],
+      },
     ],
   },
-
-  wall: {
-    name: "Wall Flow",
-    base: {
-      title: "Base — Wall",
-      cue: "Stand 45°. Weight back foot. Soft wall lean.",
-      highlight: "hips",
-    },
-    steps: [
-      { id: 1, cue: "Kick front knee forward. Keep hips back.", highlight: "feet" },
-      { id: 2, cue: "Switch to composition 3. Keep pose unchanged.", highlight: "motion" },
-      { id: 3, cue: "Cross arms softly. Drop shoulders. Exhale.", highlight: "arms" },
-      { id: 4, cue: "Shift weight to front foot. Keep lean.", highlight: "feet" },
-      { id: 5, cue: "Rotate to face wall. Keep chest line.", highlight: "hips" },
-      { id: 6, cue: "Hands down. Relax wrists. Chin forward.", highlight: "arms" },
+  {
+    id: "set2_standing",
+    name: "SET 2 — STANDING",
+    bases: [
+      {
+        id: "base79",
+        name: "Base Pose 79",
+        flow: [
+          { id: "Base Pose 79", cue: "Feet apart, hip rocked, hands on hips", highlight: "hips" },
+          { id: "Pose 80", cue: "Change composition, shoot low", highlight: "motion" },
+        ],
+      },
+      {
+        id: "base81",
+        name: "Base Pose 81",
+        flow: [
+          { id: "Base Pose 81", cue: "Rotate body, foot elevated, chin 45°", highlight: "feet" },
+          { id: "Pose 82", cue: "Elbow tucked, slight left tilt", highlight: "arms" },
+          { id: "Pose 83", cue: "Chin back to camera", highlight: "head" },
+          { id: "Pose 84", cue: "Rotate, look back, keep breast line", highlight: "hips" },
+        ],
+      },
     ],
   },
-
-  table: {
-    name: "Table Flow",
-    base: {
-      title: "Base — Table",
-      cue: "Elbows on table. Symmetry. Shoulders down. Neck long.",
-      highlight: "arms",
-    },
-    steps: [
-      { id: 1, cue: "Right elbow out. Create asymmetry. Keep shoulders down.", highlight: "arms" },
-      { id: 2, cue: "Right hand in hair. Add small head tilt.", highlight: "head" },
-      { id: 3, cue: "Both hands up. Frame face. Light touch.", highlight: "arms" },
-      { id: 4, cue: "Chest slightly away. Chin down. Eyes up.", highlight: "hips" },
-      { id: 5, cue: "Hands cross to right side. Keep neck long.", highlight: "arms" },
-      { id: 6, cue: "Smoking hands. Elbows in. Soft mouth.", highlight: "arms" },
+  {
+    id: "set3_wall",
+    name: "SET 3 — WALL",
+    bases: [
+      {
+        id: "base72",
+        name: "Base Pose 72",
+        flow: [
+          { id: "Base Pose 72", cue: "45° to camera, weight back, knee forward", highlight: "feet" },
+          { id: "Pose 73", cue: "Same pose, tighter composition", highlight: "motion" },
+          { id: "Pose 74", cue: "Hands crossed, left under", highlight: "arms" },
+        ],
+      },
+      {
+        id: "base75",
+        name: "Base Pose 75",
+        flow: [
+          { id: "Base Pose 75", cue: "Rotate body, shift weight forward", highlight: "feet" },
+          { id: "Pose 76", cue: "Face wall, flatten shoulders", highlight: "hips" },
+          { id: "Pose 77", cue: "Change composition, widen frame", highlight: "motion" },
+          { id: "Pose 78", cue: "Hands down, soften posture", highlight: "arms" },
+        ],
+      },
     ],
   },
-};
+  {
+    id: "set4_table",
+    name: "SET 4 — TABLE",
+    bases: [
+      {
+        id: "base94",
+        name: "Base Pose 94",
+        flow: [
+          { id: "Base Pose 94", cue: "Symmetric elbows, tapered arms", highlight: "arms" },
+          { id: "Pose 95", cue: "Asymmetric, right elbow out", highlight: "arms" },
+          { id: "Pose 96", cue: "Hands up, right higher, tilt", highlight: "head" },
+          { id: "Pose 97", cue: "Elbows together, frame face", highlight: "arms" },
+          { id: "Pose 98", cue: "Chest away, neck long", highlight: "hips" },
+          { id: "Pose 99", cue: "Hands out, crossing lightly", highlight: "arms" },
+          { id: "Pose 100", cue: "Smoking hands, elbows in", highlight: "arms" },
+          { id: "Pose 101", cue: "Hands behind hair, elbows crossed", highlight: "arms" },
+          { id: "Pose 102", cue: "Elbow one way, hands across", highlight: "arms" },
+          { id: "Pose 103", cue: "Body out, head left", highlight: "hips" },
+          { id: "Pose 104", cue: "Hand in hair, body sideways", highlight: "hips" },
+          { id: "Pose 105", cue: "Both hands up", highlight: "arms" },
+          { id: "Pose 106", cue: "Hands tucked, tight composition", highlight: "motion" },
+          { id: "Pose 107", cue: "Hugging motion, one hand off", highlight: "arms" },
+          { id: "Pose 108", cue: "Double hug, compress shape", highlight: "arms" },
+          { id: "Pose 109", cue: "Elbow off, one up one down, tilt", highlight: "arms" },
+        ],
+      },
+    ],
+  },
+  {
+    id: "set5_staggered_box",
+    name: "SET 5 — STAGGERED SEATING (BOX)",
+    bases: [
+      {
+        id: "base111",
+        name: "Base Pose 111",
+        flow: [
+          { id: "Base Pose 111", cue: "Recline on box, elbow down, body relaxed", highlight: "hips" },
+          { id: "Pose 112", cue: "Hands inside, elbows supported", highlight: "arms" },
+          { id: "Pose 113", cue: "Hand behind hair", highlight: "arms" },
+          { id: "Pose 114", cue: "Triangle shape, elbow anchored", highlight: "arms" },
+          { id: "Pose 115", cue: "Elbows together, hands on chin", highlight: "head" },
+          { id: "Pose 116", cue: "Rotate body around elbows", highlight: "hips" },
+          { id: "Pose 117", cue: "Feet on box, hug knees", highlight: "feet" },
+          { id: "Pose 118", cue: "Remove box, horizontal tilt", highlight: "motion" },
+          { id: "Pose 119", cue: "Big smile, tilt, hold", highlight: "head" },
+          { id: "Pose 120", cue: "One knee hugged, elbow down", highlight: "feet" },
+        ],
+      },
+    ],
+  },
+];
 
-/* =========================
-   SIMPLE SKETCH
-   ========================= */
+function requestFullscreen(el) {
+  if (!el) return;
+  const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if (fn) fn.call(el);
+}
+
+function exitFullscreen() {
+  const fn = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  if (fn) fn.call(document);
+}
+
+function isFullscreen() {
+  return !!(
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement
+  );
+}
 
 function StickFigure({ highlight }) {
   const style = (z) => ({
     strokeWidth: highlight === z ? 10 : 6,
-    opacity: highlight === z ? 1 : 0.35,
+    opacity: highlight === z ? 1 : 0.32,
   });
 
   return (
@@ -101,59 +191,65 @@ function StickFigure({ highlight }) {
   );
 }
 
-/* =========================
-   FULLSCREEN HELPERS
-   ========================= */
+function useAutoplay({ enabled, seconds, onTick }) {
+  const ref = useRef(null);
 
-function requestFullscreen(el) {
-  if (!el) return;
-  const fn =
-    el.requestFullscreen ||
-    el.webkitRequestFullscreen ||
-    el.mozRequestFullScreen ||
-    el.msRequestFullscreen;
-  if (fn) fn.call(el);
+  useEffect(() => {
+    if (ref.current) {
+      clearInterval(ref.current);
+      ref.current = null;
+    }
+    if (!enabled) return;
+
+    ref.current = setInterval(() => {
+      onTick();
+    }, seconds * 1000);
+
+    return () => {
+      if (ref.current) {
+        clearInterval(ref.current);
+        ref.current = null;
+      }
+    };
+  }, [enabled, seconds, onTick]);
 }
-
-function exitFullscreen() {
-  const fn =
-    document.exitFullscreen ||
-    document.webkitExitFullscreen ||
-    document.mozCancelFullScreen ||
-    document.msExitFullscreen;
-  if (fn) fn.call(document);
-}
-
-function isFullscreen() {
-  return (
-    document.fullscreenElement ||
-    document.webkitFullscreenElement ||
-    document.mozFullScreenElement ||
-    document.msFullscreenElement
-  );
-}
-
-/* =========================
-   APP
-   ========================= */
 
 export default function App() {
-  const [flowKey, setFlowKey] = useState("seated");
-  const flow = FLOWS[flowKey];
-
-  const [step, setStep] = useState(-1); // -1 = base pose
-
-  // Autoplay
-  const [autoplayOn, setAutoplayOn] = useState(false);
-  const [autoplaySec, setAutoplaySec] = useState(8); // 6–10
-  const timerRef = useRef(null);
-
-  // Fullscreen
   const shellRef = useRef(null);
   const [fs, setFs] = useState(false);
 
+  const [setId, setSetId] = useState(SETS[0].id);
+  const selectedSet = useMemo(() => SETS.find((s) => s.id === setId) ?? SETS[0], [setId]);
+
+  const [baseId, setBaseId] = useState(selectedSet.bases[0]?.id ?? "");
+
   useEffect(() => {
-    const handler = () => setFs(!!isFullscreen());
+    setBaseId(selectedSet.bases[0]?.id ?? "");
+  }, [setId]);
+
+  const selectedBase = useMemo(() => {
+    return selectedSet.bases.find((b) => b.id === baseId) ?? selectedSet.bases[0] ?? null;
+  }, [selectedSet, baseId]);
+
+  const flow = selectedBase?.flow ?? [];
+
+  // index in flow array
+  const [idx, setIdx] = useState(0);
+  const [ended, setEnded] = useState(false);
+
+  // autoplay
+  const [autoplayOn, setAutoplayOn] = useState(false);
+  const [autoplaySec, setAutoplaySec] = useState(8);
+
+  useEffect(() => {
+    // reset on base change
+    setIdx(0);
+    setEnded(false);
+    setAutoplayOn(false);
+  }, [setId, baseId]);
+
+  useEffect(() => {
+    const handler = () => setFs(isFullscreen());
     document.addEventListener("fullscreenchange", handler);
     document.addEventListener("webkitfullscreenchange", handler);
     return () => {
@@ -162,81 +258,134 @@ export default function App() {
     };
   }, []);
 
-  const current = useMemo(() => {
-    if (step === -1) return flow.base;
-    return flow.steps[step];
-  }, [step, flow]);
-
-  const next = () => {
-    if (step < flow.steps.length - 1) {
-      setStep(step + 1);
-    } else {
-      setStep(-1); // loop back to base
-    }
-  };
-
-  const prev = () => {
-    if (step > -1) setStep(step - 1);
-  };
-
-  const resetToBase = () => setStep(-1);
-
-  // Autoplay interval
-  useEffect(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    if (!autoplayOn) return;
-
-    timerRef.current = setInterval(() => {
-      setStep((s) => {
-        if (s < flow.steps.length - 1) return s + 1;
-        return -1;
-      });
-    }, autoplaySec * 1000);
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-  }, [autoplayOn, autoplaySec, flowKey]);
-
-  // Reset state on flow change
-  useEffect(() => {
-    setStep(-1);
-    setAutoplayOn(false);
-  }, [flowKey]);
-
-  // Highlight mapping (base can still highlight a zone)
-  const highlight = current.highlight || "arms";
-
-  // Flow map: next 3 steps
-  const nextThree = useMemo(() => {
-    const steps = flow.steps;
-    const start = step;
-
-    // define "current index" in the steps array
-    // base (-1) is treated as "before step 0"
-    const currentIndex = start;
-
-    const pick = (offset) => {
-      if (steps.length === 0) return null;
-      // if base: next is step 0
-      const baseIndex = currentIndex === -1 ? -1 : currentIndex;
-      const idx = (baseIndex + offset + steps.length) % steps.length;
-      return { idx, step: steps[idx] };
-    };
-
-    return [pick(1), pick(2), pick(3)].filter(Boolean);
-  }, [flow.steps, step]);
-
   const toggleFullscreen = () => {
     if (fs) exitFullscreen();
     else requestFullscreen(shellRef.current);
   };
+
+  const getValidIndex = (start) => {
+    if (!flow || flow.length === 0) return -1;
+    let i = start;
+    while (i < flow.length && !flow[i]) i += 1;
+    if (i >= flow.length) return -1;
+    return i;
+  };
+
+  const advance = () => {
+    if (!flow || flow.length === 0) {
+      setEnded(true);
+      setAutoplayOn(false);
+      return;
+    }
+
+    const nextRaw = idx + 1;
+    const nextValid = getValidIndex(nextRaw);
+
+    if (nextValid === -1) {
+      setEnded(true);
+      setAutoplayOn(false);
+      return;
+    }
+
+    setIdx(nextValid);
+  };
+
+  const back = () => {
+    if (!flow || flow.length === 0) return;
+    let i = idx - 1;
+    while (i >= 0 && !flow[i]) i -= 1;
+    if (i >= 0) setIdx(i);
+  };
+
+  useAutoplay({
+    enabled: autoplayOn && !ended,
+    seconds: autoplaySec,
+    onTick: () => {
+      advance();
+    },
+  });
+
+  const currentIndex = useMemo(() => {
+    if (!flow || flow.length === 0) return -1;
+    const valid = getValidIndex(idx);
+    if (valid === -1) return -1;
+    return valid;
+  }, [flow, idx]);
+
+  const current = currentIndex >= 0 ? flow[currentIndex] : null;
+  const highlight = current?.highlight ?? "arms";
+
+  // Flow-map mini strip: current + next 3 only
+  const strip = useMemo(() => {
+    if (!flow || flow.length === 0) return [];
+
+    const out = [];
+
+    const addAt = (i) => {
+      if (i < 0) return;
+      const vi = getValidIndex(i);
+      if (vi === -1) return;
+      const item = flow[vi];
+      if (!item) return;
+      out.push({ index: vi, id: item.id, cue: item.cue });
+    };
+
+    addAt(currentIndex);
+    addAt(currentIndex + 1);
+    addAt(currentIndex + 2);
+    addAt(currentIndex + 3);
+
+    return out;
+  }, [flow, currentIndex]);
+
+  // Manual swipe only when autoplay is off
+  const touchRef = useRef({ x: 0, y: 0, t: 0 });
+  const onTouchStart = (e) => {
+    if (autoplayOn) return;
+    const t = e.touches?.[0];
+    if (!t) return;
+    touchRef.current = { x: t.clientX, y: t.clientY, t: Date.now() };
+  };
+
+  const onTouchEnd = (e) => {
+    if (autoplayOn) return;
+    const t = e.changedTouches?.[0];
+    if (!t) return;
+    const dx = t.clientX - touchRef.current.x;
+    const dy = t.clientY - touchRef.current.y;
+    const dt = Date.now() - touchRef.current.t;
+
+    if (dt > 900) return;
+    if (Math.abs(dx) < 50) return;
+    if (Math.abs(dy) > 80) return;
+
+    if (dx < 0) advance();
+    else back();
+  };
+
+  // failsafe: if base has no related poses, end flow (after base)
+  useEffect(() => {
+    if (!selectedBase) {
+      setEnded(true);
+      setAutoplayOn(false);
+      return;
+    }
+    if (!flow || flow.length === 0) {
+      setEnded(true);
+      setAutoplayOn(false);
+      return;
+    }
+
+    const first = getValidIndex(0);
+    if (first === -1) {
+      setEnded(true);
+      setAutoplayOn(false);
+      return;
+    }
+
+    setIdx(first);
+    setEnded(false);
+  }, [selectedBase]);
 
   return (
     <div ref={shellRef} className="min-h-screen bg-white p-6 text-neutral-900">
@@ -244,120 +393,110 @@ export default function App() {
         <div className="border rounded-2xl p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="text-sm text-neutral-500">Flow Trainer</div>
-              <h1 className="text-2xl font-semibold">Pose Flow Simulator</h1>
+              <div className="text-sm text-neutral-500">Session Flow</div>
+              <h1 className="text-2xl font-semibold">Pose Flow Operator</h1>
             </div>
-            <button
-              onClick={toggleFullscreen}
-              className="border rounded-lg px-3 py-2 text-sm"
-              title="Full screen"
-            >
+            <button onClick={toggleFullscreen} className="border rounded-lg px-3 py-2 text-sm" title="Full screen">
               {fs ? "Exit full screen" : "Full screen"}
             </button>
           </div>
 
           <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <div className="text-xs text-neutral-500">Flow</div>
+              <div className="text-xs text-neutral-500">Set</div>
               <select
                 className="mt-1 w-full border rounded-lg p-2"
-                value={flowKey}
-                onChange={(e) => {
-                  setFlowKey(e.target.value);
-                  setStep(-1);
-                }}
+                value={setId}
+                onChange={(e) => setSetId(e.target.value)}
               >
-                {Object.entries(FLOWS).map(([k, f]) => (
-                  <option key={k} value={k}>
-                    {f.name}
+                {SETS.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="border rounded-xl p-3">
-              <div className="text-xs text-neutral-500">Autoplay</div>
-              <div className="mt-2 flex items-center justify-between gap-2">
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={autoplayOn}
-                    onChange={(e) => setAutoplayOn(e.target.checked)}
-                  />
-                  On
-                </label>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-neutral-600">Every</span>
-                  <select
-                    className="border rounded-lg p-2 text-sm"
-                    value={autoplaySec}
-                    onChange={(e) => setAutoplaySec(Number(e.target.value))}
-                    disabled={!autoplayOn}
-                  >
-                    {[6, 7, 8, 9, 10].map((s) => (
-                      <option key={s} value={s}>
-                        {s}s
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="mt-2 text-xs text-neutral-500">Mirror drill: set 8s, loop repeatedly.</div>
+            <div>
+              <div className="text-xs text-neutral-500">Base</div>
+              <select
+                className="mt-1 w-full border rounded-lg p-2"
+                value={baseId}
+                onChange={(e) => setBaseId(e.target.value)}
+              >
+                {selectedSet.bases.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* FLOW MAP: NEXT 3 */}
           <div className="mt-4 border rounded-xl p-4">
-            <div className="text-xs uppercase text-neutral-500">Next movements</div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {nextThree.map((x, i) => (
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-xs text-neutral-500">Autoplay</div>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={autoplayOn}
+                  onChange={(e) => setAutoplayOn(e.target.checked)}
+                  disabled={ended}
+                />
+                On
+              </label>
+              <select
+                className="border rounded-lg p-2 text-sm"
+                value={autoplaySec}
+                onChange={(e) => setAutoplaySec(Number(e.target.value))}
+                disabled={!autoplayOn || ended}
+              >
+                {[6, 7, 8, 9, 10].map((s) => (
+                  <option key={s} value={s}>
+                    {s}s
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-4 border rounded-xl p-4">
+            <div className="flex flex-wrap gap-2">
+              {strip.map((x) => (
                 <div
-                  key={`${x.step.id}-${i}`}
-                  className="rounded-full border px-3 py-1 text-xs bg-neutral-50"
+                  key={`${x.index}-${x.id}`}
+                  className={`rounded-full border px-3 py-1 text-xs ${x.index === currentIndex ? "bg-neutral-900 text-white" : "bg-neutral-50"}`}
                 >
-                  <span className="font-semibold">#{x.step.id}</span> {x.step.cue}
+                  <span className="font-semibold">{x.id}</span> {x.cue}
                 </div>
               ))}
             </div>
-            <div className="mt-3 flex gap-2">
-              <button onClick={resetToBase} className="border rounded-lg px-3 py-2 text-sm">
-                Back to base
-              </button>
-            </div>
           </div>
 
-          {/* CURRENT STEP CARD */}
-          <div className="mt-4 border rounded-xl p-4">
-            <div className="text-xs uppercase text-neutral-500">
-              {step === -1 ? "Base Pose" : `Step ${step + 1} of ${flow.steps.length}`}
-            </div>
-            <div className="mt-2 text-lg font-semibold">{current.title || ""}</div>
-            <p className="mt-2 text-base text-neutral-900 font-medium">{current.cue}</p>
-            <div className="mt-3 text-xs text-neutral-500">Operator cue = 7–10 words. Do exactly that.</div>
-          </div>
-
-          <div className="mt-4 flex gap-2">
-            <button onClick={prev} className="border rounded-lg px-4 py-2 text-sm">
-              Back
-            </button>
-            <button onClick={next} className="border rounded-lg px-4 py-2 text-sm">
-              Next movement
-            </button>
-          </div>
-
-          <div className="mt-4 text-xs text-neutral-500">
-            Looping flow. Last step returns to base pose.
+          <div
+            className="mt-4 border rounded-xl p-5"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            {!ended && current && (
+              <>
+                <div className="text-xs text-neutral-500">{current.id}</div>
+                <div className="mt-2 text-xl font-semibold">{current.cue}</div>
+              </>
+            )}
+            {ended && (
+              <>
+                <div className="text-xs text-neutral-500">End</div>
+                <div className="mt-2 text-xl font-semibold">—</div>
+              </>
+            )}
           </div>
         </div>
 
         <div className="border rounded-2xl p-5">
-          <div className="text-sm text-neutral-500">Movement Guide</div>
+          <div className="text-sm text-neutral-500">Guide</div>
           <div className="mt-2 aspect-square border rounded-xl flex items-center justify-center">
-            <StickFigure highlight={highlight === "base" ? "hips" : highlight} />
-          </div>
-          <div className="mt-3 text-xs text-neutral-500">
-            Highlight shows what changes from the previous pose.
+            <StickFigure highlight={highlight} />
           </div>
         </div>
       </div>
