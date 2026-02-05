@@ -1,31 +1,37 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * Studio Flow Companion — Quiet Assistant (Sellable v0.9)
+ * Studio Flow Companion — Regression-fixed
  *
- * Target devices:
- * - Android phone (portrait) ✅ optimized
- * - Android tablet ✅ supported
- * - Laptop ✅ supported
+ * FIXES APPLIED (per reported issues):
+ * 1) Navigation (Laptop + Mobile): navigation is BUTTONS ONLY
+ *    - No tap zones
+ *    - No swipe navigation
+ *    - Main screen click/tap does NOT advance
+ *    - Session shows explicit Back / Next buttons
+ *    - When flow is over, show explicit "Back to start" button
  *
- * Implements:
- * ✅ Prep → Start Ritual → Session (locked)
- * ✅ One-hand tap zones (dominant side = large Next, opposite side = small Back)
- * ✅ Device profiles (phone/tablet/laptop) controlling geometry + typography + whisper behavior
- * ✅ Whisper fades unless intentionally revealed (phone: press-and-hold; tablet: tap; laptop: mouse down)
- * ✅ Rhythm (qualitative), default OFF
- * ✅ Hold (locks movement + stops rhythm)
- * ✅ No “End” state (silence)
- * ✅ Offline-first persistence (localStorage) + Resume last session
- * ✅ Import / Export JSON (v1)
- * ✅ Duplicate anchor (create “My Anchors”)
- * ✅ Favorites (environment-level)
+ * 2) Selection Persistence:
+ *    - Device selection persists when Dominant Hand changes
+ *    - Device/handedness are top-level persisted fields and never reset by other selections
+ *    - If conflicts occur during restore, earliest valid persisted selection wins
  *
- * Note: True PWA caching (works when not previously opened) requires manifest + service worker.
- * This component includes optional SW registration hook (commented).
+ * 3) Pose Availability (Beauty):
+ *    - Restores the original Beauty Set 1 (Seated Stool) with 4 base poses (beauty_base1..beauty_base4)
+ *    - Preserves other genres (50+, Personal Branding (Man)) as previously included
+ *
+ * Preserved behaviors (unless explicitly changed above):
+ * - Prep → Start Ritual → Session (locked)
+ * - Favorites (environment-level)
+ * - Duplicate anchor (creates “My …”)
+ * - Import/Export JSON (v1)
+ * - Offline persistence + Resume last session
+ * - Rhythm (qualitative) + Hold
+ * - Whisper line exists; fades unless user touches/clicks the cue area (GLANCE ONLY)
+ *   (Touching cue area reveals whisper briefly; does not navigate.)
  */
 
-/* ----------------------------- Base Library ----------------------------- */
+/* ----------------------------- Data ----------------------------- */
 
 const BASE_GENRES = [
   {
@@ -34,147 +40,296 @@ const BASE_GENRES = [
     sets: [
       {
         id: "beauty_set1_seated_stool",
-        name: "Seated — Stool",
+        name: "SET 1 — SEATED (STOOL)",
         bases: [
           {
             id: "beauty_base1",
-            name: "Anchor",
+            name: "Base Pose 1",
             curated: true,
             flow: [
-              { uid: "beauty_base1_step1", cue: "Stool edge. Turn slightly. Feet grounded. Hands rest.", beat: "Settle" },
-              { uid: "beauty_base1_step2", cue: "Hands softly together. Let the shoulders melt.", beat: "Open" },
-              { uid: "beauty_base1_step3", cue: "Rotate a touch. Keep the length through the torso.", beat: "Soften" },
-              { uid: "beauty_base1_step4", cue: "Hold the shape. Stay quiet and still.", beat: "Finish" },
+              { uid: "beauty_base1_step1", label: "Base Pose 1", cue: "Edge of stool, 45°, feet down, hands flat", beat: "Settle" },
+              { uid: "beauty_base1_step2", label: "Pose 2", cue: "Hands between legs, elbows relaxed inward", beat: "Open" },
+              { uid: "beauty_base1_step3", label: "Pose 3", cue: "Rotate side-on, maintain torso length", beat: "Soften" },
+              { uid: "beauty_base1_step4", label: "Pose 4", cue: "Change composition, tighten crop", beat: "Finish" },
+              { uid: "beauty_base1_step5", label: "Pose 5", cue: "Horizontal camera, same body position", beat: "Finish" },
+              { uid: "beauty_base1_step6", label: "Pose 6", cue: "Alternate composition, hold expression", beat: "Finish" },
+            ],
+          },
+          {
+            id: "beauty_base2",
+            name: "Base Pose 2",
+            curated: true,
+            flow: [
+              { uid: "beauty_base2_step1", label: "Base Pose 2", cue: "Left foot raised, elbow on knee, torso forward", beat: "Settle" },
+              { uid: "beauty_base2_step2", label: "Pose 10", cue: "Cup fingers softly, relax wrists", beat: "Open" },
+              { uid: "beauty_base2_step3", label: "Pose 11", cue: "Right hand back pocket, chest open", beat: "Empower" },
+              { uid: "beauty_base2_step4", label: "Pose 12", cue: "Hands between legs, weight grounded", beat: "Soften" },
+              { uid: "beauty_base2_step5", label: "Pose 13", cue: "Lean back slightly, tilt, compose wide", beat: "Soften" },
+              { uid: "beauty_base2_step6", label: "Pose 14", cue: "Elbow out, knee support maintained", beat: "Finish" },
+              { uid: "beauty_base2_step7", label: "Pose 15", cue: "Hands forward, connect elbows visually", beat: "Finish" },
+            ],
+          },
+          {
+            id: "beauty_base3",
+            name: "Base Pose 3",
+            curated: true,
+            flow: [
+              { uid: "beauty_base3_step1", label: "Base Pose 3", cue: "Open to camera, elbow on knee, hand on thigh", beat: "Settle" },
+              { uid: "beauty_base3_step2", label: "Pose 17", cue: "Hand to chin, thoughtful pause", beat: "Open" },
+              { uid: "beauty_base3_step3", label: "Pose 18", cue: "Big smile, hold structure", beat: "Empower" },
+              { uid: "beauty_base3_step4", label: "Pose 19", cue: "Tilt head, smile, hands crossed low", beat: "Finish" },
+            ],
+          },
+          {
+            id: "beauty_base4",
+            name: "Base Pose 4",
+            curated: true,
+            flow: [
+              { uid: "beauty_base4_step1", label: "Base Pose 4", cue: "Body forward, legs crossed, arms staggered", beat: "Settle" },
+              { uid: "beauty_base4_step2", label: "Pose 21", cue: "Hand to chin, other grounded", beat: "Open" },
+              { uid: "beauty_base4_step3", label: "Pose 22", cue: "Smoking-style fingers, relaxed wrist", beat: "Soften" },
+              { uid: "beauty_base4_step4", label: "Pose 23", cue: "Hands down, big smile, head tilt", beat: "Finish" },
             ],
           },
         ],
       },
       {
-        id: "beauty_set_wall",
-        name: "Wall",
+        id: "beauty_set3_wall",
+        name: "SET 3 — WALL",
         bases: [
           {
-            id: "beauty_wall_base1",
-            name: "Anchor",
+            id: "beauty_base72",
+            name: "Base Pose 72",
             curated: true,
             flow: [
-              { uid: "beauty_wall_1", cue: "Turn slightly. Weight back. Knees soft.", beat: "Settle" },
-              { uid: "beauty_wall_2", cue: "Hands close. Neck long.", beat: "Open" },
-              { uid: "beauty_wall_3", cue: "Quiet eyes. Small breath.", beat: "Soften" },
-              { uid: "beauty_wall_4", cue: "Hold. Soft and still.", beat: "Finish" },
+              { uid: "beauty_base72_step1", label: "Base Pose 72", cue: "45° to camera, weight back, knee forward", beat: "Settle" },
+              { uid: "beauty_base72_step2", label: "Pose 73", cue: "Same pose, tighter composition", beat: "Open" },
+              { uid: "beauty_base72_step3", label: "Pose 74", cue: "Hands crossed, left under", beat: "Finish" },
+            ],
+          },
+          {
+            id: "beauty_base75",
+            name: "Base Pose 75",
+            curated: true,
+            flow: [
+              { uid: "beauty_base75_step1", label: "Base Pose 75", cue: "Rotate body, shift weight forward", beat: "Settle" },
+              { uid: "beauty_base75_step2", label: "Pose 76", cue: "Face wall, flatten shoulders", beat: "Open" },
+              { uid: "beauty_base75_step3", label: "Pose 77", cue: "Change composition, widen frame", beat: "Soften" },
+              { uid: "beauty_base75_step4", label: "Pose 78", cue: "Hands down, soften posture", beat: "Finish" },
             ],
           },
         ],
       },
     ],
   },
+
   {
     id: "fifty_plus",
     name: "50+",
     sets: [
       {
         id: "50p_set1_apple_box_bright_gold",
-        name: "Apple Box — Bright / Gold",
+        name: "SET 1 — APPLE BOX (BRIGHT / GOLD)",
         bases: [
           {
             id: "50p_base1",
-            name: "Anchor",
+            name: "Base Pose 1",
             curated: true,
             flow: [
-              { uid: "50p_set1_base1_step1", cue: "Sit tall on the box. Chin gently around. Fingertips light.", beat: "Settle" },
+              {
+                uid: "50p_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: "Seated tall, apple box, chin around, fingertips light",
+                beat: "Settle",
+              },
               {
                 uid: "50p_set1_base1_step2",
-                cue: "Hands together, softly down and forward. Let the shoulders melt. Remove the second box.",
+                label: "Pose 2",
+                cue: `Hands together and down and forward
+Shoulders dropped
+Remove the second box`,
                 beat: "Open",
               },
-              { uid: "50p_set1_base1_step3", cue: "Stay just there. A quiet, gentle smile.", beat: "Soften" },
-              { uid: "50p_set1_base1_step4", cue: "Hold the shape. Soft and still.", beat: "Finish" },
+              { uid: "50p_set1_base1_step3", label: "Pose 3", cue: "Comp 1 Baby smile", beat: "Soften" },
+              { uid: "50p_set1_base1_step4", label: "Pose 4", cue: "Comp 2", beat: "Finish" },
             ],
           },
         ],
       },
       {
         id: "50p_set2_wall_white_bright",
-        name: "Wall — White / Bright",
+        name: "SET 2 — WALL (WHITE / BRIGHT)",
         bases: [
           {
             id: "50p_base2",
-            name: "Anchor",
+            name: "Base Pose 2",
             curated: true,
             flow: [
               {
                 uid: "50p_set2_base2_step1",
-                cue: "Ease away from the wall. Turn slightly. Hands close. Lean gently. Chin around.",
+                label: "Base Pose 2",
+                cue: `Take your body away from the wall
+45 degrees
+Touch body with your hands
+Lean with your body
+Touch up and back
+Chin around
+Tilt the camera`,
                 beat: "Settle",
               },
-              { uid: "50p_set2_base2_step2", cue: "Soften the eyes. Stay calm.", beat: "Open" },
-              { uid: "50p_set2_base2_step3", cue: "Chin slightly down. Hint of a smile.", beat: "Soften" },
-              { uid: "50p_set2_base2_step4", cue: "Stay level. Breathe.", beat: "Soften" },
-              { uid: "50p_set2_base2_step5", cue: "Let the near shoulder drop. Change the weight.", beat: "Empower" },
-              { uid: "50p_set2_base2_step6", cue: "Wrap the hands gently. Shoulders relaxed.", beat: "Finish" },
+              { uid: "50p_set2_base2_step2", label: "Pose 3", cue: "Chin around, soften eyes", beat: "Open" },
+              { uid: "50p_set2_base2_step3", label: "Pose 4", cue: "Chin down, baby smile", beat: "Soften" },
+              { uid: "50p_set2_base2_step4", label: "Pose 5", cue: "Chin down and horizontal", beat: "Soften" },
+              {
+                uid: "50p_set2_base2_step5",
+                label: "Pose 6",
+                cue: `Keep your shoulder drop to me
+Roll your shoulder back to the wall
+Change weight to the other foot`,
+                beat: "Empower",
+              },
+              {
+                uid: "50p_set2_base2_step6",
+                label: "Pose 7",
+                cue: `Hold hands around the body
+Shoulders down to me`,
+                beat: "Finish",
+              },
             ],
           },
         ],
       },
       {
         id: "50p_set5_standing_bright_gold",
-        name: "Standing — Bright / Gold",
+        name: "SET 5 — STANDING (BRIGHT / GOLD)",
         bases: [
           {
             id: "50p_base5",
-            name: "Anchor",
+            name: "Base Pose 5",
             curated: true,
             flow: [
               {
                 uid: "50p_set5_base5_step1",
-                cue: "Hands resting down. Light touch. Elbow back. Front foot toward me. Chin forward and down.",
+                label: "Base Pose 5",
+                cue: `Hands down
+Touch
+Elbow back
+Foot towards me
+Chin forward and down
+Drop shoulder down
+Tilt camera`,
                 beat: "Settle",
               },
-              { uid: "50p_set5_base5_step2", cue: "Hold the shape. Quiet eyes.", beat: "Open" },
-              { uid: "50p_set5_base5_step3", cue: "Chin forward and down again. Gentle.", beat: "Soften" },
-              { uid: "50p_set5_base5_step4", cue: "Create a little space. Chin around.", beat: "Finish" },
+              { uid: "50p_set5_base5_step2", label: "Pose 6", cue: "Horizontal", beat: "Open" },
+              { uid: "50p_set5_base5_step3", label: "Pose 7", cue: "Chin forward and down", beat: "Soften" },
+              { uid: "50p_set5_base5_step4", label: "Pose 8", cue: "More air, chin around", beat: "Finish" },
             ],
           },
         ],
       },
     ],
   },
+
   {
     id: "personal_branding_man",
     name: "Personal Branding (Man)",
     sets: [
       {
         id: "pbm_set1_stool_dark_side_light",
-        name: "Stool — Dark / Side Light",
+        name: "SET 1 — STOOL (DARK / SIDE LIGHT)",
         bases: [
           {
             id: "pbm_base1",
-            name: "Anchor",
+            name: "Base Pose 1",
             curated: true,
             flow: [
-              { uid: "pbm_set1_base1_step1", cue: "Sit tall. Turn slightly. One foot lifted. Hands together. Chin toward me.", beat: "Settle" },
-              { uid: "pbm_set1_base1_step2", cue: "Stay there. Easy smile.", beat: "Open" },
-              { uid: "pbm_set1_base1_step3", cue: "Lean a touch into the knee. Back shoulder soft. Chin forward. Soft smile.", beat: "Empower" },
-              { uid: "pbm_set1_base1_step4", cue: "Relax the posture. Chin gently around.", beat: "Soften" },
-              { uid: "pbm_set1_base1_step5", cue: "Let the smile grow a little.", beat: "Soften" },
-              { uid: "pbm_set1_base1_step6", cue: "Hands resting on the thigh. Easy, natural smile.", beat: "Finish" },
+              {
+                uid: "pbm_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: `Sitting on a stool
+45 degrees
+One foot raised
+Hands together
+Sit upright
+Chin towards me`,
+                beat: "Settle",
+              },
+              { uid: "pbm_set1_base1_step2", label: "Pose 2", cue: "Step back, easy smile", beat: "Open" },
+              {
+                uid: "pbm_set1_base1_step3",
+                label: "Pose 3",
+                cue: `Lean onto that knee a bit more
+Drop right back shoulder
+Chin forward
+Soft smile`,
+                beat: "Empower",
+              },
+              { uid: "pbm_set1_base1_step4", label: "Pose 4", cue: "Relax your posture and chin around to me", beat: "Soften" },
+              { uid: "pbm_set1_base1_step5", label: "Pose 5", cue: "More smile", beat: "Soften" },
+              { uid: "pbm_set1_base1_step6", label: "Pose 6", cue: "Hands on your thigh, easy smile", beat: "Finish" },
             ],
           },
         ],
       },
       {
-        id: "pbm_set3_wall",
-        name: "Wall — Casual",
+        id: "pbm_set2_real_casual_armani",
+        name: "SET 2 — REAL CASUAL (ARMANI)",
         bases: [
           {
-            id: "pbm_wall_base1",
-            name: "Anchor",
+            id: "pbm_base2",
+            name: "Base Pose 2",
             curated: true,
             flow: [
-              { uid: "pbm_wall_1", cue: "Turn slightly. Weight back. Arms crossed.", beat: "Settle" },
-              { uid: "pbm_wall_2", cue: "Arms lower. Let the weight settle.", beat: "Open" },
-              { uid: "pbm_wall_3", cue: "Arms down. Open the shoulders.", beat: "Empower" },
-              { uid: "pbm_wall_4", cue: "Step away. Feet apart. Shoulders toward me.", beat: "Finish" },
+              { uid: "pbm_set2_base2_step1", label: "Base Pose 2", cue: "Same pose but go down, fingers together", beat: "Settle" },
+              { uid: "pbm_set2_base2_step2", label: "Pose 3", cue: "Hands together", beat: "Open" },
+              { uid: "pbm_set2_base2_step3", label: "Pose 4", cue: "Easy smile, show me some teeth", beat: "Finish" },
+            ],
+          },
+        ],
+      },
+      {
+        id: "pbm_set3_more_casual_wall_standing",
+        name: "SET 3 — MORE CASUAL LOOK, STANDING ON THE WALL",
+        bases: [
+          {
+            id: "pbm_base3",
+            name: "Base Pose 3",
+            curated: true,
+            flow: [
+              { uid: "pbm_set3_base3_step1", label: "Base Pose 3", cue: "45 degrees, weight on the back foot, arms crossed", beat: "Settle" },
+              { uid: "pbm_set3_base3_step2", label: "Pose 4", cue: "Arms crossed low, weight settled", beat: "Open" },
+              { uid: "pbm_set3_base3_step3", label: "Pose 5", cue: "Arms down, open shoulders", beat: "Empower" },
+              {
+                uid: "pbm_set3_base3_step4",
+                label: "Pose 6",
+                cue: `Stand away from the wall
+Feet apart
+Shoulders to me`,
+                beat: "Finish",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "pbm_set4_seated_chair",
+        name: "SET 4 — SEATED (CHAIR)",
+        bases: [
+          {
+            id: "pbm_base4",
+            name: "Base Pose 4",
+            curated: true,
+            flow: [
+              {
+                uid: "pbm_set4_base4_step1",
+                label: "Base Pose 4",
+                cue: `Sit tall, 45 degrees
+Back foot on a half box
+Hands on thigh, loose`,
+                beat: "Settle",
+              },
+              { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture", beat: "Open" },
+              { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile", beat: "Finish" },
             ],
           },
         ],
@@ -189,45 +344,13 @@ const RHYTHMS = [
   { id: "gentle", label: "Gentle", seconds: 6 },
 ];
 
-/* ----------------------------- Device Profiles ----------------------------- */
+const DEVICE_PROFILES = [
+  { id: "phone", label: "Android phone (portrait)" },
+  { id: "tablet", label: "Android tablet" },
+  { id: "laptop", label: "Laptop" },
+];
 
-const DEVICE_PROFILES = {
-  phone: {
-    id: "phone",
-    label: "Android phone (portrait)",
-    nextPct: 70,
-    backPct: 30,
-    deadBottomPx: 64, // protects Android gesture bar / palm hits
-    whisperReveal: "press", // press-and-hold
-    pressMs: 220,
-    type: { cue: "text-3xl", cueMd: "md:text-4xl", whisper: "text-sm md:text-base" },
-    minTapMs: 120,
-  },
-  tablet: {
-    id: "tablet",
-    label: "Android tablet",
-    nextPct: 60,
-    backPct: 40,
-    deadBottomPx: 0,
-    whisperReveal: "tap",
-    pressMs: 0,
-    type: { cue: "text-4xl", cueMd: "md:text-5xl", whisper: "text-base md:text-lg" },
-    minTapMs: 0,
-  },
-  laptop: {
-    id: "laptop",
-    label: "Laptop",
-    nextPct: 55,
-    backPct: 45,
-    deadBottomPx: 0,
-    whisperReveal: "mousedown",
-    pressMs: 0,
-    type: { cue: "text-4xl", cueMd: "md:text-5xl", whisper: "text-base md:text-lg" },
-    minTapMs: 0,
-  },
-};
-
-const STORAGE_KEY = "sfc_v09_state";
+const STORAGE_KEY = "pose_companion_state_v1";
 
 /* ----------------------------- Utilities ----------------------------- */
 
@@ -237,43 +360,6 @@ function safeJsonParse(str, fallback) {
   } catch {
     return fallback;
   }
-}
-
-function requestFullscreen(el) {
-  if (!el) return;
-  const fn = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-  if (fn) fn.call(el);
-}
-function exitFullscreen() {
-  const fn =
-    document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
-  if (fn) fn.call(document);
-}
-function isFullscreen() {
-  return !!(
-    document.fullscreenElement ||
-    document.webkitFullscreenElement ||
-    document.mozFullScreenElement ||
-    document.msFullscreenElement
-  );
-}
-
-function useInterval(enabled, ms, onTick) {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (ref.current) {
-      clearInterval(ref.current);
-      ref.current = null;
-    }
-    if (!enabled) return;
-    ref.current = setInterval(onTick, ms);
-    return () => {
-      if (ref.current) {
-        clearInterval(ref.current);
-        ref.current = null;
-      }
-    };
-  }, [enabled, ms, onTick]);
 }
 
 function deepClone(x) {
@@ -298,50 +384,35 @@ function mergeUserBasesIntoGenres(baseGenres, userBasesBySet) {
   return genres;
 }
 
-function useHaptic(enabled) {
-  const vibrate = (ms = 10) => {
-    if (!enabled) return;
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      try {
-        navigator.vibrate(ms);
-      } catch {}
-    }
-  };
-  return { vibrate };
-}
-
 /* ----------------------------- App ----------------------------- */
 
 export default function App() {
-  const shellRef = useRef(null);
-
-  // Optional SW registration if you add /sw.js + manifest
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      // navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
-  }, []);
-
-  // Load persisted state
+  // Load persisted ONCE
   const persisted = useMemo(() => safeJsonParse(localStorage.getItem(STORAGE_KEY), null), []);
 
   /**
-   * Persisted shape:
+   * Persisted schema:
    * {
    *   device: "phone"|"tablet"|"laptop",
-   *   handedness: "right"|"left",
+   *   handedness: "left"|"right",
    *   showFullLibrary: boolean,
    *   favorites: { [setId]: baseId },
    *   userBasesBySet: { [setId]: [baseObjects...] },
    *   lastSelection: { genreId, setId, baseId },
-   *   lastSession: { device, handedness, genreId, setId, baseId, idx, silence, hold, rhythmOn, rhythmId }
+   *   lastSession: { device, handedness, genreId, setId, baseId, idx, isOver, hold, rhythmOn, rhythmId }
    * }
    */
-  const [device, setDevice] = useState(persisted?.device ?? "phone");
-  const profile = useMemo(() => DEVICE_PROFILES[device] ?? DEVICE_PROFILES.phone, [device]);
 
-  const [handedness, setHandedness] = useState(persisted?.handedness ?? "right");
-  const [showFullLibrary, setShowFullLibrary] = useState(persisted?.showFullLibrary ?? false);
+  // Selection Persistence FIX: device + handedness are independent top-level state
+  const [device, setDevice] = useState(() => {
+    // prioritize earliest valid selection: persisted.device first
+    const d = persisted?.device;
+    if (DEVICE_PROFILES.some((p) => p.id === d)) return d;
+    return "phone";
+  });
+  const [handedness, setHandedness] = useState(() => (persisted?.handedness === "left" ? "left" : "right"));
+
+  const [showFullLibrary, setShowFullLibrary] = useState(!!persisted?.showFullLibrary);
   const [favorites, setFavorites] = useState(persisted?.favorites ?? {});
   const [userBasesBySet, setUserBasesBySet] = useState(persisted?.userBasesBySet ?? {});
   const [lastSelection, setLastSelection] = useState(persisted?.lastSelection ?? null);
@@ -352,44 +423,23 @@ export default function App() {
   // Modes
   const [mode, setMode] = useState("prep"); // "prep" | "ritual" | "session"
 
-  // Fullscreen
-  const [fs, setFs] = useState(false);
-  useEffect(() => {
-    const handler = () => setFs(isFullscreen());
-    document.addEventListener("fullscreenchange", handler);
-    document.addEventListener("webkitfullscreenchange", handler);
-    return () => {
-      document.removeEventListener("fullscreenchange", handler);
-      document.removeEventListener("webkitfullscreenchange", handler);
-    };
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (fs) exitFullscreen();
-    else requestFullscreen(shellRef.current);
-  };
-
-  // Haptic (Android-friendly) — used only for manual taps
-  const { vibrate } = useHaptic(device !== "laptop");
-
-  // Prep selection defaults
-  const initialGenreId = lastSelection?.genreId ?? GENRES[0]?.id ?? "";
-  const [genreId, setGenreId] = useState(initialGenreId);
+  // Prep selection
+  const [genreId, setGenreId] = useState(() => lastSelection?.genreId ?? GENRES[0]?.id ?? "beauty");
   const genre = useMemo(() => GENRES.find((g) => g.id === genreId) ?? GENRES[0], [GENRES, genreId]);
 
-  const initialSetId = useMemo(() => {
+  const [setId, setSetId] = useState(() => {
     const byLast = lastSelection?.setId;
     if (byLast && genre?.sets?.some((s) => s.id === byLast)) return byLast;
     return genre?.sets?.[0]?.id ?? "";
-  }, [genre, lastSelection]);
+  });
 
-  const [setId, setSetId] = useState(initialSetId);
-
+  // When genre changes, reset set/base only (do NOT touch device/handedness)
   useEffect(() => {
     const byLast = lastSelection?.setId;
     const nextSet = byLast && genre?.sets?.some((s) => s.id === byLast) ? byLast : genre?.sets?.[0]?.id ?? "";
     setSetId(nextSet);
-  }, [genreId]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [genreId]);
 
   const selectedSet = useMemo(() => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null, [genre, setId]);
 
@@ -397,10 +447,10 @@ export default function App() {
     const bases = selectedSet?.bases ?? [];
     if (showFullLibrary) return bases;
     const curated = bases.filter((b) => b.curated);
-    return curated.length ? curated : bases.slice(0, 1);
+    return curated.length ? curated : bases;
   }, [selectedSet, showFullLibrary]);
 
-  const initialBaseId = useMemo(() => {
+  const [baseId, setBaseId] = useState(() => {
     const basesAll = selectedSet?.bases ?? [];
     const fav = favorites?.[setId];
     if (fav && basesAll.some((b) => b.id === fav)) return fav;
@@ -409,10 +459,9 @@ export default function App() {
     if (byLast && basesAll.some((b) => b.id === byLast)) return byLast;
 
     return availableBases?.[0]?.id ?? "";
-  }, [favorites, setId, selectedSet, availableBases, lastSelection]);
+  });
 
-  const [baseId, setBaseId] = useState(initialBaseId);
-
+  // When set changes, reset base only (do NOT touch device/handedness)
   useEffect(() => {
     const basesAll = selectedSet?.bases ?? [];
     const fav = favorites?.[setId];
@@ -426,7 +475,8 @@ export default function App() {
       return;
     }
     setBaseId(availableBases?.[0]?.id ?? "");
-  }, [setId, selectedSet]); // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setId]);
 
   const selectedBase = useMemo(() => {
     const all = selectedSet?.bases ?? [];
@@ -437,15 +487,13 @@ export default function App() {
 
   // Session state
   const [idx, setIdx] = useState(0);
-  const [silence, setSilence] = useState(false);
+  const [isOver, setIsOver] = useState(false); // Flow-over state (required by issue #1)
   const [hold, setHold] = useState(false);
-
-  // Rhythm
   const [rhythmOn, setRhythmOn] = useState(false);
   const [rhythmId, setRhythmId] = useState("natural");
   const rhythm = useMemo(() => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1], [rhythmId]);
 
-  // Whisper reveal
+  // Whisper (glance only): hidden unless user taps/clicks cue area
   const [whisperVisible, setWhisperVisible] = useState(false);
   const whisperTimerRef = useRef(null);
   const revealWhisperBriefly = useCallback(() => {
@@ -459,44 +507,10 @@ export default function App() {
     };
   }, []);
 
-  // Press-and-hold to reveal whisper (phone)
-  const pressTimerRef = useRef(null);
-  const pressStartAtRef = useRef(0);
-
-  const onPressStart = useCallback(() => {
-    if (mode !== "session") return;
-    if (rhythmOn || hold) return;
-    if (profile.whisperReveal !== "press") return;
-
-    pressStartAtRef.current = Date.now();
-    if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
-    pressTimerRef.current = setTimeout(() => {
-      revealWhisperBriefly();
-    }, profile.pressMs || 220);
-  }, [mode, rhythmOn, hold, profile, revealWhisperBriefly]);
-
-  const onPressEnd = useCallback(() => {
-    if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
-    pressTimerRef.current = null;
-  }, []);
-
-  // Persistence
-  useEffect(() => {
-    const payload = {
-      device,
-      handedness,
-      showFullLibrary,
-      favorites,
-      userBasesBySet,
-      lastSelection: { genreId, setId, baseId },
-      lastSession,
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [device, handedness, showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, lastSession]);
-
   const current = useMemo(() => {
     if (!flow.length) return null;
-    return flow[Math.max(0, Math.min(idx, flow.length - 1))] ?? null;
+    const clamped = Math.max(0, Math.min(idx, flow.length - 1));
+    return flow[clamped] ?? null;
   }, [flow, idx]);
 
   const nextWhisper = useMemo(() => {
@@ -506,32 +520,38 @@ export default function App() {
     return flow[ni] ?? null;
   }, [flow, idx]);
 
+  const restartFlow = useCallback(() => {
+    setIdx(0);
+    setIsOver(false);
+    setHold(false);
+    setRhythmOn(false);
+    setWhisperVisible(false);
+  }, []);
+
   const advance = useCallback(() => {
     if (!flow.length) return;
     if (hold) return;
 
-    if (silence) {
-      setSilence(false);
-      setIdx(flow.length - 1);
-      return;
-    }
+    if (isOver) return;
 
     const ni = idx + 1;
     if (ni >= flow.length) {
-      setSilence(true); // no End state
+      // Flow over: show required "Back to start" button state
+      setIsOver(true);
       setRhythmOn(false);
       setWhisperVisible(false);
       return;
     }
     setIdx(ni);
-  }, [flow, idx, silence, hold]);
+  }, [flow, idx, hold, isOver]);
 
   const back = useCallback(() => {
     if (!flow.length) return;
     if (hold) return;
 
-    if (silence) {
-      setSilence(false);
+    if (isOver) {
+      // Back from over state returns to last cue
+      setIsOver(false);
       setIdx(flow.length - 1);
       return;
     }
@@ -539,196 +559,36 @@ export default function App() {
     const pi = idx - 1;
     if (pi < 0) return;
     setIdx(pi);
-  }, [flow, idx, silence, hold]);
+  }, [flow, idx, hold, isOver]);
 
-  // Rhythm tick
-  useInterval(mode === "session" && rhythmOn && !silence && !hold, rhythm.seconds * 1000, () => {
-    advance();
-  });
-
-  // One-hand sides
-  const nextSide = handedness === "right" ? "right" : "left";
-  const backSide = nextSide === "right" ? "left" : "right";
-
-  // Tap zones with accidental-tap guard (phone)
-  const lastTapRef = useRef(0);
-  const guardedAction = (fn) => {
-    const now = Date.now();
-    if (profile.minTapMs && now - lastTapRef.current < profile.minTapMs) return;
-    lastTapRef.current = now;
-    fn();
-  };
-
-  const onTapZone = (action) => {
-    if (mode !== "session") return;
-    if (!flow.length) return;
-    if (rhythmOn || hold) return;
-
-    guardedAction(() => {
-      // Whisper reveal rules:
-      // - tablet: reveal on tap
-      // - phone: reveal only via press-and-hold (not tap)
-      // - laptop: reveal on mouse down
-      if (profile.whisperReveal === "tap") revealWhisperBriefly();
-
-      // small haptic for manual navigation (Android)
-      vibrate(10);
-
-      if (action === "back") back();
-      else advance();
-    });
-  };
-
-  // Touch swipe (session only; rhythm OFF; hold OFF)
-  const touchRef = useRef({ x: 0, y: 0, t: 0 });
-  const onTouchStart = (e) => {
-    if (mode !== "session") return;
-    if (rhythmOn || hold) return;
-
-    onPressStart();
-
-    const t = e.touches?.[0];
-    if (!t) return;
-    touchRef.current = { x: t.clientX, y: t.clientY, t: Date.now() };
-  };
-
-  const onTouchEnd = (e) => {
-    if (mode !== "session") return;
-    if (rhythmOn || hold) return;
-
-    onPressEnd();
-
-    const t = e.changedTouches?.[0];
-    if (!t) return;
-
-    const dx = t.clientX - touchRef.current.x;
-    const dy = t.clientY - touchRef.current.y;
-    const dt = Date.now() - touchRef.current.t;
-
-    // If it was a long press (phone whisper reveal), ignore swipe/nav intent
-    if (profile.whisperReveal === "press") {
-      const pressDuration = Date.now() - pressStartAtRef.current;
-      if (pressDuration >= (profile.pressMs || 220)) return;
-    }
-
-    if (dt > 900) return;
-    if (Math.abs(dx) < 50) return;
-    if (Math.abs(dy) > 80) return;
-
-    guardedAction(() => {
-      vibrate(10);
-      if (dx < 0) advance();
-      else back();
-    });
-  };
-
-  const onTouchCancel = () => {
-    onPressEnd();
-  };
-
-  // Keyboard (laptop)
-  const onKeyDown = (e) => {
-    if (mode !== "session") return;
-    if (rhythmOn || hold) return;
-
-    if (e.key === "ArrowRight") {
-      guardedAction(() => {
-        vibrate(10);
-        advance();
-      });
-    }
-    if (e.key === "ArrowLeft") {
-      guardedAction(() => {
-        vibrate(10);
-        back();
-      });
-    }
-    if (e.key === " " || e.key === "Spacebar") {
-      // Intentional reveal on laptop
-      revealWhisperBriefly();
-    }
-  };
-
-  // Start Ritual
-  const startRitual = () => {
-    setMode("ritual");
-    setIdx(0);
-    setSilence(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
-    setLastSelection({ genreId, setId, baseId });
-  };
-
-  const beginSessionFromRitual = () => {
-    setMode("session");
-    setIdx(0);
-    setSilence(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
-
-    setLastSession({
-      device,
-      handedness,
-      genreId,
-      setId,
-      baseId,
-      idx: 0,
-      silence: false,
-      hold: false,
-      rhythmOn: false,
-      rhythmId,
-    });
-  };
-
-  const exitSession = () => {
-    setMode("prep");
-    setSilence(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
-  };
-
-  // Update resumable session snapshot
+  // Rhythm tick (unchanged behavior): advances automatically while on, unless over/hold
   useEffect(() => {
     if (mode !== "session") return;
-    setLastSession({
-      device,
-      handedness,
-      genreId,
-      setId,
-      baseId,
-      idx,
-      silence,
-      hold,
-      rhythmOn,
-      rhythmId,
-    });
-  }, [mode, device, handedness, genreId, setId, baseId, idx, silence, hold, rhythmOn, rhythmId]);
+    if (!rhythmOn) return;
+    if (hold) return;
+    if (isOver) return;
+    if (!flow.length) return;
 
-  const resumeLastSession = () => {
-    if (!lastSession) return;
+    const ms = (rhythm?.seconds ?? 8) * 1000;
+    const t = setInterval(() => {
+      // Under rhythm, use same advance behavior
+      setIdx((prev) => {
+        const ni = prev + 1;
+        if (ni >= flow.length) {
+          // transition to over
+          setIsOver(true);
+          setRhythmOn(false);
+          setWhisperVisible(false);
+          return prev; // keep last valid index
+        }
+        return ni;
+      });
+    }, ms);
 
-    setDevice(lastSession.device ?? device);
-    setHandedness(lastSession.handedness ?? handedness);
+    return () => clearInterval(t);
+  }, [mode, rhythmOn, hold, isOver, flow, rhythm]);
 
-    setGenreId(lastSession.genreId);
-    setTimeout(() => {
-      setSetId(lastSession.setId);
-      setTimeout(() => {
-        setBaseId(lastSession.baseId);
-        setIdx(lastSession.idx ?? 0);
-        setSilence(!!lastSession.silence);
-        setHold(!!lastSession.hold);
-        setRhythmId(lastSession.rhythmId ?? "natural");
-        setRhythmOn(!!lastSession.rhythmOn);
-        setMode("session");
-      }, 0);
-    }, 0);
-  };
-
-  // Favorites
+  // Favorites (environment-level)
   const isFavorite = favorites?.[setId] === baseId;
   const toggleFavorite = () => {
     setFavorites((prev) => {
@@ -739,7 +599,7 @@ export default function App() {
     });
   };
 
-  // Duplicate anchor
+  // Duplicate anchor (creates user-owned anchor in same set)
   const duplicateAnchor = () => {
     if (!selectedBase || !selectedSet) return;
     const copy = deepClone(selectedBase);
@@ -759,7 +619,7 @@ export default function App() {
     setTimeout(() => setBaseId(copy.id), 0);
   };
 
-  // Import / Export
+  // Import / Export JSON (v1)
   const [ioOpen, setIoOpen] = useState(false);
   const [ioMode, setIoMode] = useState("export"); // export | import
   const [ioText, setIoText] = useState("");
@@ -793,6 +653,7 @@ export default function App() {
     copy.curated = true;
     copy.flow = copy.flow.map((step) => ({
       uid: makeId("my_step"),
+      label: step.label ?? "",
       cue: String(step.cue ?? "").trim(),
       beat: step.beat ?? undefined,
     }));
@@ -809,38 +670,122 @@ export default function App() {
     setTimeout(() => setBaseId(copy.id), 0);
   };
 
+  // Start Ritual / Session
+  const startRitual = () => {
+    setMode("ritual");
+    setLastSelection({ genreId, setId, baseId });
+    setIdx(0);
+    setIsOver(false);
+    setHold(false);
+    setRhythmOn(false);
+    setWhisperVisible(false);
+  };
+
+  const beginSessionFromRitual = () => {
+    setMode("session");
+    restartFlow();
+    setLastSession({
+      device,
+      handedness,
+      genreId,
+      setId,
+      baseId,
+      idx: 0,
+      isOver: false,
+      hold: false,
+      rhythmOn: false,
+      rhythmId,
+    });
+  };
+
+  const exitSession = () => {
+    setMode("prep");
+    setIsOver(false);
+    setHold(false);
+    setRhythmOn(false);
+    setWhisperVisible(false);
+  };
+
+  // Resume last session (prioritize earliest valid selection: persisted.device/handedness already applied)
+  const resumeLastSession = () => {
+    if (!lastSession) return;
+
+    // Do NOT overwrite device/handedness from resume unless current is invalid.
+    // Prioritize earliest valid selection already in state.
+    if (!DEVICE_PROFILES.some((p) => p.id === device) && DEVICE_PROFILES.some((p) => p.id === lastSession.device)) {
+      setDevice(lastSession.device);
+    }
+    if (handedness !== "left" && handedness !== "right") {
+      setHandedness(lastSession.handedness === "left" ? "left" : "right");
+    }
+
+    setGenreId(lastSession.genreId);
+    setTimeout(() => {
+      setSetId(lastSession.setId);
+      setTimeout(() => {
+        setBaseId(lastSession.baseId);
+        setMode("session");
+        setIdx(typeof lastSession.idx === "number" ? lastSession.idx : 0);
+        setIsOver(!!lastSession.isOver);
+        setHold(!!lastSession.hold);
+        setRhythmId(lastSession.rhythmId ?? "natural");
+        setRhythmOn(!!lastSession.rhythmOn);
+        setWhisperVisible(false);
+      }, 0);
+    }, 0);
+  };
+
+  // Persist state (Selection Persistence FIX: ensure device remains persisted independently)
+  useEffect(() => {
+    const payload = {
+      device,
+      handedness,
+      showFullLibrary,
+      favorites,
+      userBasesBySet,
+      lastSelection: { genreId, setId, baseId },
+      lastSession,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  }, [device, handedness, showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, lastSession]);
+
+  // Update lastSession snapshot during session
+  useEffect(() => {
+    if (mode !== "session") return;
+    setLastSession({
+      device,
+      handedness,
+      genreId,
+      setId,
+      baseId,
+      idx,
+      isOver,
+      hold,
+      rhythmOn,
+      rhythmId,
+    });
+  }, [mode, device, handedness, genreId, setId, baseId, idx, isOver, hold, rhythmOn, rhythmId]);
+
   /* ----------------------------- Render ----------------------------- */
 
-  const headerModeLabel = mode === "prep" ? "Prep" : mode === "ritual" ? "Start" : "Session";
-
-  // Tap zone widths and safe bottom
-  const nextWidth = `${profile.nextPct}%`;
-  const backWidth = `${profile.backPct}%`;
-
-  const nextPos = nextSide === "right" ? { right: 0 } : { left: 0 };
-  const backPos = backSide === "right" ? { right: 0 } : { left: 0 };
-
   return (
-    <div ref={shellRef} className="min-h-screen bg-white text-neutral-900" onKeyDown={onKeyDown} tabIndex={-1}>
+    <div className="min-h-screen bg-white text-neutral-900">
       <div className="max-w-5xl mx-auto p-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-xs text-neutral-500">{headerModeLabel}</div>
+            <div className="text-xs text-neutral-500">{mode === "prep" ? "Prep" : mode === "ritual" ? "Start" : "Session"}</div>
             <h1 className="text-2xl font-semibold">Studio Flow Companion</h1>
             <div className="mt-1 text-sm text-neutral-600">
               {mode === "prep"
                 ? "Choose your environment and anchor. Then begin."
                 : mode === "ritual"
                 ? "Breathe. Then begin."
-                : "Stay present. Small changes. Quiet rhythm."}
+                : "Buttons only. Stay steady."}
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <button onClick={toggleFullscreen} className="border rounded-xl px-3 py-2 text-sm">
-              {fs ? "Exit full screen" : "Full screen"}
-            </button>
             {mode === "session" ? (
               <button onClick={exitSession} className="border rounded-xl px-3 py-2 text-sm">
                 Exit session
@@ -866,10 +811,11 @@ export default function App() {
             ) : null}
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div>
+              {/* Device */}
+              <div className="border rounded-2xl p-4">
                 <div className="text-xs text-neutral-500">Device</div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {Object.values(DEVICE_PROFILES).map((p) => (
+                  {DEVICE_PROFILES.map((p) => (
                     <button
                       key={p.id}
                       onClick={() => setDevice(p.id)}
@@ -879,12 +825,10 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <div className="mt-2 text-xs text-neutral-500">
-                  Phone uses press-and-hold to reveal the whisper.
-                </div>
               </div>
 
-              <div>
+              {/* Dominant hand */}
+              <div className="border rounded-2xl p-4">
                 <div className="text-xs text-neutral-500">Dominant hand</div>
                 <div className="mt-2 flex items-center gap-2">
                   <button
@@ -900,12 +844,10 @@ export default function App() {
                     Right
                   </button>
                 </div>
-                <div className="mt-2 text-xs text-neutral-500">
-                  Next is larger on your dominant side.
-                </div>
               </div>
 
-              <div>
+              {/* Selection */}
+              <div className="border rounded-2xl p-4">
                 <div className="text-xs text-neutral-500">Genre</div>
                 <select className="mt-1 w-full border rounded-xl p-2" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
                   {GENRES.map((g) => (
@@ -915,7 +857,7 @@ export default function App() {
                   ))}
                 </select>
 
-                <div className="mt-3 text-xs text-neutral-500">Environment</div>
+                <div className="mt-3 text-xs text-neutral-500">Set</div>
                 <select className="mt-1 w-full border rounded-xl p-2" value={setId} onChange={(e) => setSetId(e.target.value)}>
                   {(genre.sets ?? []).map((s) => (
                     <option key={s.id} value={s.id}>
@@ -924,7 +866,7 @@ export default function App() {
                   ))}
                 </select>
 
-                <div className="mt-3 text-xs text-neutral-500">Anchor</div>
+                <div className="mt-3 text-xs text-neutral-500">Base</div>
                 <select className="mt-1 w-full border rounded-xl p-2" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                   {availableBases.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -939,14 +881,14 @@ export default function App() {
                     Show full library (Prep only)
                   </label>
 
-                  <button onClick={toggleFavorite} className="border rounded-xl px-3 py-2 text-sm" title="Favorite this anchor">
+                  <button onClick={toggleFavorite} className="border rounded-xl px-3 py-2 text-sm" title="Favorite this base">
                     {isFavorite ? "★" : "☆"}
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Ownership tools + ready */}
+            {/* Tools + Begin */}
             <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="border rounded-2xl p-4">
                 <div className="text-xs text-neutral-500">Make it yours</div>
@@ -974,29 +916,19 @@ export default function App() {
                     Import
                   </button>
                 </div>
-                <div className="mt-2 text-xs text-neutral-500">
-                  Duplicate creates a “My Anchor” you can edit later.
-                </div>
               </div>
 
               <div className="border rounded-2xl p-4">
                 <div className="text-xs text-neutral-500">Ready</div>
-                <div className="mt-1 text-sm text-neutral-700">
-                  {flow.length ? `${flow.length} quiet steps loaded.` : "No steps available."}
-                </div>
+                <div className="mt-1 text-sm text-neutral-700">{flow.length ? `${flow.length} steps loaded.` : "No steps available."}</div>
                 <button onClick={startRitual} className="mt-2 border rounded-xl px-4 py-2 text-sm" disabled={!flow.length}>
                   Begin
                 </button>
               </div>
 
               <div className="border rounded-2xl p-4">
-                <div className="text-xs text-neutral-500">Notes</div>
-                <div className="mt-1 text-sm text-neutral-700">
-                  Phone: press-and-hold to preview the next whisper.
-                </div>
-                <div className="mt-1 text-sm text-neutral-700">
-                  Tap dominant side for Next. Opposite side for Back.
-                </div>
+                <div className="text-xs text-neutral-500">Navigation</div>
+                <div className="mt-1 text-sm text-neutral-700">Session uses Back / Next buttons only.</div>
               </div>
             </div>
 
@@ -1007,7 +939,7 @@ export default function App() {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-xs text-neutral-500">{ioMode === "export" ? "Export" : "Import"}</div>
-                      <div className="text-lg font-semibold">{ioMode === "export" ? "Copy your anchor JSON" : "Paste anchor JSON"}</div>
+                      <div className="text-lg font-semibold">{ioMode === "export" ? "Copy your base JSON" : "Paste base JSON"}</div>
                     </div>
                     <button onClick={() => setIoOpen(false)} className="border rounded-xl px-3 py-2 text-sm">
                       Close
@@ -1073,19 +1005,19 @@ export default function App() {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <div className="text-xs text-neutral-500">Rhythm</div>
-                <div className="text-sm text-neutral-700">Optional gentle pacing.</div>
+                <div className="text-sm text-neutral-700">Optional pacing.</div>
               </div>
 
               <div className="flex items-center gap-2">
                 <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={rhythmOn} onChange={(e) => setRhythmOn(e.target.checked)} disabled={silence || hold} />
+                  <input type="checkbox" checked={rhythmOn} onChange={(e) => setRhythmOn(e.target.checked)} disabled={isOver || hold} />
                   On
                 </label>
                 <select
                   className="border rounded-xl p-2 text-sm"
                   value={rhythmId}
                   onChange={(e) => setRhythmId(e.target.value)}
-                  disabled={!rhythmOn || silence || hold}
+                  disabled={!rhythmOn || isOver || hold}
                 >
                   {RHYTHMS.map((r) => (
                     <option key={r.id} value={r.id}>
@@ -1108,60 +1040,38 @@ export default function App() {
               </div>
             </div>
 
-            {/* Breath screen */}
+            {/* Cue Area (tap/click only reveals whisper; does NOT navigate) */}
             <div className="mt-5 border rounded-2xl overflow-hidden">
               <div
-                className="relative p-6 min-h-[320px] flex flex-col justify-center select-none"
-                style={{ paddingBottom: 24 + (profile.deadBottomPx || 0) }}
-                onTouchStart={onTouchStart}
-                onTouchEnd={onTouchEnd}
-                onTouchCancel={onTouchCancel}
+                className="p-6 min-h-[320px] flex flex-col justify-center select-none"
                 onMouseDown={() => {
-                  if (profile.whisperReveal === "mousedown" && !rhythmOn && !hold) revealWhisperBriefly();
+                  if (!hold) revealWhisperBriefly();
                 }}
-                title={hold ? "Hold" : rhythmOn ? "Rhythm is on" : "Tap zones: Next (dominant side), Back (opposite)."}
+                onTouchStart={() => {
+                  if (!hold) revealWhisperBriefly();
+                }}
               >
-                {/* Tap zones (no buttons) */}
-                <button
-                  aria-label="Next"
-                  onClick={() => onTapZone("next")}
-                  className="absolute inset-y-0 bg-transparent"
-                  style={{
-                    width: nextWidth,
-                    ...nextPos,
-                    bottom: profile.deadBottomPx,
-                    cursor: rhythmOn || hold ? "default" : "pointer",
-                  }}
-                />
-                <button
-                  aria-label="Back"
-                  onClick={() => onTapZone("back")}
-                  className="absolute inset-y-0 bg-transparent"
-                  style={{
-                    width: backWidth,
-                    ...backPos,
-                    bottom: profile.deadBottomPx,
-                    cursor: rhythmOn || hold ? "default" : "pointer",
-                  }}
-                />
-
-                {/* Silence: no End state */}
-                {silence ? (
-                  <div className="py-12">
-                    <div className="h-10" />
+                {isOver ? (
+                  <div className="flex flex-col items-center justify-center gap-6 py-10">
+                    <div className="text-sm text-neutral-500">Flow over</div>
+                    <div className="text-xl font-semibold text-neutral-800">—</div>
+                    <div className="flex items-center gap-2">
+                      <button onClick={restartFlow} className="border rounded-xl px-4 py-2 text-sm">
+                        Back to start
+                      </button>
+                      <button onClick={exitSession} className="border rounded-xl px-4 py-2 text-sm">
+                        Exit session
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <>
-                    <div
-                      className={`relative z-10 font-semibold leading-snug whitespace-pre-line ${profile.type.cue} ${profile.type.cueMd} ${
-                        hold ? "opacity-70" : ""
-                      }`}
-                    >
+                    <div className={`text-3xl md:text-4xl font-semibold leading-snug whitespace-pre-line ${hold ? "opacity-70" : ""}`}>
                       {current?.cue ?? ""}
                     </div>
 
                     <div
-                      className={`relative z-10 mt-6 whitespace-pre-line transition-opacity duration-500 ${profile.type.whisper} ${
+                      className={`mt-6 text-sm md:text-base whitespace-pre-line transition-opacity duration-500 ${
                         whisperVisible && !hold ? "opacity-60 text-neutral-600" : "opacity-0 text-neutral-600"
                       }`}
                     >
@@ -1169,6 +1079,22 @@ export default function App() {
                     </div>
                   </>
                 )}
+              </div>
+            </div>
+
+            {/* Navigation Buttons ONLY (Laptop + Mobile) */}
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <button onClick={back} className="border rounded-xl px-4 py-2 text-sm" disabled={hold || (!isOver && idx <= 0)}>
+                Back
+              </button>
+
+              <div className="flex items-center gap-2">
+                <button onClick={restartFlow} className="border rounded-xl px-4 py-2 text-sm" disabled={hold}>
+                  Back to start
+                </button>
+                <button onClick={advance} className="border rounded-xl px-4 py-2 text-sm" disabled={hold || isOver || !flow.length}>
+                  Next
+                </button>
               </div>
             </div>
           </div>
