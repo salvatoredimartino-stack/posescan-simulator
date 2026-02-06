@@ -625,22 +625,27 @@ function Styles() {
         justify-content:center;
       }
       .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
+/* HERO cue text (big, but not ridiculous) */
+.cueWrap{
+  width: 100%;
+  max-width: 30ch;              /* slightly wider lines */
+  text-align: left;
+  position: relative;
+  z-index: 1;
 
-      /* HERO cue text */
-      .cueWrap{
-        width: 100%;
-        max-width: 24ch; /* forces short lines */
-        text-align: left;
-        position: relative;
-        z-index: 1;
-      }
-      .cue{
-        font-size: clamp(44px, 6.4vw, 82px);
-        line-height: 1.02;
-        font-weight: 950;
-        letter-spacing: -0.03em;
-        white-space: pre-line;
-      }
+  /* prevents clipping behind bars on smaller viewports */
+  max-height: calc(100vh - 260px);
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.cue{
+  font-size: clamp(28px, 4.2vw, 56px);  /* 👈 smaller range */
+  line-height: 1.06;
+  font-weight: 950;
+  letter-spacing: -0.02em;
+  white-space: pre-line;
+}
 
       .nextBox{
         margin-top: 18px;
@@ -651,7 +656,13 @@ function Styles() {
         box-shadow: 0 10px 22px rgba(15,23,42,.08);
       }
       .nextLabel{ font-size:12px; font-weight: 900; color: var(--muted); }
-      .nextCue{ margin-top:6px; font-size: 20px; font-weight: 900; white-space: pre-line; line-height: 1.18; }
+      .nextCue{
+  margin-top:6px;
+  font-size: 16px;     /* was 20px */
+  font-weight: 850;
+  white-space: pre-line;
+  line-height: 1.22;
+}
 
       .hint{ margin-top: 16px; font-size: 14px; color: var(--muted); }
 
