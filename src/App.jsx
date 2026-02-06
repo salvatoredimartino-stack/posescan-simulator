@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 /* =========================================
    ERROR BOUNDARY
@@ -978,10 +978,12 @@ function Styles() {
 
       /* SESSION */
       .session{
-        position: fixed; inset: 0; z-index: 9999;
-        background: var(--bg);
-        color: var(--ink);
-      }
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  color: var(--ink);
+  --topbar-h: 0px;
+  --bottombar-h: 0px;
+}
       .topBar{
         position: fixed; left:0; right:0; top:0; z-index: 2;
         padding-top: env(safe-area-inset-top);
@@ -1070,16 +1072,12 @@ function Styles() {
         .exitBtn{ grid-column:auto; }
       }
 
-      .main{
-        position:absolute; inset:0;
-        padding-top: calc(env(safe-area-inset-top) + 210px);
-        padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
-      }
-      @media (min-width: 860px){
-        .main{
-          padding-top: calc(env(safe-area-inset-top) + 118px);
-        }
-      }
+     .main{
+  position:absolute; inset:0;
+  padding-top: calc(env(safe-area-inset-top) + var(--topbar-h, 0px));
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottombar-h, 0px));
+}
+      
 
       .mainPad{ height:100%; padding: 14px; }
       .stage{
@@ -1209,6 +1207,42 @@ function AppInner() {
   const [favorites, setFavorites] = useState(persisted?.favorites ?? {});
   const [userBasesBySet, setUserBasesBySet] = useState(persisted?.userBasesBySet ?? {});
   const [lastSelection, setLastSelection] = useState(persisted?.lastSelection ?? null);
+  
+  const sessionRef = useRef(null);
+  const topBarRef = useRef(null);
+  const bottomBarRef = useRef(null);
+  useLayoutEffect(() => {
+  if (mode !== "session") return;
+
+  const elSession = sessionRef.current;
+  const elTop = topBarRef.current;
+  const elBottom = bottomBarRef.current;
+
+  if (!elSession) return;
+
+  const apply = () => {
+    const topH = elTop ? Math.ceil(elTop.getBoundingClientRect().height) : 0;
+    const bottomH = elBottom ? Math.ceil(elBottom.getBoundingClientRect().height) : 0;
+
+    elSession.style.setProperty("--topbar-h", `${topH}px`);
+    elSession.style.setProperty("--bottombar-h", `${bottomH}px`);
+  };
+
+  apply();
+
+  const ro = new ResizeObserver(() => apply());
+  if (elTop) ro.observe(elTop);
+  if (elBottom) ro.observe(elBottom);
+
+  window.addEventListener("resize", apply);
+  window.addEventListener("orientationchange", apply);
+
+  return () => {
+    ro.disconnect();
+    window.removeEventListener("resize", apply);
+    window.removeEventListener("orientationchange", apply);
+  };
+}, [mode, showNextPreview, showRefImage, autoOn, rhythmId, isOver, flow.length]);
 
   const GENRES = useMemo(() => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet), [userBasesBySet]);
 
@@ -1697,8 +1731,8 @@ function AppInner() {
       )}
 
       {mode === "session" && (
-        <div className="session">
-          <div className="topBar">
+  <div className="session" ref={sessionRef}>
+          <div className="topBar" ref={topBarRef}>
             <div className="topInner">
               <div className="topRow">
                 <div style={{ flex: 1, minWidth: 260 }}>
@@ -1823,7 +1857,7 @@ function AppInner() {
           </div>
 
           {!isOver ? (
-            <div className="bottomBar">
+            <div className="bottomBar" ref={bottomBarRef}>
               <div className="bottomInner">
                 <div className="navRow">
                   <button className="btn navBtn" onClick={back} disabled={!flow.length || idx <= 0} aria-label="Back">
