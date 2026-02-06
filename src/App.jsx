@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /* =========================================
-   FIX: Robust asset paths for Vite base paths
-   - Works whether your app is served at "/" or "/some/subfolder/"
-   - Put images in: public/poses/...
-   - Then reference with: ASSET("poses/.../step1.png")
+   ASSET PATHS (CRITICAL)
+   Your dev server is mounted at:
+     http://localhost:5177/posescan-simulator/
+   So assets MUST resolve via BASE_URL.
+   Example working URL:
+     /posescan-simulator/poses/beauty/...
    ========================================= */
 const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* ================================
    ONE sketch per base:
-   - Every step in that base points to the same image.
+   - Every step in a base points to the same image path.
    - Expected file locations:
      public/poses/beauty/<set>/<base>/step1.png
    ================================ */
@@ -321,96 +323,21 @@ const BASE_GENRES = [
                 cue: "Symmetric elbows, tapered arms",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
-              {
-                uid: "beauty_table_base1_step2",
-                label: "Pose 2",
-                cue: "Asymmetric, right elbow out",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step3",
-                label: "Pose 3",
-                cue: "Hands up, right higher, tilt",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step4",
-                label: "Pose 4",
-                cue: "Elbows together, frame face",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step5",
-                label: "Pose 5",
-                cue: "Chest away, neck long",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step6",
-                label: "Pose 6",
-                cue: "Hands out, crossing lightly",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step7",
-                label: "Pose 7",
-                cue: "Smoking hands, elbows in",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step8",
-                label: "Pose 8",
-                cue: "Hands behind hair, elbows crossed",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step9",
-                label: "Pose 9",
-                cue: "Elbow one way, hands across",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step10",
-                label: "Pose 10",
-                cue: "Body out, head left",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step11",
-                label: "Pose 11",
-                cue: "Hand in hair, body sideways",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step12",
-                label: "Pose 12",
-                cue: "Both hands up",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step13",
-                label: "Pose 13",
-                cue: "Hands tucked, tight composition",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step14",
-                label: "Pose 14",
-                cue: "Hugging motion, one hand off",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step15",
-                label: "Pose 15",
-                cue: "Double hug, compress shape",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step16",
-                label: "Pose 16",
-                cue: "Elbow off, one up one down, tilt",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
+              { uid: "beauty_table_base1_step2", label: "Pose 2", cue: "Asymmetric, right elbow out", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step3", label: "Pose 3", cue: "Hands up, right higher, tilt", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step4", label: "Pose 4", cue: "Elbows together, frame face", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step5", label: "Pose 5", cue: "Chest away, neck long", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step6", label: "Pose 6", cue: "Hands out, crossing lightly", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step7", label: "Pose 7", cue: "Smoking hands, elbows in", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step8", label: "Pose 8", cue: "Hands behind hair, elbows crossed", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step9", label: "Pose 9", cue: "Elbow one way, hands across", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step10", label: "Pose 10", cue: "Body out, head left", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step11", label: "Pose 11", cue: "Hand in hair, body sideways", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step12", label: "Pose 12", cue: "Both hands up", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step13", label: "Pose 13", cue: "Hands tucked, tight composition", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step14", label: "Pose 14", cue: "Hugging motion, one hand off", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step15", label: "Pose 15", cue: "Double hug, compress shape", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
+              { uid: "beauty_table_base1_step16", label: "Pose 16", cue: "Elbow off, one up one down, tilt", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
             ],
           },
         ],
@@ -425,66 +352,16 @@ const BASE_GENRES = [
             name: "Base Pose 1",
             curated: true,
             flow: [
-              {
-                uid: "beauty_box_base1_step1",
-                label: "Base Pose 1",
-                cue: "Recline on box, elbow down, body relaxed",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step2",
-                label: "Pose 2",
-                cue: "Hands inside, elbows supported",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step3",
-                label: "Pose 3",
-                cue: "Hand behind hair",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step4",
-                label: "Pose 4",
-                cue: "Triangle shape, elbow anchored",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step5",
-                label: "Pose 5",
-                cue: "Elbows together, hands on chin",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step6",
-                label: "Pose 6",
-                cue: "Rotate body around elbows",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step7",
-                label: "Pose 7",
-                cue: "Feet on box, hug knees",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step8",
-                label: "Pose 8",
-                cue: "Remove box, horizontal tilt",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step9",
-                label: "Pose 9",
-                cue: "Big smile, tilt, hold",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step10",
-                label: "Pose 10",
-                cue: "One knee hugged, elbow down",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
+              { uid: "beauty_box_base1_step1", label: "Base Pose 1", cue: "Recline on box, elbow down, body relaxed", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step2", label: "Pose 2", cue: "Hands inside, elbows supported", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step3", label: "Pose 3", cue: "Hand behind hair", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step4", label: "Pose 4", cue: "Triangle shape, elbow anchored", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step5", label: "Pose 5", cue: "Elbows together, hands on chin", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step6", label: "Pose 6", cue: "Rotate body around elbows", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step7", label: "Pose 7", cue: "Feet on box, hug knees", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step8", label: "Pose 8", cue: "Remove box, horizontal tilt", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step9", label: "Pose 9", cue: "Big smile, tilt, hold", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
+              { uid: "beauty_box_base1_step10", label: "Pose 10", cue: "One knee hugged, elbow down", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
             ],
           },
 
@@ -493,42 +370,12 @@ const BASE_GENRES = [
             name: "Base Pose 2",
             curated: true,
             flow: [
-              {
-                uid: "beauty_box_base2_step1",
-                label: "Base Pose 2",
-                cue: "Seated sideways on box, torso upright, knees angled",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step2",
-                label: "Pose 2",
-                cue: "Elbow resting on knee, hand relaxed",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step3",
-                label: "Pose 3",
-                cue: "Lean slightly forward, keep spine long",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step4",
-                label: "Pose 4",
-                cue: "Hands together, soften shoulders",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step5",
-                label: "Pose 5",
-                cue: "Chin around, small tilt",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step6",
-                label: "Pose 6",
-                cue: "Change composition, tighter crop",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
+              { uid: "beauty_box_base2_step1", label: "Base Pose 2", cue: "Seated sideways on box, torso upright, knees angled", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "beauty_box_base2_step2", label: "Pose 2", cue: "Elbow resting on knee, hand relaxed", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "beauty_box_base2_step3", label: "Pose 3", cue: "Lean slightly forward, keep spine long", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "beauty_box_base2_step4", label: "Pose 4", cue: "Hands together, soften shoulders", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "beauty_box_base2_step5", label: "Pose 5", cue: "Chin around, small tilt", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "beauty_box_base2_step6", label: "Pose 6", cue: "Change composition, tighter crop", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
             ],
           },
         ],
@@ -1116,10 +963,16 @@ export default function App() {
               <div
                 className="p-6 min-h-[360px] flex flex-col justify-center select-none"
                 onMouseDown={() => {
-                  if (!hold) revealWhisperBriefly();
+                  if (!hold) setWhisperVisible(true);
+                }}
+                onMouseUp={() => {
+                  setWhisperVisible(false);
                 }}
                 onTouchStart={() => {
-                  if (!hold) revealWhisperBriefly();
+                  if (!hold) setWhisperVisible(true);
+                }}
+                onTouchEnd={() => {
+                  setWhisperVisible(false);
                 }}
               >
                 {isOver ? (
@@ -1148,7 +1001,7 @@ export default function App() {
                     </div>
 
                     <div
-                      className={`mt-6 text-sm md:text-base whitespace-pre-line transition-opacity duration-500 ${
+                      className={`mt-6 text-sm md:text-base whitespace-pre-line transition-opacity duration-300 ${
                         whisperVisible && !hold ? "opacity-60 text-neutral-600" : "opacity-0 text-neutral-600"
                       }`}
                     >
