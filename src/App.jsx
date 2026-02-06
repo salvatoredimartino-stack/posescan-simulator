@@ -2,19 +2,16 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 /* =========================================
    ASSET PATHS (CRITICAL)
-   Your dev server is mounted at:
+   Dev server mounted at:
      http://localhost:5177/posescan-simulator/
-   So assets MUST resolve via BASE_URL.
+   Assets MUST resolve via BASE_URL.
    Example working URL:
      /posescan-simulator/poses/beauty/...
    ========================================= */
 const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* ================================
-   ONE sketch per base:
-   - Every step in a base points to the same image path.
-   - Expected file locations:
-     public/poses/beauty/<set>/<base>/step1.png
+   DATA
    ================================ */
 
 const BASE_GENRES = [
@@ -317,12 +314,7 @@ const BASE_GENRES = [
             name: "Base Pose 1",
             curated: true,
             flow: [
-              {
-                uid: "beauty_table_base1_step1",
-                label: "Base Pose 1",
-                cue: "Symmetric elbows, tapered arms",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
+              { uid: "beauty_table_base1_step1", label: "Base Pose 1", cue: "Symmetric elbows, tapered arms", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
               { uid: "beauty_table_base1_step2", label: "Pose 2", cue: "Asymmetric, right elbow out", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
               { uid: "beauty_table_base1_step3", label: "Pose 3", cue: "Hands up, right higher, tilt", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
               { uid: "beauty_table_base1_step4", label: "Pose 4", cue: "Elbows together, frame face", img: ASSET("poses/beauty/set4-table/base1/step1.png") },
@@ -579,6 +571,16 @@ const RHYTHMS = [
   { id: "gentle", label: "Gentle", seconds: 6 },
 ];
 
+const REHEARSAL_PLAN_7_DAYS = [
+  { day: "Day 1", text: "Set 1 (Seated stool) only — run 3 times" },
+  { day: "Day 2", text: "Set 2 (Standing) — run 3 times" },
+  { day: "Day 3", text: "Set 3 (Wall) — run 3 times" },
+  { day: "Day 4", text: "Set 4 (Table) — run 3 times" },
+  { day: "Day 5", text: "Set 5 (Box) — run 3 times" },
+  { day: "Day 6", text: "Full session (Sets 1–5) once, slow" },
+  { day: "Day 7", text: "Full session once, normal pace" },
+];
+
 const STORAGE_KEY = "pose_rehearsal_app_state_v3";
 
 function safeJsonParse(str, fallback) {
@@ -719,6 +721,17 @@ export default function App() {
     return flow[ni] ?? null;
   }, [flow, idx]);
 
+  // NEW: progress values for peripheral-vision UI
+  const stepNow = useMemo(() => {
+    if (!flow.length) return 0;
+    return isOver ? flow.length : Math.min(idx + 1, flow.length);
+  }, [flow.length, idx, isOver]);
+
+  const progressPct = useMemo(() => {
+    if (!flow.length) return 0;
+    return Math.round((stepNow / flow.length) * 100);
+  }, [flow.length, stepNow]);
+
   const restartFlow = useCallback(() => {
     setIdx(0);
     setIsOver(false);
@@ -843,191 +856,400 @@ export default function App() {
     setWhisperVisible(false);
   };
 
+  const copyRehearsalPlan = async () => {
+    const text = [
+      "7-Day Rehearsal Plan (Session in a Week)",
+      "",
+      ...REHEARSAL_PLAN_7_DAYS.map((x) => `${x.day}: ${x.text}`),
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      revealWhisperBriefly(); // tiny feedback reuse (non-blocking)
+    } catch {
+      // no-op: clipboard may be blocked; still fine
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <div className="max-w-5xl mx-auto p-6">
-        <div className="flex items-start justify-between gap-3">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+      <div className="mx-auto max-w-5xl px-4 py-6 md:py-10">
+        {/* Top bar (prep only). Session is full-screen overlay below. */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="text-xs text-neutral-500">{mode === "prep" ? "Prep" : "Session"}</div>
-            <h1 className="text-2xl font-semibold">Pose Flow Operator</h1>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+              <span className={`h-2 w-2 rounded-full ${mode === "prep" ? "bg-amber-400" : "bg-emerald-400"}`} />
+              {mode === "prep" ? "Prep" : "Session"}
+            </div>
+
+            <h1 className="mt-3 text-3xl md:text-4xl font-semibold tracking-tight">Pose Flow Operator</h1>
+            <p className="mt-1 text-sm text-slate-300">Clean flow. Clear cues. No improvising.</p>
           </div>
 
-          {mode === "session" ? (
-            <button onClick={exitSession} className="border rounded-xl px-3 py-2 text-sm">
+          {mode === "prep" ? null : (
+            <button
+              onClick={exitSession}
+              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 shadow-sm hover:bg-white/10 transition"
+            >
               Exit session
             </button>
-          ) : null}
+          )}
         </div>
 
+        {/* PREP */}
         {mode === "prep" && (
-          <div className="mt-6 border rounded-2xl p-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div>
-                <div className="text-xs text-neutral-500">Genre</div>
-                <select className="mt-1 w-full border rounded-xl p-2" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
-                  {GENRES.map((g) => (
-                    <option key={g.id} value={g.id}>
-                      {g.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <div className="text-xs text-neutral-500">Set</div>
-                <select className="mt-1 w-full border rounded-xl p-2" value={setId} onChange={(e) => setSetId(e.target.value)}>
-                  {(genre.sets ?? []).map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <div className="text-xs text-neutral-500">Base</div>
-                <select className="mt-1 w-full border rounded-xl p-2" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
-                  {availableBases.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.name}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="mt-2 flex items-center justify-between">
-                  <label className="flex items-center gap-2 text-sm text-neutral-700">
-                    <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
-                    Show full library (Prep only)
-                  </label>
-
-                  <button onClick={toggleFavorite} className="border rounded-xl px-3 py-2 text-sm" title="Favorite this base">
-                    {isFavorite ? "★" : "☆"}
-                  </button>
+          <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/30 backdrop-blur-xl">
+            <div className="p-5 md:p-6">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                {/* Genre */}
+                <div>
+                  <div className="text-xs font-medium text-slate-300">Genre</div>
+                  <select
+                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
+                    value={genreId}
+                    onChange={(e) => setGenreId(e.target.value)}
+                  >
+                    {GENRES.map((g) => (
+                      <option key={g.id} value={g.id} className="bg-slate-900">
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                <div className="mt-2 flex flex-wrap gap-2">
-                  <button onClick={duplicateAnchor} className="border rounded-xl px-3 py-2 text-sm" disabled={!selectedBase}>
-                    Duplicate
-                  </button>
+                {/* Set */}
+                <div>
+                  <div className="text-xs font-medium text-slate-300">Set</div>
+                  <select
+                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
+                    value={setId}
+                    onChange={(e) => setSetId(e.target.value)}
+                  >
+                    {(genre.sets ?? []).map((s) => (
+                      <option key={s.id} value={s.id} className="bg-slate-900">
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Base */}
+                <div>
+                  <div className="text-xs font-medium text-slate-300">Base</div>
+                  <select
+                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
+                    value={baseId}
+                    onChange={(e) => setBaseId(e.target.value)}
+                  >
+                    {availableBases.map((b) => (
+                      <option key={b.id} value={b.id} className="bg-slate-900">
+                        {b.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* toggles row */}
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <label className="flex items-center gap-2 text-sm text-slate-200 select-none">
+                      <input
+                        type="checkbox"
+                        checked={showFullLibrary}
+                        onChange={(e) => setShowFullLibrary(e.target.checked)}
+                        className="h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500 focus:ring-4 focus:ring-indigo-500/20"
+                      />
+                      <span className="text-slate-200">Show full library</span>
+                      <span className="text-xs text-slate-400">(Prep only)</span>
+                    </label>
+
+                    <button
+                      onClick={toggleFavorite}
+                      className={`h-10 w-12 rounded-2xl border transition shadow-sm
+                        ${
+                          isFavorite
+                            ? "border-fuchsia-400/40 bg-fuchsia-500/15 text-fuchsia-200 hover:bg-fuchsia-500/20"
+                            : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                        }`}
+                      title="Favorite this base"
+                    >
+                      <span className="text-lg leading-none">{isFavorite ? "★" : "☆"}</span>
+                    </button>
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button
+                      onClick={duplicateAnchor}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition disabled:opacity-40 disabled:hover:bg-white/5"
+                      disabled={!selectedBase}
+                    >
+                      Duplicate
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-5 flex items-center justify-end">
-              <button onClick={beginSession} className="border rounded-xl px-4 py-2 text-sm" disabled={!flow.length}>
-                Begin
-              </button>
-            </div>
-          </div>
-        )}
-
-        {mode === "session" && (
-          <div className="mt-6 border rounded-2xl p-5">
-            <div className="flex items-center justify-between gap-3">
-              <div className="text-xs text-neutral-500">Rhythm</div>
-
-              <div className="flex items-center gap-2">
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={rhythmOn} onChange={(e) => setRhythmOn(e.target.checked)} disabled={isOver || hold} />
-                  On
-                </label>
-
-                <select
-                  className="border rounded-xl p-2 text-sm"
-                  value={rhythmId}
-                  onChange={(e) => setRhythmId(e.target.value)}
-                  disabled={!rhythmOn || isOver || hold}
-                >
-                  {RHYTHMS.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-
+              <div className="mt-6 flex items-center justify-end">
                 <button
-                  onClick={() => {
-                    setHold((v) => !v);
-                    setRhythmOn(false);
-                    setWhisperVisible(false);
-                  }}
-                  className={`border rounded-full w-10 h-10 flex items-center justify-center text-sm ${hold ? "bg-neutral-900 text-white" : ""}`}
-                  title="Hold"
+                  onClick={beginSession}
+                  disabled={!flow.length}
+                  className="rounded-2xl px-5 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-900/30 transition
+                    bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110
+                    disabled:opacity-40 disabled:hover:brightness-100"
                 >
-                  ●
+                  Begin session
                 </button>
               </div>
-            </div>
 
-            <div className="mt-5 border rounded-2xl overflow-hidden">
-              <div
-                className="p-6 min-h-[360px] flex flex-col justify-center select-none"
-                onMouseDown={() => {
-                  if (!hold) setWhisperVisible(true);
-                }}
-                onMouseUp={() => {
-                  setWhisperVisible(false);
-                }}
-                onTouchStart={() => {
-                  if (!hold) setWhisperVisible(true);
-                }}
-                onTouchEnd={() => {
-                  setWhisperVisible(false);
-                }}
-              >
-                {isOver ? (
-                  <div className="flex flex-col items-center justify-center gap-6 py-10">
-                    <div className="text-sm text-neutral-500">Flow over</div>
-                    <div className="text-xl font-semibold text-neutral-800">—</div>
-                    <div className="flex items-center gap-2">
-                      <button onClick={restartFlow} className="border rounded-xl px-4 py-2 text-sm">
-                        Back to start
-                      </button>
-                      <button onClick={exitSession} className="border rounded-xl px-4 py-2 text-sm">
-                        Exit session
-                      </button>
+              {/* Rehearsal plan */}
+              <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-sm font-semibold text-slate-100">Rehearsal plan (Session in a week)</div>
+                    <div className="mt-1 text-xs text-slate-300">
+                      Testable in 7 days without changing the core system.
                     </div>
                   </div>
-                ) : (
-                  <>
-                    {current?.img ? (
-                      <div className="mb-4 flex justify-center">
-                        <img src={current.img} alt="" className="max-h-[380px] w-auto object-contain" draggable={false} />
-                      </div>
-                    ) : null}
 
-                    <div className={`text-2xl md:text-3xl font-semibold leading-snug whitespace-pre-line ${hold ? "opacity-70" : ""}`}>
-                      {current?.cue ?? ""}
+                  <button
+                    onClick={copyRehearsalPlan}
+                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition"
+                    title="Copy plan"
+                  >
+                    Copy
+                  </button>
+                </div>
+
+                <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+                  {REHEARSAL_PLAN_7_DAYS.map((x) => (
+                    <div key={x.day} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <div className="text-xs font-medium text-slate-300">{x.day}</div>
+                      <div className="mt-1 text-sm text-slate-100">{x.text}</div>
                     </div>
-
-                    <div
-                      className={`mt-6 text-sm md:text-base whitespace-pre-line transition-opacity duration-300 ${
-                        whisperVisible && !hold ? "opacity-60 text-neutral-600" : "opacity-0 text-neutral-600"
-                      }`}
-                    >
-                      {nextWhisper?.cue ?? ""}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-4 flex items-center justify-between gap-2">
-              <button onClick={back} className="border rounded-xl px-4 py-2 text-sm" disabled={hold || (!isOver && idx <= 0)}>
-                Back
-              </button>
-
-              <div className="flex items-center gap-2">
-                <button onClick={restartFlow} className="border rounded-xl px-4 py-2 text-sm" disabled={hold}>
-                  Back to start
-                </button>
-                <button onClick={advance} className="border rounded-xl px-4 py-2 text-sm" disabled={hold || isOver || !flow.length}>
-                  Next
-                </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         )}
+
+        {/* SESSION: full-screen operator overlay */}
+        {mode === "session" && (
+          <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+            {/* TOP BAR (peripheral-visible progress) */}
+            <div
+              className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl"
+              style={{ paddingTop: "env(safe-area-inset-top)" }}
+            >
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-3">
+                      <div className="text-xs font-medium text-slate-300">Session</div>
+                      <div className="text-xs text-slate-400">
+                        <span className="text-slate-100 font-semibold">{stepNow}</span>
+                        <span className="text-slate-400"> / </span>
+                        <span className="text-slate-200">{flow.length || 0}</span>
+                        <span className="ml-2 text-slate-400">({progressPct}%)</span>
+                      </div>
+                    </div>
+
+                    {/* Big progress bar for peripheral vision */}
+                    <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 transition-all"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={exitSession}
+                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition"
+                    >
+                      Exit
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setHold((v) => !v);
+                        setRhythmOn(false);
+                        setWhisperVisible(false);
+                      }}
+                      className={`rounded-2xl border px-4 py-2 text-sm font-medium transition
+                        ${
+                          hold
+                            ? "border-emerald-400/30 bg-emerald-500/15 text-emerald-200"
+                            : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                        }`}
+                      title="Hold"
+                    >
+                      {hold ? "Hold: ON" : "Hold"}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Rhythm (secondary) */}
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="text-xs font-medium text-slate-300">Rhythm</div>
+
+                    <label className="flex items-center gap-2 text-sm text-slate-200 select-none">
+                      <input
+                        type="checkbox"
+                        checked={rhythmOn}
+                        onChange={(e) => setRhythmOn(e.target.checked)}
+                        disabled={isOver || hold}
+                        className="h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500 focus:ring-4 focus:ring-indigo-500/20 disabled:opacity-40"
+                      />
+                      On
+                    </label>
+
+                    <select
+                      className="appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-100 outline-none hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition disabled:opacity-40"
+                      value={rhythmId}
+                      onChange={(e) => setRhythmId(e.target.value)}
+                      disabled={!rhythmOn || isOver || hold}
+                    >
+                      {RHYTHMS.map((r) => (
+                        <option key={r.id} value={r.id} className="bg-slate-900">
+                          {r.label} ({r.seconds}s)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="text-xs text-slate-400">Press & hold to preview next cue</div>
+                </div>
+              </div>
+            </div>
+
+            {/* MAIN (no scroll; padded for fixed bars + safe areas) */}
+            <div
+              className="absolute inset-0"
+              style={{
+                paddingTop: "calc(env(safe-area-inset-top) + 112px)",
+                paddingBottom: "calc(env(safe-area-inset-bottom) + 96px)",
+              }}
+            >
+              <div className="h-full px-4">
+                <div
+                  className="h-full rounded-3xl border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/30 backdrop-blur-xl overflow-hidden"
+                  onMouseDown={() => {
+                    if (!hold) setWhisperVisible(true);
+                  }}
+                  onMouseUp={() => setWhisperVisible(false)}
+                  onTouchStart={() => {
+                    if (!hold) setWhisperVisible(true);
+                  }}
+                  onTouchEnd={() => setWhisperVisible(false)}
+                  onClick={() => {
+                    // Tap anywhere to advance (one-hand operation)
+                    if (!hold && !isOver) advance();
+                  }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="h-full p-6 md:p-10 flex flex-col justify-center select-none">
+                    {isOver ? (
+                      <div className="flex flex-col items-center justify-center gap-6 text-center">
+                        <div className="text-sm text-slate-300">Flow complete</div>
+                        <div className="text-3xl font-semibold text-slate-100">—</div>
+
+                        <div className="flex flex-wrap items-center justify-center gap-3">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              restartFlow();
+                            }}
+                            className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-200 hover:bg-white/10 transition"
+                          >
+                            Restart
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              exitSession();
+                            }}
+                            className="rounded-2xl px-5 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-900/30 transition
+                              bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110"
+                          >
+                            Exit
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {current?.img ? (
+                          <div className="mb-6 flex justify-center">
+                            <div className="rounded-3xl border border-white/10 bg-white/5 p-3 shadow-xl shadow-black/25">
+                              <img
+                                src={current.img}
+                                alt=""
+                                className="max-h-[280px] md:max-h-[340px] w-auto object-contain rounded-2xl"
+                                draggable={false}
+                              />
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {/* HUGE cue text + short lines (controlled line length) */}
+                        <div className="mx-auto w-full max-w-[22ch] md:max-w-[26ch]">
+                          <div className={`text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05] whitespace-pre-line ${hold ? "opacity-70" : ""}`}>
+                            {current?.cue ?? ""}
+                          </div>
+
+                          {/* Whisper (next cue) */}
+                          <div
+                            className={`mt-6 text-base md:text-lg whitespace-pre-line transition-opacity duration-200 ${
+                              whisperVisible && !hold ? "opacity-70 text-slate-300" : "opacity-0 text-slate-300"
+                            }`}
+                          >
+                            {nextWhisper?.cue ?? ""}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* BOTTOM NAV (2 buttons fixed, thumb-friendly) */}
+            <div
+              className="fixed left-0 right-0 bottom-0 z-50 border-t border-white/10 bg-black/30 backdrop-blur-xl"
+              style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+            >
+              <div className="px-4 py-4">
+                <div className="mx-auto max-w-5xl flex items-center gap-3">
+                  <button
+                    onClick={back}
+                    disabled={hold || (!isOver && idx <= 0)}
+                    className="flex-1 h-14 rounded-2xl border border-white/10 bg-white/5 text-slate-100 text-lg font-medium
+                      hover:bg-white/10 transition disabled:opacity-40 disabled:hover:bg-white/5"
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    onClick={advance}
+                    disabled={hold || isOver || !flow.length}
+                    className="flex-1 h-14 rounded-2xl text-white text-lg font-semibold shadow-lg shadow-indigo-900/30 transition
+                      bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110
+                      disabled:opacity-40 disabled:hover:brightness-100"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* tiny footer (prep only) */}
+        {mode === "prep" ? (
+          <div className="mt-8 text-xs text-slate-400">
+            Tip: press-and-hold during session reveals the next cue.
+          </div>
+        ) : null}
       </div>
     </div>
   );
