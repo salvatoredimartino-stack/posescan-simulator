@@ -2,10 +2,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 /* =========================================
    ASSET PATHS (CRITICAL)
-   Dev server mounted at:
-     http://localhost:5177/posescan-simulator/
    Assets MUST resolve via BASE_URL.
-   Example working URL:
+   Example:
      /posescan-simulator/poses/beauty/...
    ========================================= */
 const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
@@ -66,7 +64,6 @@ const BASE_GENRES = [
               },
             ],
           },
-
           {
             id: "beauty_seated_base2",
             name: "Base Pose 2",
@@ -116,7 +113,6 @@ const BASE_GENRES = [
               },
             ],
           },
-
           {
             id: "beauty_seated_base3",
             name: "Base Pose 3",
@@ -148,7 +144,6 @@ const BASE_GENRES = [
               },
             ],
           },
-
           {
             id: "beauty_seated_base4",
             name: "Base Pose 4",
@@ -182,7 +177,6 @@ const BASE_GENRES = [
           },
         ],
       },
-
       {
         id: "beauty_set2_standing",
         name: "SET 2 — STANDING",
@@ -206,7 +200,6 @@ const BASE_GENRES = [
               },
             ],
           },
-
           {
             id: "beauty_standing_base2",
             name: "Base Pose 2",
@@ -240,7 +233,6 @@ const BASE_GENRES = [
           },
         ],
       },
-
       {
         id: "beauty_set3_wall",
         name: "SET 3 — WALL",
@@ -270,7 +262,6 @@ const BASE_GENRES = [
               },
             ],
           },
-
           {
             id: "beauty_wall_base2",
             name: "Base Pose 2",
@@ -304,7 +295,6 @@ const BASE_GENRES = [
           },
         ],
       },
-
       {
         id: "beauty_set4_table",
         name: "SET 4 — TABLE",
@@ -334,7 +324,6 @@ const BASE_GENRES = [
           },
         ],
       },
-
       {
         id: "beauty_set5_staggered_box",
         name: "SET 5 — STAGGERED SEATING (BOX)",
@@ -356,7 +345,6 @@ const BASE_GENRES = [
               { uid: "beauty_box_base1_step10", label: "Pose 10", cue: "One knee hugged, elbow down", img: ASSET("poses/beauty/set5-box/base1/step1.png") },
             ],
           },
-
           {
             id: "beauty_box_base2",
             name: "Base Pose 2",
@@ -389,13 +377,7 @@ const BASE_GENRES = [
             curated: true,
             flow: [
               { uid: "50p_set1_base1_step1", label: "Base Pose 1", cue: "Seated tall, apple box, chin around, fingertips light" },
-              {
-                uid: "50p_set1_base1_step2",
-                label: "Pose 2",
-                cue: `Hands together and down and forward
-Shoulders dropped
-Remove the second box`,
-              },
+              { uid: "50p_set1_base1_step2", label: "Pose 2", cue: `Hands together and down and forward\nShoulders dropped\nRemove the second box` },
               { uid: "50p_set1_base1_step3", label: "Pose 3", cue: "Comp 1 Baby smile" },
               { uid: "50p_set1_base1_step4", label: "Pose 4", cue: "Comp 2" },
             ],
@@ -414,24 +396,12 @@ Remove the second box`,
               {
                 uid: "50p_set2_base2_step1",
                 label: "Base Pose 2",
-                cue: `Take your body away from the wall
-45 degrees
-Touch body with your hands
-Lean with your body
-Touch up and back
-Chin around
-Tilt the camera`,
+                cue: `Take your body away from the wall\n45 degrees\nTouch body with your hands\nLean with your body\nTouch up and back\nChin around\nTilt the camera`,
               },
               { uid: "50p_set2_base2_step2", label: "Pose 3", cue: "Chin around, soften eyes" },
               { uid: "50p_set2_base2_step3", label: "Pose 4", cue: "Chin down, baby smile" },
               { uid: "50p_set2_base2_step4", label: "Pose 5", cue: "Chin down and horizontal" },
-              {
-                uid: "50p_set2_base2_step5",
-                label: "Pose 6",
-                cue: `Keep your shoulder drop to me
-Roll your shoulder back to the wall
-Change weight to the other foot`,
-              },
+              { uid: "50p_set2_base2_step5", label: "Pose 6", cue: `Keep your shoulder drop to me\nRoll your shoulder back to the wall\nChange weight to the other foot` },
               { uid: "50p_set2_base2_step6", label: "Pose 7", cue: `Hold hands around the body\nShoulders down to me` },
             ],
           },
@@ -446,17 +416,7 @@ Change weight to the other foot`,
             name: "Base Pose 5",
             curated: true,
             flow: [
-              {
-                uid: "50p_set5_base5_step1",
-                label: "Base Pose 5",
-                cue: `Hands down
-Touch
-Elbow back
-Foot towards me
-Chin forward and down
-Drop shoulder down
-Tilt camera`,
-              },
+              { uid: "50p_set5_base5_step1", label: "Base Pose 5", cue: `Hands down\nTouch\nElbow back\nFoot towards me\nChin forward and down\nDrop shoulder down\nTilt camera` },
               { uid: "50p_set5_base5_step2", label: "Pose 6", cue: "Horizontal" },
               { uid: "50p_set5_base5_step3", label: "Pose 7", cue: "Chin forward and down" },
               { uid: "50p_set5_base5_step4", label: "Pose 8", cue: "More air, chin around" },
@@ -480,25 +440,9 @@ Tilt camera`,
             name: "Base Pose 1",
             curated: true,
             flow: [
-              {
-                uid: "pbm_set1_base1_step1",
-                label: "Base Pose 1",
-                cue: `Sitting on a stool
-45 degrees
-One foot raised
-Hands together
-Sit upright
-Chin towards me`,
-              },
+              { uid: "pbm_set1_base1_step1", label: "Base Pose 1", cue: `Sitting on a stool\n45 degrees\nOne foot raised\nHands together\nSit upright\nChin towards me` },
               { uid: "pbm_set1_base1_step2", label: "Pose 2", cue: "Step back, easy smile" },
-              {
-                uid: "pbm_set1_base1_step3",
-                label: "Pose 3",
-                cue: `Lean onto that knee a bit more
-Drop right back shoulder
-Chin forward
-Soft smile`,
-              },
+              { uid: "pbm_set1_base1_step3", label: "Pose 3", cue: `Lean onto that knee a bit more\nDrop right back shoulder\nChin forward\nSoft smile` },
               { uid: "pbm_set1_base1_step4", label: "Pose 4", cue: "Relax your posture and chin around to me" },
               { uid: "pbm_set1_base1_step5", label: "Pose 5", cue: "More smile" },
               { uid: "pbm_set1_base1_step6", label: "Pose 6", cue: "Hands on your thigh, easy smile" },
@@ -548,13 +492,7 @@ Soft smile`,
             name: "Base Pose 4",
             curated: true,
             flow: [
-              {
-                uid: "pbm_set4_base4_step1",
-                label: "Base Pose 4",
-                cue: `Sit tall, 45 degrees
-Back foot on a half box
-Hands on thigh, loose`,
-              },
+              { uid: "pbm_set4_base4_step1", label: "Base Pose 4", cue: `Sit tall, 45 degrees\nBack foot on a half box\nHands on thigh, loose` },
               { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture" },
               { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile" },
             ],
@@ -566,9 +504,9 @@ Hands on thigh, loose`,
 ];
 
 const RHYTHMS = [
-  { id: "linger", label: "Linger", seconds: 10 },
-  { id: "natural", label: "Natural", seconds: 8 },
-  { id: "gentle", label: "Gentle", seconds: 6 },
+  { id: "slow", label: "Slow", seconds: 10 },
+  { id: "normal", label: "Normal", seconds: 8 },
+  { id: "fast", label: "Fast", seconds: 6 },
 ];
 
 const REHEARSAL_PLAN_7_DAYS = [
@@ -581,7 +519,7 @@ const REHEARSAL_PLAN_7_DAYS = [
   { day: "Day 7", text: "Full session once, normal pace" },
 ];
 
-const STORAGE_KEY = "pose_rehearsal_app_state_v3";
+const STORAGE_KEY = "pose_rehearsal_app_state_v4";
 
 function safeJsonParse(str, fallback) {
   try {
@@ -684,29 +622,20 @@ export default function App() {
 
   const flow = useMemo(() => selectedBase?.flow ?? [], [selectedBase]);
 
+  // Session state
   const [idx, setIdx] = useState(0);
   const [isOver, setIsOver] = useState(false);
-  const [hold, setHold] = useState(false);
 
-  const [rhythmOn, setRhythmOn] = useState(false);
-  const [rhythmId, setRhythmId] = useState("natural");
+  // Auto-advance (replaces confusing "Hold")
+  const [autoOn, setAutoOn] = useState(false);
+  const [rhythmId, setRhythmId] = useState("normal");
   const rhythm = useMemo(() => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1], [rhythmId]);
 
-  const [whisperVisible, setWhisperVisible] = useState(false);
-  const whisperTimerRef = useRef(null);
+  // Show/hide the small reference thumbnail (image should be small, text big)
+  const [showRefImage, setShowRefImage] = useState(true);
 
-  const revealWhisperBriefly = useCallback(() => {
-    if (!flow.length) return;
-    setWhisperVisible(true);
-    if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
-    whisperTimerRef.current = setTimeout(() => setWhisperVisible(false), 1200);
-  }, [flow.length]);
-
-  useEffect(() => {
-    return () => {
-      if (whisperTimerRef.current) clearTimeout(whisperTimerRef.current);
-    };
-  }, []);
+  // Optional helper: show next cue in a small “preview” panel (no press/hold nonsense)
+  const [showNextPreview, setShowNextPreview] = useState(true);
 
   const current = useMemo(() => {
     if (!flow.length) return null;
@@ -714,14 +643,13 @@ export default function App() {
     return flow[clamped] ?? null;
   }, [flow, idx]);
 
-  const nextWhisper = useMemo(() => {
+  const nextStep = useMemo(() => {
     if (!flow.length) return null;
     const ni = idx + 1;
     if (ni >= flow.length) return null;
     return flow[ni] ?? null;
   }, [flow, idx]);
 
-  // NEW: progress values for peripheral-vision UI
   const stepNow = useMemo(() => {
     if (!flow.length) return 0;
     return isOver ? flow.length : Math.min(idx + 1, flow.length);
@@ -735,29 +663,24 @@ export default function App() {
   const restartFlow = useCallback(() => {
     setIdx(0);
     setIsOver(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
+    setAutoOn(false);
   }, []);
 
   const advance = useCallback(() => {
     if (!flow.length) return;
-    if (hold) return;
     if (isOver) return;
 
     const ni = idx + 1;
     if (ni >= flow.length) {
       setIsOver(true);
-      setRhythmOn(false);
-      setWhisperVisible(false);
+      setAutoOn(false);
       return;
     }
     setIdx(ni);
-  }, [flow.length, idx, hold, isOver]);
+  }, [flow.length, idx, isOver]);
 
   const back = useCallback(() => {
     if (!flow.length) return;
-    if (hold) return;
 
     if (isOver) {
       setIsOver(false);
@@ -768,12 +691,12 @@ export default function App() {
     const pi = idx - 1;
     if (pi < 0) return;
     setIdx(pi);
-  }, [flow.length, idx, hold, isOver]);
+  }, [flow.length, idx, isOver]);
 
+  // Auto-advance timer
   useEffect(() => {
     if (mode !== "session") return;
-    if (!rhythmOn) return;
-    if (hold) return;
+    if (!autoOn) return;
     if (isOver) return;
     if (!flow.length) return;
 
@@ -783,8 +706,7 @@ export default function App() {
         const ni = prev + 1;
         if (ni >= flow.length) {
           setIsOver(true);
-          setRhythmOn(false);
-          setWhisperVisible(false);
+          setAutoOn(false);
           return prev;
         }
         return ni;
@@ -792,7 +714,7 @@ export default function App() {
     }, ms);
 
     return () => clearInterval(t);
-  }, [mode, rhythmOn, hold, isOver, flow.length, rhythm]);
+  }, [mode, autoOn, isOver, flow.length, rhythm]);
 
   const isFavorite = favorites?.[setId] === baseId;
 
@@ -824,23 +746,32 @@ export default function App() {
     setTimeout(() => setBaseId(copy.id), 0);
   };
 
+  // Reset session when selections change
   useEffect(() => {
     setIdx(0);
     setIsOver(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
+    setAutoOn(false);
   }, [genreId, setId, baseId]);
 
+  // Persist
   useEffect(() => {
     const payload = {
       showFullLibrary,
       favorites,
       userBasesBySet,
       lastSelection: { genreId, setId, baseId },
+      showRefImage,
+      showNextPreview,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId]);
+  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview]);
+
+  // Restore UI toggles if present
+  useEffect(() => {
+    if (persisted?.showRefImage !== undefined) setShowRefImage(!!persisted.showRefImage);
+    if (persisted?.showNextPreview !== undefined) setShowNextPreview(!!persisted.showNextPreview);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const beginSession = () => {
     setLastSelection({ genreId, setId, baseId });
@@ -851,210 +782,192 @@ export default function App() {
   const exitSession = () => {
     setMode("prep");
     setIsOver(false);
-    setHold(false);
-    setRhythmOn(false);
-    setWhisperVisible(false);
+    setAutoOn(false);
   };
 
-  const copyRehearsalPlan = async () => {
-    const text = [
-      "7-Day Rehearsal Plan (Session in a Week)",
-      "",
-      ...REHEARSAL_PLAN_7_DAYS.map((x) => `${x.day}: ${x.text}`),
-    ].join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
-      revealWhisperBriefly(); // tiny feedback reuse (non-blocking)
-    } catch {
-      // no-op: clipboard may be blocked; still fine
-    }
-  };
+  /* ================================
+     UI
+     Fixes made per your feedback:
+     - COLORS: light, visible, high-contrast UI.
+     - TEXT: huge cue text, short line width.
+     - IMAGE: small thumbnail only (optional).
+     - HOLD removed (replaced with clear Auto On/Off).
+     - Copy button removed.
+     - User-friendly: fewer controls, obvious labels.
+     ================================ */
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-indigo-50 text-slate-900">
       <div className="mx-auto max-w-5xl px-4 py-6 md:py-10">
-        {/* Top bar (prep only). Session is full-screen overlay below. */}
+        {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-              <span className={`h-2 w-2 rounded-full ${mode === "prep" ? "bg-amber-400" : "bg-emerald-400"}`} />
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600 shadow-sm">
+              <span className={`h-2 w-2 rounded-full ${mode === "prep" ? "bg-amber-500" : "bg-emerald-500"}`} />
               {mode === "prep" ? "Prep" : "Session"}
             </div>
 
-            <h1 className="mt-3 text-3xl md:text-4xl font-semibold tracking-tight">Pose Flow Operator</h1>
-            <p className="mt-1 text-sm text-slate-300">Clean flow. Clear cues. No improvising.</p>
+            <h1 className="mt-3 text-3xl md:text-4xl font-semibold tracking-tight text-slate-900">
+              Pose Flow Operator
+            </h1>
+            <p className="mt-1 text-sm text-slate-600">
+              Big cues. Fast navigation. No confusion.
+            </p>
           </div>
 
-          {mode === "prep" ? null : (
+          {mode === "session" ? (
             <button
               onClick={exitSession}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 shadow-sm hover:bg-white/10 transition"
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 shadow-sm hover:bg-slate-50 transition"
             >
               Exit session
             </button>
-          )}
+          ) : null}
         </div>
 
         {/* PREP */}
         {mode === "prep" && (
-          <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/30 backdrop-blur-xl">
-            <div className="p-5 md:p-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                {/* Genre */}
-                <div>
-                  <div className="text-xs font-medium text-slate-300">Genre</div>
-                  <select
-                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
-                    value={genreId}
-                    onChange={(e) => setGenreId(e.target.value)}
-                  >
-                    {GENRES.map((g) => (
-                      <option key={g.id} value={g.id} className="bg-slate-900">
-                        {g.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Set */}
-                <div>
-                  <div className="text-xs font-medium text-slate-300">Set</div>
-                  <select
-                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
-                    value={setId}
-                    onChange={(e) => setSetId(e.target.value)}
-                  >
-                    {(genre.sets ?? []).map((s) => (
-                      <option key={s.id} value={s.id} className="bg-slate-900">
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Base */}
-                <div>
-                  <div className="text-xs font-medium text-slate-300">Base</div>
-                  <select
-                    className="mt-2 w-full appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none shadow-sm hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition"
-                    value={baseId}
-                    onChange={(e) => setBaseId(e.target.value)}
-                  >
-                    {availableBases.map((b) => (
-                      <option key={b.id} value={b.id} className="bg-slate-900">
-                        {b.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  {/* toggles row */}
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <label className="flex items-center gap-2 text-sm text-slate-200 select-none">
-                      <input
-                        type="checkbox"
-                        checked={showFullLibrary}
-                        onChange={(e) => setShowFullLibrary(e.target.checked)}
-                        className="h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500 focus:ring-4 focus:ring-indigo-500/20"
-                      />
-                      <span className="text-slate-200">Show full library</span>
-                      <span className="text-xs text-slate-400">(Prep only)</span>
-                    </label>
-
-                    <button
-                      onClick={toggleFavorite}
-                      className={`h-10 w-12 rounded-2xl border transition shadow-sm
-                        ${
-                          isFavorite
-                            ? "border-fuchsia-400/40 bg-fuchsia-500/15 text-fuchsia-200 hover:bg-fuchsia-500/20"
-                            : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
-                        }`}
-                      title="Favorite this base"
-                    >
-                      <span className="text-lg leading-none">{isFavorite ? "★" : "☆"}</span>
-                    </button>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <button
-                      onClick={duplicateAnchor}
-                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition disabled:opacity-40 disabled:hover:bg-white/5"
-                      disabled={!selectedBase}
-                    >
-                      Duplicate
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex items-center justify-end">
-                <button
-                  onClick={beginSession}
-                  disabled={!flow.length}
-                  className="rounded-2xl px-5 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-900/30 transition
-                    bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110
-                    disabled:opacity-40 disabled:hover:brightness-100"
-                >
-                  Begin session
-                </button>
-              </div>
-
-              {/* Rehearsal plan */}
-              <div className="mt-6 rounded-3xl border border-white/10 bg-white/[0.04] p-5 md:p-6">
-                <div className="flex items-start justify-between gap-3">
+          <>
+            <div className="mt-6 rounded-3xl border border-slate-200 bg-white/80 shadow-xl backdrop-blur">
+              <div className="p-5 md:p-6">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
-                    <div className="text-sm font-semibold text-slate-100">Rehearsal plan (Session in a week)</div>
-                    <div className="mt-1 text-xs text-slate-300">
-                      Testable in 7 days without changing the core system.
-                    </div>
+                    <div className="text-xs font-semibold text-slate-700">Genre</div>
+                    <select
+                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none focus:ring-4 focus:ring-indigo-200"
+                      value={genreId}
+                      onChange={(e) => setGenreId(e.target.value)}
+                    >
+                      {GENRES.map((g) => (
+                        <option key={g.id} value={g.id}>
+                          {g.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  <button
-                    onClick={copyRehearsalPlan}
-                    className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition"
-                    title="Copy plan"
-                  >
-                    Copy
-                  </button>
+                  <div>
+                    <div className="text-xs font-semibold text-slate-700">Set</div>
+                    <select
+                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none focus:ring-4 focus:ring-indigo-200"
+                      value={setId}
+                      onChange={(e) => setSetId(e.target.value)}
+                    >
+                      {(genre.sets ?? []).map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <div className="text-xs font-semibold text-slate-700">Base</div>
+                    <select
+                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none focus:ring-4 focus:ring-indigo-200"
+                      value={baseId}
+                      onChange={(e) => setBaseId(e.target.value)}
+                    >
+                      {availableBases.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <label className="flex items-center gap-2 text-sm text-slate-700 select-none">
+                        <input
+                          type="checkbox"
+                          checked={showFullLibrary}
+                          onChange={(e) => setShowFullLibrary(e.target.checked)}
+                          className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-4 focus:ring-indigo-200"
+                        />
+                        Show full library
+                      </label>
+
+                      <button
+                        onClick={toggleFavorite}
+                        className={`h-10 w-12 rounded-2xl border px-2 shadow-sm transition ${
+                          isFavorite
+                            ? "border-fuchsia-200 bg-fuchsia-50 text-fuchsia-700 hover:bg-fuchsia-100"
+                            : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                        }`}
+                        title="Favorite this base"
+                      >
+                        <span className="text-lg leading-none">{isFavorite ? "★" : "☆"}</span>
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        onClick={duplicateAnchor}
+                        className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 shadow-sm hover:bg-slate-50 transition disabled:opacity-40"
+                        disabled={!selectedBase}
+                      >
+                        Duplicate
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2">
-                  {REHEARSAL_PLAN_7_DAYS.map((x) => (
-                    <div key={x.day} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <div className="text-xs font-medium text-slate-300">{x.day}</div>
-                      <div className="mt-1 text-sm text-slate-100">{x.text}</div>
-                    </div>
-                  ))}
+                <div className="mt-6 flex items-center justify-end">
+                  <button
+                    onClick={beginSession}
+                    disabled={!flow.length}
+                    className="rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-lg transition
+                      bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-600 hover:brightness-110
+                      disabled:opacity-40 disabled:hover:brightness-100"
+                  >
+                    Begin session
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
+
+            {/* Rehearsal plan (no copy button, just clear info) */}
+            <div className="mt-6 rounded-3xl border border-slate-200 bg-white/80 shadow-xl backdrop-blur p-5 md:p-6">
+              <div className="text-sm font-semibold text-slate-900">Rehearsal plan (Session in a week)</div>
+              <div className="mt-1 text-xs text-slate-600">
+                Follow this 7-day plan to make it testable in a week without changing your core system.
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2">
+                {REHEARSAL_PLAN_7_DAYS.map((x) => (
+                  <div key={x.day} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <div className="text-xs font-semibold text-slate-600">{x.day}</div>
+                    <div className="mt-1 text-sm text-slate-900">{x.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         )}
 
-        {/* SESSION: full-screen operator overlay */}
+        {/* SESSION: Full-screen operator */}
         {mode === "session" && (
-          <div className="fixed inset-0 z-50 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-slate-100">
-            {/* TOP BAR (peripheral-visible progress) */}
+          <div className="fixed inset-0 z-50 bg-gradient-to-br from-rose-50 via-white to-indigo-50 text-slate-900">
+            {/* TOP BAR: always visible, bright, obvious */}
             <div
-              className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl"
+              className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur"
               style={{ paddingTop: "env(safe-area-inset-top)" }}
             >
               <div className="px-4 py-3">
                 <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-3">
-                      <div className="text-xs font-medium text-slate-300">Session</div>
-                      <div className="text-xs text-slate-400">
-                        <span className="text-slate-100 font-semibold">{stepNow}</span>
-                        <span className="text-slate-400"> / </span>
-                        <span className="text-slate-200">{flow.length || 0}</span>
-                        <span className="ml-2 text-slate-400">({progressPct}%)</span>
+                      <div className="text-xs font-semibold text-slate-700">Progress</div>
+                      <div className="text-xs text-slate-600">
+                        <span className="font-semibold text-slate-900">{stepNow}</span>
+                        <span className="text-slate-500"> / </span>
+                        <span className="text-slate-700">{flow.length || 0}</span>
+                        <span className="ml-2 text-slate-600">({progressPct}%)</span>
                       </div>
                     </div>
 
-                    {/* Big progress bar for peripheral vision */}
-                    <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/10">
+                    <div className="mt-2 h-4 w-full overflow-hidden rounded-full bg-slate-100 border border-slate-200">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-600 transition-all"
                         style={{ width: `${progressPct}%` }}
                       />
                     </div>
@@ -1063,96 +976,103 @@ export default function App() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={exitSession}
-                      className="rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition"
+                      className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 shadow-sm hover:bg-slate-50 transition"
                     >
                       Exit
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setHold((v) => !v);
-                        setRhythmOn(false);
-                        setWhisperVisible(false);
-                      }}
-                      className={`rounded-2xl border px-4 py-2 text-sm font-medium transition
-                        ${
-                          hold
-                            ? "border-emerald-400/30 bg-emerald-500/15 text-emerald-200"
-                            : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
-                        }`}
-                      title="Hold"
-                    >
-                      {hold ? "Hold: ON" : "Hold"}
                     </button>
                   </div>
                 </div>
 
-                {/* Rhythm (secondary) */}
-                <div className="mt-3 flex items-center justify-between gap-3">
+                {/* SIMPLE controls row: Auto + speed + tiny toggles */}
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="text-xs font-medium text-slate-300">Rhythm</div>
-
-                    <label className="flex items-center gap-2 text-sm text-slate-200 select-none">
+                    <label className="flex items-center gap-2 text-sm text-slate-800 select-none">
                       <input
                         type="checkbox"
-                        checked={rhythmOn}
-                        onChange={(e) => setRhythmOn(e.target.checked)}
-                        disabled={isOver || hold}
-                        className="h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500 focus:ring-4 focus:ring-indigo-500/20 disabled:opacity-40"
+                        checked={autoOn}
+                        onChange={(e) => setAutoOn(e.target.checked)}
+                        disabled={isOver}
+                        className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-4 focus:ring-indigo-200 disabled:opacity-40"
                       />
-                      On
+                      Auto
                     </label>
 
                     <select
-                      className="appearance-none rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-100 outline-none hover:bg-white/10 focus:border-indigo-400/50 focus:ring-4 focus:ring-indigo-500/20 transition disabled:opacity-40"
+                      className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 shadow-sm outline-none focus:ring-4 focus:ring-indigo-200 disabled:opacity-40"
                       value={rhythmId}
                       onChange={(e) => setRhythmId(e.target.value)}
-                      disabled={!rhythmOn || isOver || hold}
+                      disabled={!autoOn || isOver}
                     >
                       {RHYTHMS.map((r) => (
-                        <option key={r.id} value={r.id} className="bg-slate-900">
+                        <option key={r.id} value={r.id}>
                           {r.label} ({r.seconds}s)
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="text-xs text-slate-400">Press & hold to preview next cue</div>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 text-sm text-slate-800 select-none">
+                      <input
+                        type="checkbox"
+                        checked={showRefImage}
+                        onChange={(e) => setShowRefImage(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-4 focus:ring-indigo-200"
+                      />
+                      Image
+                    </label>
+
+                    <label className="flex items-center gap-2 text-sm text-slate-800 select-none">
+                      <input
+                        type="checkbox"
+                        checked={showNextPreview}
+                        onChange={(e) => setShowNextPreview(e.target.checked)}
+                        className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-4 focus:ring-indigo-200"
+                      />
+                      Next hint
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* MAIN (no scroll; padded for fixed bars + safe areas) */}
+            {/* MAIN: huge cue, image small */}
             <div
               className="absolute inset-0"
               style={{
-                paddingTop: "calc(env(safe-area-inset-top) + 112px)",
+                paddingTop: "calc(env(safe-area-inset-top) + 120px)",
                 paddingBottom: "calc(env(safe-area-inset-bottom) + 96px)",
               }}
             >
               <div className="h-full px-4">
-                <div
-                  className="h-full rounded-3xl border border-white/10 bg-white/[0.06] shadow-2xl shadow-black/30 backdrop-blur-xl overflow-hidden"
-                  onMouseDown={() => {
-                    if (!hold) setWhisperVisible(true);
-                  }}
-                  onMouseUp={() => setWhisperVisible(false)}
-                  onTouchStart={() => {
-                    if (!hold) setWhisperVisible(true);
-                  }}
-                  onTouchEnd={() => setWhisperVisible(false)}
-                  onClick={() => {
-                    // Tap anywhere to advance (one-hand operation)
-                    if (!hold && !isOver) advance();
-                  }}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <div className="h-full p-6 md:p-10 flex flex-col justify-center select-none">
+                <div className="h-full rounded-3xl border border-slate-200 bg-white/80 shadow-xl backdrop-blur overflow-hidden relative">
+                  {/* Small reference image (top-right, never dominates) */}
+                  {showRefImage && current?.img ? (
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className="rounded-2xl border border-slate-200 bg-white shadow-md p-2">
+                        <img
+                          src={current.img}
+                          alt=""
+                          className="h-24 w-24 md:h-28 md:w-28 object-contain rounded-xl"
+                          draggable={false}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <div
+                    className="h-full p-6 md:p-10 flex flex-col justify-center"
+                    onClick={() => {
+                      // tap anywhere to advance (fast, one-hand)
+                      if (!isOver) advance();
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
                     {isOver ? (
                       <div className="flex flex-col items-center justify-center gap-6 text-center">
-                        <div className="text-sm text-slate-300">Flow complete</div>
-                        <div className="text-3xl font-semibold text-slate-100">—</div>
+                        <div className="text-sm text-slate-600">Flow complete</div>
+                        <div className="text-3xl font-semibold text-slate-900">—</div>
 
                         <div className="flex flex-wrap items-center justify-center gap-3">
                           <button
@@ -1160,7 +1080,7 @@ export default function App() {
                               e.stopPropagation();
                               restartFlow();
                             }}
-                            className="rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm text-slate-200 hover:bg-white/10 transition"
+                            className="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50 transition"
                           >
                             Restart
                           </button>
@@ -1169,71 +1089,61 @@ export default function App() {
                               e.stopPropagation();
                               exitSession();
                             }}
-                            className="rounded-2xl px-5 py-3 text-sm font-medium text-white shadow-lg shadow-indigo-900/30 transition
-                              bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110"
+                            className="rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-lg transition
+                              bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-600 hover:brightness-110"
                           >
                             Exit
                           </button>
                         </div>
                       </div>
                     ) : (
-                      <>
-                        {current?.img ? (
-                          <div className="mb-6 flex justify-center">
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-3 shadow-xl shadow-black/25">
-                              <img
-                                src={current.img}
-                                alt=""
-                                className="max-h-[280px] md:max-h-[340px] w-auto object-contain rounded-2xl"
-                                draggable={false}
-                              />
+                      <div className="mx-auto w-full max-w-[22ch] md:max-w-[26ch]">
+                        {/* HUGE cue text, short lines */}
+                        <div className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02] whitespace-pre-line text-slate-900">
+                          {current?.cue ?? ""}
+                        </div>
+
+                        {/* Next cue preview (small, optional, always readable) */}
+                        {showNextPreview && nextStep?.cue ? (
+                          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                            <div className="text-xs font-semibold text-slate-600">Next</div>
+                            <div className="mt-1 text-lg md:text-xl font-semibold text-slate-900 whitespace-pre-line leading-snug">
+                              {nextStep.cue}
                             </div>
                           </div>
                         ) : null}
 
-                        {/* HUGE cue text + short lines (controlled line length) */}
-                        <div className="mx-auto w-full max-w-[22ch] md:max-w-[26ch]">
-                          <div className={`text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05] whitespace-pre-line ${hold ? "opacity-70" : ""}`}>
-                            {current?.cue ?? ""}
-                          </div>
-
-                          {/* Whisper (next cue) */}
-                          <div
-                            className={`mt-6 text-base md:text-lg whitespace-pre-line transition-opacity duration-200 ${
-                              whisperVisible && !hold ? "opacity-70 text-slate-300" : "opacity-0 text-slate-300"
-                            }`}
-                          >
-                            {nextWhisper?.cue ?? ""}
-                          </div>
+                        <div className="mt-6 text-sm text-slate-500">
+                          Tap anywhere to go next.
                         </div>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* BOTTOM NAV (2 buttons fixed, thumb-friendly) */}
+            {/* BOTTOM NAV: only two big buttons, thumb-friendly */}
             <div
-              className="fixed left-0 right-0 bottom-0 z-50 border-t border-white/10 bg-black/30 backdrop-blur-xl"
+              className="fixed left-0 right-0 bottom-0 z-50 border-t border-slate-200 bg-white/90 backdrop-blur"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
               <div className="px-4 py-4">
                 <div className="mx-auto max-w-5xl flex items-center gap-3">
                   <button
                     onClick={back}
-                    disabled={hold || (!isOver && idx <= 0)}
-                    className="flex-1 h-14 rounded-2xl border border-white/10 bg-white/5 text-slate-100 text-lg font-medium
-                      hover:bg-white/10 transition disabled:opacity-40 disabled:hover:bg-white/5"
+                    disabled={!flow.length || (!isOver && idx <= 0)}
+                    className="flex-1 h-14 rounded-2xl border border-slate-200 bg-white text-slate-900 text-lg font-bold
+                      shadow-sm hover:bg-slate-50 transition disabled:opacity-40"
                   >
                     Back
                   </button>
 
                   <button
                     onClick={advance}
-                    disabled={hold || isOver || !flow.length}
-                    className="flex-1 h-14 rounded-2xl text-white text-lg font-semibold shadow-lg shadow-indigo-900/30 transition
-                      bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-pink-500 hover:brightness-110
+                    disabled={!flow.length || isOver}
+                    className="flex-1 h-14 rounded-2xl text-white text-lg font-extrabold shadow-lg transition
+                      bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-600 hover:brightness-110
                       disabled:opacity-40 disabled:hover:brightness-100"
                   >
                     Next
@@ -1244,10 +1154,10 @@ export default function App() {
           </div>
         )}
 
-        {/* tiny footer (prep only) */}
+        {/* Small footer */}
         {mode === "prep" ? (
-          <div className="mt-8 text-xs text-slate-400">
-            Tip: press-and-hold during session reveals the next cue.
+          <div className="mt-8 text-xs text-slate-500">
+            Session UI is optimized for big text + quick thumb navigation.
           </div>
         ) : null}
       </div>
