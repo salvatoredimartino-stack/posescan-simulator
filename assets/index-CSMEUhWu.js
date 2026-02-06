@@ -58,7 +58,7 @@ Hands on thigh, loose`},{uid:"pbm_set4_base4_step2",label:"Pose 5",cue:"Rotate a
       .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
       .dot.session{ background:#10b981; }
 
-      .h1{ font-size: clamp(36px, 6vw, 64px); line-height: 1.02; margin: 14px 0 8px; letter-spacing:-0.03em; }
+      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 14px 0 8px; letter-spacing:-0.03em; }
       .sub{ margin:0; font-size: 16px; color: var(--muted); }
 
       .card{
