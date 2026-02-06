@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 /* =========================================
    ERROR BOUNDARY
-   Prevents “white page” by showing the real runtime error.
    ========================================= */
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -26,7 +25,13 @@ class ErrorBoundary extends React.Component {
             }}
           >
             <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 10 }}>App crashed (runtime error)</div>
-            <pre style={{ margin: 0, whiteSpace: "pre-wrap", fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
+            <pre
+              style={{
+                margin: 0,
+                whiteSpace: "pre-wrap",
+                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+              }}
+            >
               {String(this.state.error)}
             </pre>
             <div style={{ marginTop: 12, color: "#475569", lineHeight: 1.4 }}>
@@ -42,9 +47,6 @@ class ErrorBoundary extends React.Component {
 
 /* =========================================
    ASSET PATHS (CRITICAL)
-   GitHub Pages base path requires BASE_URL.
-   Example:
-     /posescan-simulator/poses/beauty/...
    ========================================= */
 const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
@@ -387,17 +389,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const REHEARSAL_PLAN_7_DAYS = [
-  { day: "Day 1", text: "Set 1 (Seated stool) only — run 3 times" },
-  { day: "Day 2", text: "Set 2 (Standing) — run 3 times" },
-  { day: "Day 3", text: "Set 3 (Wall) — run 3 times" },
-  { day: "Day 4", text: "Set 4 (Table) — run 3 times" },
-  { day: "Day 5", text: "Set 5 (Box) — run 3 times" },
-  { day: "Day 6", text: "Full session (Sets 1–5) once, slow" },
-  { day: "Day 7", text: "Full session once, normal pace" },
-];
-
-const STORAGE_KEY = "pose_rehearsal_app_state_css_v2";
+const STORAGE_KEY = "pose_rehearsal_app_state_css_v3";
 
 /* =========================================
    HELPERS
@@ -428,6 +420,26 @@ function mergeUserBasesIntoGenres(baseGenres, userBasesBySet) {
   }
   return genres;
 }
+function firstTruthy(arr, fn) {
+  for (const x of arr || []) if (fn(x)) return x;
+  return null;
+}
+function clamp(n, a, b) {
+  return Math.max(a, Math.min(b, n));
+}
+function cueTierFromText(cue = "") {
+  // Prevent “in-card scrolling” by scaling type down when content is long.
+  const text = String(cue);
+  const len = text.replace(/\s+/g, " ").trim().length;
+
+  // Multiple lines should reduce size earlier.
+  const lines = (text.match(/\n/g) || []).length + 1;
+
+  // Conservative tiers (keeps readability, avoids overflow).
+  if (lines >= 6 || len >= 170) return "t3";
+  if (lines >= 4 || len >= 120) return "t2";
+  return "t1";
+}
 
 /* =========================================
    NO-TAILWIND CSS (works on GitHub Pages)
@@ -449,7 +461,12 @@ function Styles() {
       }
 
       *{ box-sizing:border-box; }
-      body{ margin:0; background:var(--bg); color:var(--ink); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+      body{
+        margin:0;
+        background:var(--bg);
+        color:var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
 
       .wrap{ max-width: 980px; margin: 0 auto; padding: 24px 16px 44px; }
 
@@ -475,7 +492,27 @@ function Styles() {
       .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
       @media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
-      .label{ font-size:12px; font-weight: 800; color: var(--muted); }
+      .label{ font-size:12px; font-weight: 800; color: var(--muted); display:flex; align-items:center; gap:8px; }
+      .helpIcon{
+        width: 18px; height: 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.92);
+        color: var(--muted);
+        font-weight: 950;
+        font-size: 12px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        cursor: default;
+        user-select:none;
+      }
+      .helper{
+        margin-top: 6px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
 
       .control{
         margin-top:8px;
@@ -545,6 +582,55 @@ function Styles() {
       .planDay{ font-size:12px; font-weight: 900; color: var(--muted); }
       .planText{ margin-top:6px; font-size: 15px; font-weight: 900; color: var(--ink); }
 
+      /* Onboarding */
+      .overlay{
+        position: fixed; inset: 0; z-index: 10000;
+        background: rgba(15,23,42,.45);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding: 18px;
+      }
+      .modal{
+        width: min(720px, 100%);
+        border-radius: 22px;
+        border:1px solid rgba(255,255,255,.25);
+        background: rgba(255,255,255,.96);
+        box-shadow: 0 30px 70px rgba(15,23,42,.28);
+        overflow:hidden;
+      }
+      .modalInner{ padding: 18px; }
+      @media (min-width: 860px){ .modalInner{ padding: 22px; } }
+      .modalTitle{ font-size: 18px; font-weight: 950; }
+      .modalBody{ margin-top: 10px; color: var(--muted); line-height: 1.45; font-size: 14px; }
+      .modalList{ margin-top: 10px; padding-left: 18px; color: var(--muted); line-height: 1.45; font-size: 14px; }
+      .modalActions{ display:flex; justify-content:flex-end; gap:10px; margin-top: 14px; flex-wrap:wrap; }
+
+      /* Toast */
+      .toastWrap{
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 12000;
+        display:flex;
+        justify-content:center;
+        pointer-events:none;
+      }
+      .toast{
+        pointer-events:none;
+        max-width: 720px;
+        width: fit-content;
+        border-radius: 999px;
+        border: 1px solid rgba(15,23,42,.16);
+        background: rgba(255,255,255,.95);
+        box-shadow: 0 12px 26px rgba(15,23,42,.14);
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 850;
+        color: var(--ink);
+      }
+
       /* SESSION overlay */
       .session{
         position: fixed; inset: 0; z-index: 9999;
@@ -608,44 +694,48 @@ function Styles() {
         padding: 22px;
       }
 
-      /* Small reference image */
+      /* Reference image (bigger + clearer) */
       .ref{
         position:absolute;
         right: 14px;
         top: 14px;
-        width: 110px;
-        height: 110px;
-        border-radius: 18px;
+        width: 160px;
+        height: 160px;
+        border-radius: 20px;
         border:1px solid var(--line);
         background: rgba(255,255,255,.95);
         box-shadow: var(--shadow2);
-        padding: 8px;
+        padding: 10px;
         display:flex;
         align-items:center;
         justify-content:center;
       }
       .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
-/* HERO cue text (big, but not ridiculous) */
-.cueWrap{
-  width: 100%;
-  max-width: 30ch;              /* slightly wider lines */
-  text-align: left;
-  position: relative;
-  z-index: 1;
 
-  /* prevents clipping behind bars on smaller viewports */
-  max-height: calc(100vh - 260px);
-  overflow: auto;
-  padding-right: 6px;
-}
+      .cueWrap{
+        width: 100%;
+        max-width: 34ch;
+        text-align: left;
+        position: relative;
+        z-index: 1;
+        padding-right: 4px;
 
-.cue{
-  font-size: clamp(28px, 4.2vw, 56px);  /* 👈 smaller range */
-  line-height: 1.06;
-  font-weight: 950;
-  letter-spacing: -0.02em;
-  white-space: pre-line;
-}
+        /* Important: avoid inner scrolling (audit issue). */
+        overflow: visible;
+        max-height: none;
+      }
+
+      /* Cue tiers (responsive typography to prevent overflow/scroll) */
+      .cue{
+        line-height: 1.06;
+        font-weight: 950;
+        letter-spacing: -0.02em;
+        white-space: pre-line;
+        word-break: break-word;
+      }
+      .cue.t1{ font-size: clamp(28px, 4.0vw, 56px); }
+      .cue.t2{ font-size: clamp(22px, 3.2vw, 46px); line-height: 1.08; }
+      .cue.t3{ font-size: clamp(18px, 2.6vw, 36px); line-height: 1.10; }
 
       .nextBox{
         margin-top: 18px;
@@ -657,14 +747,14 @@ function Styles() {
       }
       .nextLabel{ font-size:12px; font-weight: 900; color: var(--muted); }
       .nextCue{
-  margin-top:6px;
-  font-size: 16px;     /* was 20px */
-  font-weight: 850;
-  white-space: pre-line;
-  line-height: 1.22;
-}
+        margin-top:6px;
+        font-size: 15px;
+        font-weight: 850;
+        white-space: pre-line;
+        line-height: 1.22;
+      }
 
-      .hint{ margin-top: 16px; font-size: 14px; color: var(--muted); }
+      .hint{ margin-top: 14px; font-size: 13px; color: var(--muted); }
 
       .tapZone{
         position:absolute; inset:0;
@@ -682,7 +772,7 @@ function Styles() {
       .navRow{ display:flex; gap: 12px; }
       .navBtn{
         flex: 1;
-        height: 62px; /* thumb-friendly */
+        height: 62px;
         border-radius: 20px;
         font-size: 18px;
         font-weight: 950;
@@ -703,7 +793,7 @@ function Styles() {
 }
 
 /* =========================================
-   APP (wrapped by ErrorBoundary)
+   APP
    ========================================= */
 function AppInner() {
   const persisted = useMemo(() => safeJsonParse(localStorage.getItem(STORAGE_KEY), null), []);
@@ -716,6 +806,21 @@ function AppInner() {
   const GENRES = useMemo(() => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet), [userBasesBySet]);
 
   const [mode, setMode] = useState("prep"); // prep | session
+
+  // Beginner onboarding (shown once; can be re-opened via "?" badge)
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    const seen = persisted?.seenOnboarding;
+    return !seen; // first time: true
+  });
+
+  // Toast
+  const [toast, setToast] = useState(null);
+  const toastTimer = useRef(null);
+  const pushToast = useCallback((msg) => {
+    setToast(String(msg));
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2200);
+  }, []);
 
   // Safe defaults even if data is missing
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
@@ -736,7 +841,10 @@ function AppInner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [genreId, lastSelection, genre?.sets]);
 
-  const selectedSet = useMemo(() => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null, [genre, setId]);
+  const selectedSet = useMemo(
+    () => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
+    [genre, setId]
+  );
 
   const availableBases = useMemo(() => {
     const bases = selectedSet?.bases ?? [];
@@ -783,7 +891,7 @@ function AppInner() {
   const [idx, setIdx] = useState(0);
   const [isOver, setIsOver] = useState(false);
 
-  // Clear replacement for “Hold”
+  // Auto-advance
   const [autoOn, setAutoOn] = useState(false);
   const [rhythmId, setRhythmId] = useState("normal");
   const rhythm = useMemo(() => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1], [rhythmId]);
@@ -794,8 +902,8 @@ function AppInner() {
 
   const current = useMemo(() => {
     if (!flow.length) return null;
-    const clamped = Math.max(0, Math.min(idx, flow.length - 1));
-    return flow[clamped] ?? null;
+    const clampedIdx = clamp(idx, 0, flow.length - 1);
+    return flow[clampedIdx] ?? null;
   }, [flow, idx]);
 
   const nextStep = useMemo(() => {
@@ -805,9 +913,10 @@ function AppInner() {
     return flow[ni] ?? null;
   }, [flow, idx]);
 
+  // Always derive progress strictly from idx + isOver (avoid mismatch)
   const stepNow = useMemo(() => {
     if (!flow.length) return 0;
-    return isOver ? flow.length : Math.min(idx + 1, flow.length);
+    return isOver ? flow.length : clamp(idx + 1, 1, flow.length);
   }, [flow.length, idx, isOver]);
 
   const progressPct = useMemo(() => {
@@ -839,7 +948,7 @@ function AppInner() {
 
     if (isOver) {
       setIsOver(false);
-      setIdx(flow.length - 1);
+      setIdx(Math.max(0, flow.length - 1));
       return;
     }
 
@@ -848,7 +957,7 @@ function AppInner() {
     setIdx(pi);
   }, [flow.length, idx, isOver]);
 
-  // Auto-advance timer
+  // Auto-advance timer (use setTimeout loop to reduce “stale” behavior)
   useEffect(() => {
     if (mode !== "session") return;
     if (!autoOn) return;
@@ -856,7 +965,7 @@ function AppInner() {
     if (!flow.length) return;
 
     const ms = (rhythm?.seconds ?? 8) * 1000;
-    const t = setInterval(() => {
+    const t = setTimeout(() => {
       setIdx((prev) => {
         const ni = prev + 1;
         if (ni >= flow.length) {
@@ -868,7 +977,7 @@ function AppInner() {
       });
     }, ms);
 
-    return () => clearInterval(t);
+    return () => clearTimeout(t);
   }, [mode, autoOn, isOver, flow.length, rhythm]);
 
   // Favorite toggle
@@ -876,13 +985,18 @@ function AppInner() {
   const toggleFavorite = () => {
     setFavorites((prev) => {
       const next = { ...(prev || {}) };
-      if (next[setId] === baseId) delete next[setId];
-      else next[setId] = baseId;
+      if (next[setId] === baseId) {
+        delete next[setId];
+        pushToast("Removed favorite for this set.");
+      } else {
+        next[setId] = baseId;
+        pushToast("Saved as favorite for this set.");
+      }
       return next;
     });
   };
 
-  // Duplicate (kept; actual value feature)
+  // Duplicate (with feedback)
   const duplicateAnchor = () => {
     if (!selectedBase || !selectedSet) return;
     const copy = deepClone(selectedBase);
@@ -900,6 +1014,7 @@ function AppInner() {
     });
 
     setTimeout(() => setBaseId(copy.id), 0);
+    pushToast("Duplicated. You’re now on your copy (My Base…).");
   };
 
   // Reset session when selection changes
@@ -909,7 +1024,34 @@ function AppInner() {
     setAutoOn(false);
   }, [genreId, setId, baseId]);
 
-  // Persist
+  const hasAnyImagesInFlow = useMemo(() => (flow || []).some((s) => !!s?.img), [flow]);
+
+  // Rehearsal plan (dynamic, so it can’t mismatch the selected genre)
+  const rehearsalPlan = useMemo(() => {
+    const sets = genre?.sets ?? [];
+    const usable = sets.slice(0, Math.min(5, sets.length));
+    const dayItems = usable.map((s, i) => ({
+      day: `Day ${i + 1}`,
+      text: `${s.name} — run 3 times`,
+    }));
+
+    if (usable.length >= 2) {
+      dayItems.push({ day: `Day ${usable.length + 1}`, text: `Full session (${usable.map((x) => x.name.replace(/^SET\\s+\\d+\\s+—\\s+/i, "Set ")).slice(0, usable.length).join(", ")}) once, slow` });
+      dayItems.push({ day: `Day ${usable.length + 2}`, text: `Full session once, normal pace` });
+    } else if (usable.length === 1) {
+      dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 4", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 5", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
+      dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
+    }
+
+    // Keep at most 7 days visible
+    return dayItems.slice(0, 7);
+  }, [genre]);
+
+  // Persist (also persist onboarding seen flag)
   useEffect(() => {
     const payload = {
       showFullLibrary,
@@ -918,38 +1060,94 @@ function AppInner() {
       lastSelection: { genreId, setId, baseId },
       showRefImage,
       showNextPreview,
+      seenOnboarding: !showOnboarding ? true : (persisted?.seenOnboarding ?? false),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview, showOnboarding]);
 
   const beginSession = () => {
     setLastSelection({ genreId, setId, baseId });
     setMode("session");
     restartFlow();
+    pushToast("Session started. Use Next / Back.");
   };
 
   const exitSession = () => {
     setMode("prep");
     setIsOver(false);
     setAutoOn(false);
+    pushToast("Exited session.");
   };
 
   const noData = !Array.isArray(GENRES) || GENRES.length === 0;
+
+  const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
 
   return (
     <>
       <Styles />
 
+      {/* Onboarding overlay */}
+      {mode === "prep" && showOnboarding && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
+          <div className="modal">
+            <div className="modalInner">
+              <div className="modalTitle">How this works (30 seconds)</div>
+              <div className="modalBody">
+                This tool runs a pose flow step-by-step so you don’t need to memorize poses.
+              </div>
+              <ul className="modalList">
+                <li><strong>Genre</strong> = a category (e.g. Beauty, 50+, Men).</li>
+                <li><strong>Set</strong> = the environment / setup (stool, wall, table, etc.).</li>
+                <li><strong>Base</strong> = the starting pose for that set.</li>
+                <li>Press <strong>Begin session</strong> and use <strong>Next</strong> / <strong>Back</strong>.</li>
+              </ul>
+              <div className="modalActions">
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setShowOnboarding(false);
+                    pushToast("Tip: you can reopen this with the “?” badge.");
+                  }}
+                >
+                  Got it
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast ? (
+        <div className="toastWrap" aria-live="polite" aria-atomic="true">
+          <div className="toast">{toast}</div>
+        </div>
+      ) : null}
+
       {/* PREP */}
       {mode === "prep" && (
         <div className="wrap">
-          <div className="pill">
-            <span className="dot" />
-            Prep
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <div className="pill">
+              <span className="dot" />
+              Prep
+            </div>
+
+            <button
+              className="btn"
+              style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+              onClick={() => setShowOnboarding(true)}
+              title="Help / How this works"
+              aria-label="Open help"
+            >
+              ?
+            </button>
           </div>
 
           <h1 className="h1">Pose Flow Operator</h1>
-          <p className="sub">Big cues. Fast navigation. No confusion.</p>
+          <p className="sub">Step-by-step cues to run a session without memorising poses.</p>
 
           {noData ? (
             <div className="warn">
@@ -961,7 +1159,9 @@ function AppInner() {
             <div className="cardInner">
               <div className="grid">
                 <div>
-                  <div className="label">Genre</div>
+                  <div className="label">
+                    Genre <span className="helpIcon" title="Pick the category (Beauty, 50+, Men, etc.).">i</span>
+                  </div>
                   <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
                     {GENRES.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -969,10 +1169,13 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
+                  <div className="helper">Choose the type of shoot this pose library belongs to.</div>
                 </div>
 
                 <div>
-                  <div className="label">Set</div>
+                  <div className="label">
+                    Set <span className="helpIcon" title="Pick the setup/environment (stool, wall, table…).">i</span>
+                  </div>
                   <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
                     {(genre?.sets ?? []).map((s) => (
                       <option key={s.id} value={s.id}>
@@ -980,10 +1183,13 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
+                  <div className="helper">This usually matches your lighting/background/prop setup.</div>
                 </div>
 
                 <div>
-                  <div className="label">Base</div>
+                  <div className="label">
+                    Base <span className="helpIcon" title="Pick the starting pose for this set.">i</span>
+                  </div>
                   <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                     {availableBases.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -993,42 +1199,74 @@ function AppInner() {
                   </select>
 
                   <div className="row">
-                    <label className="check">
+                    <label
+                      className="check"
+                      title="Curated hides non-core poses. Turn on to see everything in this set."
+                      aria-label="Show full library (show all bases, not just curated)"
+                    >
                       <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
                       Show full library
                     </label>
 
-                    <button className="btn btnIcon" onClick={toggleFavorite} title="Favorite this base">
-                      {isFavorite ? "★" : "☆"}
-                    </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span className="muted" style={{ fontSize: 13, fontWeight: 800 }}>
+                        Favorite
+                      </span>
+                      <button
+                        className="btn btnIcon"
+                        onClick={toggleFavorite}
+                        title="Save this base as the default for this set"
+                        aria-label="Toggle favorite base for this set"
+                      >
+                        {isFavorite ? "★" : "☆"}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="footerActions">
-                    <button className="btn" onClick={duplicateAnchor} disabled={!selectedBase}>
+                    <button
+                      className="btn"
+                      onClick={duplicateAnchor}
+                      disabled={!selectedBase}
+                      title="Create a copy of this base (so you can customize later)"
+                      aria-label="Duplicate this base"
+                    >
                       Duplicate
                     </button>
 
-                    <button className="btn btnPrimary" onClick={beginSession} disabled={!flow.length}>
+                    <button
+                      className="btn btnPrimary"
+                      onClick={beginSession}
+                      disabled={!flow.length}
+                      title={flow.length ? "Start the step-by-step flow" : "No steps available for this base"}
+                      aria-label="Begin session"
+                    >
                       Begin session
                     </button>
                   </div>
+
+                  {!flow.length ? (
+                    <div className="warn" style={{ marginTop: 12 }}>
+                      This base has no steps (flow is empty). Choose another base.
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Rehearsal plan */}
+          {/* Rehearsal plan (dynamic, so it can’t mismatch selection) */}
           <div className="card">
             <div className="cardInner">
               <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
-                Rehearsal plan (Session in a week)
+                Rehearsal plan (7 days)
               </div>
               <p className="sub" style={{ marginTop: 6 }}>
-                Follow this 7-day plan to make it testable in a week without changing your core system.
+                A simple practice plan built from the sets in <strong>{genre?.name ?? "this genre"}</strong>.
               </p>
 
               <div className="planGrid">
-                {REHEARSAL_PLAN_7_DAYS.map((x) => (
+                {rehearsalPlan.map((x) => (
                   <div key={x.day} className="planItem">
                     <div className="planDay">{x.day}</div>
                     <div className="planText">{x.text}</div>
@@ -1057,12 +1295,24 @@ function AppInner() {
                 </div>
 
                 <div className="topControls">
-                  <label className="toggle" title="Auto-advance through cues">
+                  <label
+                    className="toggle"
+                    title="Auto-advance: automatically go to the next cue after the chosen time"
+                    aria-label="Toggle auto-advance"
+                  >
                     <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
-                    Auto
+                    Auto-advance
                   </label>
 
-                  <select className="control" style={{ height: 42, width: 170 }} value={rhythmId} onChange={(e) => setRhythmId(e.target.value)} disabled={!autoOn || isOver}>
+                  <select
+                    className="control"
+                    style={{ height: 42, width: 170 }}
+                    value={rhythmId}
+                    onChange={(e) => setRhythmId(e.target.value)}
+                    disabled={!autoOn || isOver}
+                    title="Auto-advance speed (seconds per step)"
+                    aria-label="Select auto-advance speed"
+                  >
                     {RHYTHMS.map((r) => (
                       <option key={r.id} value={r.id}>
                         {r.label} ({r.seconds}s)
@@ -1070,17 +1320,26 @@ function AppInner() {
                     ))}
                   </select>
 
-                  <label className="toggle" title="Show small reference image">
-                    <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} />
+                  <label
+                    className="toggle"
+                    title={hasAnyImagesInFlow ? "Show the reference sketch for the current step" : "No images available for this flow"}
+                    aria-label="Toggle reference image"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={showRefImage}
+                      onChange={(e) => setShowRefImage(e.target.checked)}
+                      disabled={!hasAnyImagesInFlow}
+                    />
                     Image
                   </label>
 
-                  <label className="toggle" title="Show next cue hint">
+                  <label className="toggle" title="Show a preview of the next cue" aria-label="Toggle next cue preview">
                     <input type="checkbox" checked={showNextPreview} onChange={(e) => setShowNextPreview(e.target.checked)} />
-                    Next
+                    Next preview
                   </label>
 
-                  <button className="btn" onClick={exitSession}>
+                  <button className="btn" onClick={exitSession} title="Return to prep screen" aria-label="Exit session">
                     Exit
                   </button>
                 </div>
@@ -1091,6 +1350,7 @@ function AppInner() {
           <div className="main">
             <div className="mainPad">
               <div className="stage">
+                {/* Keep tap-to-advance as a convenience, but don't over-emphasize it (audit issue). */}
                 <div
                   className="tapZone"
                   onClick={() => {
@@ -1098,10 +1358,24 @@ function AppInner() {
                   }}
                   role="button"
                   tabIndex={0}
-                  aria-label="Tap anywhere to go next"
+                  aria-label="Advance to next cue"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      if (!isOver) advance();
+                    }
+                    if (e.key === "ArrowRight") {
+                      e.preventDefault();
+                      if (!isOver) advance();
+                    }
+                    if (e.key === "ArrowLeft") {
+                      e.preventDefault();
+                      back();
+                    }
+                  }}
                 />
 
-                {showRefImage && current?.img ? (
+                {showRefImage && hasAnyImagesInFlow && current?.img ? (
                   <div className="ref" aria-hidden="true">
                     <img src={current.img} alt="" draggable={false} />
                   </div>
@@ -1109,7 +1383,7 @@ function AppInner() {
 
                 {!isOver ? (
                   <div className="cueWrap">
-                    <div className="cue">{current?.cue ?? ""}</div>
+                    <div className={`cue ${cueTier}`}>{current?.cue ?? ""}</div>
 
                     {showNextPreview && nextStep?.cue ? (
                       <div className="nextBox">
@@ -1118,7 +1392,7 @@ function AppInner() {
                       </div>
                     ) : null}
 
-                    <div className="hint">Tap anywhere to go Next.</div>
+                    <div className="hint">Tip: use Next / Back (or tap the screen). Auto-advance is optional.</div>
                   </div>
                 ) : (
                   <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
@@ -1127,10 +1401,10 @@ function AppInner() {
                     </div>
                     <div style={{ fontSize: 42, fontWeight: 950, marginTop: 8 }}>—</div>
                     <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
-                      <button className="btn" onClick={restartFlow}>
+                      <button className="btn" onClick={restartFlow} aria-label="Restart flow">
                         Restart
                       </button>
-                      <button className="btn btnPrimary" onClick={exitSession}>
+                      <button className="btn btnPrimary" onClick={exitSession} aria-label="Exit session">
                         Exit
                       </button>
                     </div>
@@ -1143,10 +1417,10 @@ function AppInner() {
           <div className="bottomBar">
             <div className="bottomInner">
               <div className="navRow">
-                <button className="btn navBtn" onClick={back} disabled={!flow.length || (!isOver && idx <= 0)}>
+                <button className="btn navBtn" onClick={back} disabled={!flow.length || (!isOver && idx <= 0)} aria-label="Back">
                   Back
                 </button>
-                <button className="btn btnPrimary navBtn" onClick={advance} disabled={!flow.length || isOver}>
+                <button className="btn btnPrimary navBtn" onClick={advance} disabled={!flow.length || isOver} aria-label="Next">
                   Next
                 </button>
               </div>
