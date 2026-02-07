@@ -503,7 +503,6 @@ function normalizeCue(s) {
   return capitalizeFirst(t);
 }
 function clientLine(stepIndex) {
-  // Not “you’re doing great…” spam. Short, real, varied, still calm.
   const lines = [
     "Hold that. Great.",
     "Nice — keep it still.",
@@ -770,7 +769,7 @@ function Styles() {
         padding: 16px;
       }
 
-      /* ✅ Layout rule:
+      /* Layout rule:
          - Mobile: text first, image below
          - Desktop: text left, image right */
       .stageInner{
@@ -779,8 +778,6 @@ function Styles() {
         flex-direction: column;
         gap: 14px;
       }
-      .cueWrap{ order: 1; }
-      .refPanel{ order: 2; }
       @media (min-width: 860px){
         .stageInner{
           display:grid;
@@ -788,8 +785,6 @@ function Styles() {
           gap: 18px;
           align-items: start;
         }
-        .cueWrap{ order: 0; }
-        .refPanel{ order: 0; }
       }
 
       .refPanel{
@@ -806,7 +801,6 @@ function Styles() {
       .refPanel img{
         width: 100%;
         height: auto;
-        max-height: min(56vh, 520px);
         object-fit: contain;
         border-radius: 14px;
       }
@@ -856,6 +850,11 @@ function Styles() {
       .tapZone{
         position:absolute; inset:0;
         cursor: pointer;
+        z-index: 0;
+      }
+      .stageInner, .cueWrap, .refPanel{
+        position: relative;
+        z-index: 1;
       }
 
       .bottomBar{
@@ -874,90 +873,61 @@ function Styles() {
         font-size: 18px;
         font-weight: 950;
       }
-      
+
+      /* -------------------------------
+         MOBILE FIX (your request)
+         - Image must NOT dominate
+         - Text remains readable
+         - No overlap
+         - Desktop untouched
+         -------------------------------- */
+      @media (max-width: 859px){
+        /* Ensure text uses full width and doesn't get "column" boxed */
+        .cueWrap{
+          width: 100%;
+          max-width: 100%;
+          /* prevent long text from pushing image away */
+          max-height: 44vh;
+          overflow: auto;
+          padding-right: 6px;
+        }
+
+        /* Small hint: discoverability */
+        .cueWrap::after{
+          content: "Image below ↓";
+          display: block;
+          margin-top: 12px;
+          font-size: 13px;
+          font-weight: 900;
+          color: var(--muted);
+        }
+
+        /* Make image secondary (smaller) */
+        .refPanel{
+          width: 100%;
+          max-height: 30vh;
+          min-height: 0;
+          overflow: hidden;
+          padding: 10px;
+        }
+
+        .refPanel img{
+          width: 100%;
+          height: auto;
+          max-height: 26vh;
+          object-fit: contain;
+          display: block;
+        }
+      }
+
+      /* Small-screen tweaks */
       @media (max-width: 520px){
         .topInner{ padding: 10px 10px; }
         .topControls{ gap: 8px; }
         .toggle{ padding: 6px 8px; font-size: 12px; }
         .control{ height: 44px; }
         .navBtn{ height: 58px; font-size: 17px; }
-        /* MOBILE ONLY — keep laptop unchanged */
-@media (max-width: 859px){
-  /* Stack content in a clean column */
-  .stageInner{
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    align-items: stretch !important;
-  }
-
-  /* Make sure text uses the full width (no narrow column feel) */
-  .cueWrap{
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  /* Ensure nothing overlaps the content */
-  .tapZone{
-    z-index: 0 !important;
-  }
-  .cueWrap, .refPanel{
-    position: relative !important;
-    z-index: 1 !important;
-  }
-
-  /* Put the image AFTER the text, and prevent clipping */
-  .refPanel{
-    order: 3 !important;                 /* image last */
-    width: 100% !important;
-    max-height: 38vh !important;         /* key: stop image from being cut */
-    overflow: auto !important;           /* if the card is taller, scroll inside */
-    padding: 10px !important;
-  }
-
-  .refPanel img{
-    width: 100% !important;
-    height: auto !important;
-    max-height: 34vh !important;
-    object-fit: contain !important;
-    display: block !important;
-  }
-}
-
       }
-@media (max-width: 859px){
-  /* Make text use the full width */
-  .cueWrap{
-    width: 100% !important;
-    max-width: 100% !important;
-
-    /* KEY: prevent the text from pushing the image off-screen */
-    max-height: 34vh !important;
-    overflow: auto !important;
-    padding-right: 6px !important;
-  }
-
-  /* Simple hint so users know there's more */
-  .cueWrap::after{
-    content: "Image below ↓";
-    display: block;
-    margin-top: 12px;
-    font-size: 13px;
-    font-weight: 900;
-    color: var(--muted);
-  }
-
-  /* Keep the image big enough to be seen */
-  .refPanel{
-    max-height: 40vh !important;
-    overflow: hidden !important;
-  }
-
-  .refPanel img{
-    max-height: 36vh !important;
-  }
-}
-
     `}</style>
   );
 }
@@ -1174,7 +1144,6 @@ function AppInner() {
         text: `Full session once — normal pace`,
       });
     }
-    // ensure 7 days
     while (dayItems.length < 7) {
       dayItems.push({
         day: `Day ${dayItems.length + 1}`,
@@ -1227,12 +1196,11 @@ function AppInner() {
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
-    // force a clean baseline
     setShowFullLibrary(false);
     setGenreId(fallbackGenreId);
-    const firstSet = GENRES.find((g) => g.id === fallbackGenreId)?.sets?.[0]?.id ?? "";
+    const firstSet =
+      GENRES.find((g) => g.id === fallbackGenreId)?.sets?.[0]?.id ?? "";
     setSetId(firstSet);
-    // baseId will be re-derived by effect; but set a safe placeholder
     setBaseId("");
     setShowRefImage(true);
     setShowNextPreview(true);
@@ -1289,7 +1257,12 @@ function AppInner() {
 
       {/* Onboarding */}
       {mode === "prep" && showOnboarding && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
+        <div
+          className="overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="How this works"
+        >
           <div className="modal">
             <div className="modalInner">
               <div className="modalTitle">How this works (quick)</div>
@@ -1298,10 +1271,19 @@ function AppInner() {
                 You don’t need to memorise a full session.
               </div>
               <ul className="modalList">
-                <li><strong>Genre</strong> = your shoot library.</li>
-                <li><strong>Set</strong> = your setup (stool, wall, table…).</li>
-                <li><strong>Base</strong> = starting pose for that setup.</li>
-                <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
+                <li>
+                  <strong>Genre</strong> = your shoot library.
+                </li>
+                <li>
+                  <strong>Set</strong> = your setup (stool, wall, table…).
+                </li>
+                <li>
+                  <strong>Base</strong> = starting pose for that setup.
+                </li>
+                <li>
+                  Press <strong>Begin session</strong>, then use{" "}
+                  <strong>Next</strong> / <strong>Back</strong>.
+                </li>
               </ul>
               <div className="modalActions">
                 <button
@@ -1354,7 +1336,14 @@ function AppInner() {
       {/* PREP */}
       {mode === "prep" && (
         <div className="wrap">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+            }}
+          >
             <div className="pill">
               <span className="dot" />
               Prep
@@ -1396,7 +1385,11 @@ function AppInner() {
               <div className="grid">
                 <div>
                   <div className="label">Genre</div>
-                  <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
+                  <select
+                    className="control"
+                    value={genreId}
+                    onChange={(e) => setGenreId(e.target.value)}
+                  >
                     {GENRES.map((g) => (
                       <option key={g.id} value={g.id}>
                         {g.name}
@@ -1408,7 +1401,11 @@ function AppInner() {
 
                 <div>
                   <div className="label">Set</div>
-                  <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
+                  <select
+                    className="control"
+                    value={setId}
+                    onChange={(e) => setSetId(e.target.value)}
+                  >
                     {(genre?.sets ?? []).map((s) => (
                       <option key={s.id} value={s.id}>
                         {s.name}
@@ -1420,7 +1417,11 @@ function AppInner() {
 
                 <div>
                   <div className="label">Base</div>
-                  <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
+                  <select
+                    className="control"
+                    value={baseId}
+                    onChange={(e) => setBaseId(e.target.value)}
+                  >
                     {availableBases.map((b) => (
                       <option key={b.id} value={b.id}>
                         {b.name}
@@ -1429,8 +1430,16 @@ function AppInner() {
                   </select>
 
                   <div className="row">
-                    <label className="check" title="Off = curated bases only. On = all bases in this set." aria-label="Show full library">
-                      <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
+                    <label
+                      className="check"
+                      title="Off = curated bases only. On = all bases in this set."
+                      aria-label="Show full library"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={showFullLibrary}
+                        onChange={(e) => setShowFullLibrary(e.target.checked)}
+                      />
                       Show full library
                     </label>
                   </div>
@@ -1459,11 +1468,15 @@ function AppInner() {
 
           <div className="card">
             <div className="cardInner">
-              <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
+              <div
+                className="label"
+                style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}
+              >
                 7-day rehearsal plan
               </div>
               <p className="sub" style={{ marginTop: 6 }}>
-                Practice before shoots: each day is simple and repeatable. Built from <strong>{genre?.name ?? "this genre"}</strong>.
+                Practice before shoots: each day is simple and repeatable. Built from{" "}
+                <strong>{genre?.name ?? "this genre"}</strong>.
               </p>
 
               <div className="planGrid">
@@ -1519,7 +1532,7 @@ function AppInner() {
                   </select>
 
                   <label className="toggle" title={hasAnyImagesInFlow ? "Show the reference image when available." : "No images available for this flow."} aria-label="Toggle reference image">
-                    <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={!hasAnyImagesInFlow} />
+                    <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={hasAnyImagesInFlow ? false : true} />
                     Image
                   </label>
 
@@ -1548,7 +1561,7 @@ function AppInner() {
           <div className="main">
             <div className="mainPad">
               <div className="stage">
-                {/* ✅ FIX: Tap zone ONLY while not over (so Restart works) */}
+                {/* Tap zone ONLY while not over (so Restart always works) */}
                 {!isOver && (
                   <div
                     className="tapZone"
@@ -1615,7 +1628,7 @@ function AppInner() {
                     )}
                   </div>
 
-                  {/* ✅ ONE image only (no floating thumbnail anywhere) */}
+                  {/* ONE image only */}
                   {showRefImage && hasAnyImagesInFlow && current?.img ? (
                     <div className="refPanel" aria-label="Reference image">
                       <img src={current.img} alt="Reference pose" draggable={false} />
