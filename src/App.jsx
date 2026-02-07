@@ -51,7 +51,7 @@ class ErrorBoundary extends React.Component {
 const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* =========================================
-   FULL DATA (as you provided)
+   DATA
    ========================================= */
 const BASE_GENRES = [
   {
@@ -233,7 +233,6 @@ const BASE_GENRES = [
       },
     ],
   },
-
   {
     id: "fifty_plus",
     name: "Age 50+",
@@ -303,7 +302,6 @@ Tilt the camera`,
       },
     ],
   },
-
   {
     id: "personal_branding_man",
     name: "Personal Branding (Man)",
@@ -389,7 +387,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const STORAGE_KEY = "pose_rehearsal_app_state_css_v5_measuredbars";
+const STORAGE_KEY = "pose_rehearsal_app_state_css_v5";
 
 /* =========================================
    HELPERS
@@ -413,9 +411,7 @@ function mergeUserBasesIntoGenres(baseGenres, userBasesBySet) {
   for (const g of genres) {
     for (const s of g.sets || []) {
       const extra = userBasesBySet[s.id];
-      if (Array.isArray(extra) && extra.length) {
-        s.bases = [...(s.bases || []), ...extra];
-      }
+      if (Array.isArray(extra) && extra.length) s.bases = [...(s.bases || []), ...extra];
     }
   }
   return genres;
@@ -429,7 +425,6 @@ function cueTierFromText(cue = "") {
   const len = normalized.length;
   const lines = (text.match(/\n/g) || []).length + 1;
   const words = normalized ? normalized.split(" ").length : 0;
-
   if (lines >= 6 || len >= 180 || words >= 22) return "t4";
   if (lines >= 5 || len >= 150 || words >= 18) return "t3";
   if (lines >= 4 || len >= 120 || words >= 14) return "t2";
@@ -444,19 +439,16 @@ function makeDuplicateName(originalName, existingNames) {
   const base = normalizeMyPrefix(originalName);
   const cleanBase = base || "Base Pose";
   const prefix = `My ${cleanBase}`;
-
   if (!existingNames || !existingNames.length) return prefix;
-
   const lowerExisting = new Set(existingNames.map((x) => String(x).toLowerCase()));
   if (!lowerExisting.has(prefix.toLowerCase())) return prefix;
-
   let k = 2;
   while (lowerExisting.has(`${prefix} (${k})`.toLowerCase())) k += 1;
   return `${prefix} (${k})`;
 }
 
 /* =========================================
-   NO-TAILWIND CSS
+   CSS
    ========================================= */
 function Styles() {
   return (
@@ -468,10 +460,13 @@ function Styles() {
         --card:rgba(255,255,255,.86);
         --shadow: 0 20px 45px rgba(15,23,42,.12);
         --shadow2: 0 10px 25px rgba(15,23,42,.10);
-        --radius: 22px;
         --radius2: 28px;
         --grad: linear-gradient(90deg,#4f46e5,#d946ef,#fb7185);
         --bg: linear-gradient(135deg,#fff7fb,#ffffff,#f2f6ff);
+
+        /* Dynamic bars (measured in JS) */
+        --topH: 140px;
+        --bottomH: 92px;
       }
 
       *{ box-sizing:border-box; }
@@ -485,7 +480,6 @@ function Styles() {
       }
 
       .wrap{ max-width: 980px; margin: 0 auto; padding: 24px 16px 44px; }
-
       .pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:999px; font-size:12px; color:var(--muted); box-shadow: 0 2px 10px rgba(15,23,42,.06); }
       .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
 
@@ -508,7 +502,6 @@ function Styles() {
       @media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
       .label{ font-size:12px; font-weight: 900; color: var(--muted); display:flex; align-items:center; gap:8px; }
-
       .helpIcon{
         width: 18px; height: 18px;
         border-radius: 999px;
@@ -522,13 +515,7 @@ function Styles() {
         justify-content:center;
         user-select:none;
       }
-
-      .helper{
-        margin-top: 6px;
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.35;
-      }
+      .helper{ margin-top: 6px; font-size: 13px; color: var(--muted); line-height: 1.35; }
 
       .control{
         margin-top:8px;
@@ -588,23 +575,14 @@ function Styles() {
         justify-content:center;
         font-size: 18px;
       }
-
       .footerActions{ margin-top: 16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
 
-      /* Rehearsal plan grid */
       .planGrid{ margin-top:14px; display:grid; grid-template-columns: 1fr; gap: 10px; }
       @media (min-width: 860px){ .planGrid{ grid-template-columns: 1fr 1fr; } }
-      .planItem{
-        border:1px solid var(--line);
-        background: rgba(255,255,255,.92);
-        border-radius: 18px;
-        padding: 14px;
-        box-shadow: 0 8px 18px rgba(15,23,42,.06);
-      }
+      .planItem{ border:1px solid var(--line); background: rgba(255,255,255,.92); border-radius: 18px; padding: 14px; box-shadow: 0 8px 18px rgba(15,23,42,.06); }
       .planDay{ font-size:12px; font-weight: 900; color: var(--muted); }
       .planText{ margin-top:6px; font-size: 15px; font-weight: 900; color: var(--ink); }
 
-      /* Onboarding */
       .overlay{
         position: fixed; inset: 0; z-index: 10000;
         background: rgba(15,23,42,.45);
@@ -628,12 +606,12 @@ function Styles() {
       .modalList{ margin-top: 10px; padding-left: 18px; color: var(--muted); line-height: 1.45; font-size: 14px; }
       .modalActions{ display:flex; justify-content:flex-end; gap:10px; margin-top: 14px; flex-wrap:wrap; }
 
-      /* Toast */
+      /* Toast: always sits ABOVE the bottom bar on mobile */
       .toastWrap{
         position: fixed;
         left: 12px;
         right: 12px;
-        bottom: 12px;
+        bottom: calc(var(--bottomH) + 12px);
         z-index: 12000;
         display:flex;
         justify-content:center;
@@ -656,8 +634,6 @@ function Styles() {
         position: fixed; inset: 0; z-index: 9999;
         background: var(--bg);
         color: var(--ink);
-        --topbar-h: 0px;
-        --bottombar-h: 0px;
       }
       .topBar{
         position: fixed; left:0; right:0; top:0; z-index: 2;
@@ -666,9 +642,7 @@ function Styles() {
         border-bottom: 1px solid var(--line);
         backdrop-filter: blur(10px);
       }
-      .topInner{ padding: 10px 12px; }
-      @media (min-width: 860px){ .topInner{ padding: 12px 14px; } }
-
+      .topInner{ padding: 12px 14px; }
       .topRow{ display:flex; align-items:flex-start; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
       .progLabel{ font-size:12px; font-weight: 900; color: var(--muted); }
       .progNums{ font-size:12px; color: var(--muted); margin-top: 4px; }
@@ -688,71 +662,25 @@ function Styles() {
         transition: width .18s ease;
       }
 
-      /* MOBILE-FIRST SESSION CONTROLS */
-      .topControls{
-        display:grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        width: 100%;
-        margin-top: 10px;
-      }
-      @media (min-width: 860px){
-        .topControls{
-          display:flex;
-          align-items:center;
-          justify-content:flex-end;
-          gap:10px;
-          flex-wrap:wrap;
-          width:auto;
-          margin-top: 0;
-        }
-      }
+      .topControls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
 
       .toggle{
-        display:flex; align-items:center; justify-content:center; gap:8px;
-        font-size: 13px; color: var(--muted);
-        padding: 8px 10px;
-        border: 1px solid var(--line);
-        border-radius: 16px;
+        display:flex; align-items:center; gap:8px; font-size: 13px; color: var(--muted);
+        padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px;
         background: rgba(255,255,255,.9);
         user-select:none;
         white-space: nowrap;
-        width: 100%;
-      }
-      @media (min-width: 860px){
-        .toggle{
-          width:auto;
-          border-radius: 999px;
-          justify-content:flex-start;
-        }
       }
       .toggle input{ width:18px; height:18px; accent-color:#4f46e5; }
 
-      .rhythmSelect{
-        margin-top: 0;
-        height: 42px;
-        width: 100%;
-        border-radius: 16px;
-      }
-      @media (min-width: 860px){
-        .rhythmSelect{ width: 170px; }
-      }
-
-      .exitBtn{
-        grid-column: 1 / -1;
-      }
-      @media (min-width: 860px){
-        .exitBtn{ grid-column:auto; }
-      }
-
-      /* ✅ FIX: NO HARDCODED PADDING. MEASURED VARIABLES. */
+      /* KEY FIX: main paddings are dynamic, so cues never hide under top/bottom bars */
       .main{
         position:absolute; inset:0;
-        padding-top: calc(env(safe-area-inset-top) + var(--topbar-h, 0px));
-        padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottombar-h, 0px));
+        padding-top: calc(var(--topH) + 12px);
+        padding-bottom: calc(var(--bottomH) + 12px);
       }
-
       .mainPad{ height:100%; padding: 14px; }
+
       .stage{
         height:100%;
         border-radius: var(--radius2);
@@ -770,51 +698,42 @@ function Styles() {
 
       .ref{
         position:absolute;
-        right: 12px;
-        top: 12px;
-        width: 92px;
-        height: 92px;
-        border-radius: 18px;
+        right: 14px;
+        top: 14px;
+        width: 160px;
+        height: 160px;
+        border-radius: 20px;
         border:1px solid var(--line);
         background: rgba(255,255,255,.95);
         box-shadow: var(--shadow2);
-        padding: 8px;
+        padding: 10px;
         display:flex;
         align-items:center;
         justify-content:center;
-      }
-      @media (min-width: 860px){
-        .ref{
-          right: 14px;
-          top: 14px;
-          width: 160px;
-          height: 160px;
-          border-radius: 20px;
-          padding: 10px;
-        }
       }
       .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
 
       .cueWrap{
         width: 100%;
-        max-width: 40ch;
+        max-width: 44ch;
         text-align: left;
         position: relative;
         z-index: 1;
         overflow: visible;
-        max-height: none;
       }
 
       .cue{
         font-weight: 950;
         letter-spacing: -0.02em;
         white-space: pre-line;
-        word-break: break-word;
+        overflow-wrap: anywhere; /* prevents ugly single-word columns */
+        word-break: normal;
+        hyphens: auto;
       }
-      .cue.t1{ font-size: clamp(24px, 5.4vw, 56px); line-height: 1.07; }
-      .cue.t2{ font-size: clamp(20px, 4.6vw, 46px); line-height: 1.09; }
-      .cue.t3{ font-size: clamp(18px, 4.0vw, 38px); line-height: 1.11; }
-      .cue.t4{ font-size: clamp(16px, 3.6vw, 32px); line-height: 1.14; }
+      .cue.t1{ font-size: clamp(26px, 3.8vw, 56px); line-height: 1.07; }
+      .cue.t2{ font-size: clamp(22px, 3.1vw, 46px); line-height: 1.09; }
+      .cue.t3{ font-size: clamp(18px, 2.6vw, 38px); line-height: 1.11; }
+      .cue.t4{ font-size: clamp(16px, 2.2vw, 32px); line-height: 1.14; }
 
       .nextBox{
         margin-top: 18px;
@@ -825,20 +744,11 @@ function Styles() {
         box-shadow: 0 10px 22px rgba(15,23,42,.08);
       }
       .nextLabel{ font-size:12px; font-weight: 900; color: var(--muted); }
-      .nextCue{
-        margin-top:6px;
-        font-size: 15px;
-        font-weight: 850;
-        white-space: pre-line;
-        line-height: 1.22;
-      }
+      .nextCue{ margin-top:6px; font-size: 15px; font-weight: 850; white-space: pre-line; line-height: 1.22; }
 
       .hint{ margin-top: 14px; font-size: 13px; color: var(--muted); }
 
-      .tapZone{
-        position:absolute; inset:0;
-        cursor: pointer;
-      }
+      .tapZone{ position:absolute; inset:0; cursor: pointer; }
 
       .bottomBar{
         position: fixed; left:0; right:0; bottom:0; z-index: 2;
@@ -849,13 +759,7 @@ function Styles() {
       }
       .bottomInner{ padding: 12px 14px; }
       .navRow{ display:flex; gap: 12px; }
-      .navBtn{
-        flex: 1;
-        height: 62px;
-        border-radius: 20px;
-        font-size: 18px;
-        font-weight: 950;
-      }
+      .navBtn{ flex: 1; height: 62px; border-radius: 20px; font-size: 18px; font-weight: 950; }
 
       .warn{
         margin-top: 14px;
@@ -865,6 +769,26 @@ function Styles() {
         background: rgba(251,113,133,.08);
         color: #9f1239;
         font-weight: 900;
+      }
+
+      /* MOBILE: stop top controls wrapping into chaos */
+      @media (max-width: 520px){
+        .topInner{ padding: 10px 12px; }
+        .topRow{ gap: 10px; }
+        .topControls{
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          justify-content: initial;
+        }
+        .topControls .control{ width: 100% !important; height: 40px !important; margin-top: 0 !important; }
+        .toggle{ justify-content: center; }
+        .btn{ height: 40px; }
+        .ref{ width: 112px; height: 112px; right: 12px; top: 12px; }
+        .stage{ padding: 16px; }
+        .cueWrap{ max-width: 34ch; }
+        .navBtn{ height: 58px; font-size: 17px; }
       }
     `}</style>
   );
@@ -890,7 +814,6 @@ function AppInner() {
     return !seen;
   });
 
-  // Toast
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
   const pushToast = useCallback((msg) => {
@@ -898,11 +821,6 @@ function AppInner() {
     if (toastTimer.current) clearTimeout(toastTimer.current);
     toastTimer.current = setTimeout(() => setToast(null), 2200);
   }, []);
-
-  // ✅ MEASURED BAR FIX (refs)
-  const sessionRef = useRef(null);
-  const topBarRef = useRef(null);
-  const bottomBarRef = useRef(null);
 
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
   const [genreId, setGenreId] = useState(() => lastSelection?.genreId ?? fallbackGenreId);
@@ -934,10 +852,8 @@ function AppInner() {
     const basesAll = selectedSet?.bases ?? [];
     const fav = favorites?.[setId];
     if (fav && basesAll.some((b) => b.id === fav)) return fav;
-
     const byLast = lastSelection?.baseId;
     if (byLast && basesAll.some((b) => b.id === byLast)) return byLast;
-
     return availableBases?.[0]?.id ?? "";
   });
 
@@ -964,16 +880,13 @@ function AppInner() {
 
   const flow = useMemo(() => selectedBase?.flow ?? [], [selectedBase]);
 
-  // Session state
   const [idx, setIdx] = useState(0);
   const [isOver, setIsOver] = useState(false);
 
-  // Auto-advance
   const [autoOn, setAutoOn] = useState(false);
   const [rhythmId, setRhythmId] = useState("normal");
   const rhythm = useMemo(() => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1], [rhythmId]);
 
-  // Reference image + next hint
   const [showRefImage, setShowRefImage] = useState(persisted?.showRefImage ?? true);
   const [showNextPreview, setShowNextPreview] = useState(persisted?.showNextPreview ?? true);
 
@@ -1008,7 +921,6 @@ function AppInner() {
   const advance = useCallback(() => {
     if (!flow.length) return;
     if (isOver) return;
-
     const ni = idx + 1;
     if (ni >= flow.length) {
       setIsOver(true);
@@ -1020,50 +932,16 @@ function AppInner() {
 
   const back = useCallback(() => {
     if (!flow.length) return;
-
     if (isOver) {
       setIsOver(false);
       setIdx(Math.max(0, flow.length - 1));
       return;
     }
-
     const pi = idx - 1;
     if (pi < 0) return;
     setIdx(pi);
   }, [flow.length, idx, isOver]);
 
-  // ✅ MEASURE TOP/BOTTOM BAR HEIGHTS (NO GUESSES)
-  useLayoutEffect(() => {
-    if (mode !== "session") return;
-    const elSession = sessionRef.current;
-    if (!elSession) return;
-
-    const apply = () => {
-      const topH = topBarRef.current ? Math.ceil(topBarRef.current.getBoundingClientRect().height) : 0;
-      const bottomH = bottomBarRef.current ? Math.ceil(bottomBarRef.current.getBoundingClientRect().height) : 0;
-      elSession.style.setProperty("--topbar-h", `${topH}px`);
-      elSession.style.setProperty("--bottombar-h", `${bottomH}px`);
-    };
-
-    apply();
-
-    const canRO = typeof ResizeObserver !== "undefined";
-    const ro = canRO ? new ResizeObserver(() => apply()) : null;
-
-    if (ro && topBarRef.current) ro.observe(topBarRef.current);
-    if (ro && bottomBarRef.current) ro.observe(bottomBarRef.current);
-
-    window.addEventListener("resize", apply);
-    window.addEventListener("orientationchange", apply);
-
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("resize", apply);
-      window.removeEventListener("orientationchange", apply);
-    };
-  }, [mode, autoOn, rhythmId, showNextPreview, showRefImage, isOver, flow.length]);
-
-  // Auto-advance timer
   useEffect(() => {
     if (mode !== "session") return;
     if (!autoOn) return;
@@ -1103,7 +981,6 @@ function AppInner() {
 
   const duplicateAnchor = () => {
     if (!selectedBase || !selectedSet) return;
-
     const allNames = (selectedSet?.bases ?? []).map((b) => b?.name).filter(Boolean);
     const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
 
@@ -1136,11 +1013,7 @@ function AppInner() {
   const rehearsalPlan = useMemo(() => {
     const sets = genre?.sets ?? [];
     const usable = sets.slice(0, Math.min(5, sets.length));
-    const dayItems = usable.map((s, i) => ({
-      day: `Day ${i + 1}`,
-      text: `${s.name} — run 3 times`,
-    }));
-
+    const dayItems = usable.map((s, i) => ({ day: `Day ${i + 1}`, text: `${s.name} — run 3 times` }));
     if (usable.length >= 2) {
       dayItems.push({
         day: `Day ${usable.length + 1}`,
@@ -1155,7 +1028,6 @@ function AppInner() {
       dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
       dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
     }
-
     return dayItems.slice(0, 7);
   }, [genre]);
 
@@ -1167,7 +1039,7 @@ function AppInner() {
       lastSelection: { genreId, setId, baseId },
       showRefImage,
       showNextPreview,
-      seenOnboarding: !showOnboarding ? true : persisted?.seenOnboarding ?? false,
+      seenOnboarding: !showOnboarding ? true : (persisted?.seenOnboarding ?? false),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1209,6 +1081,37 @@ function AppInner() {
   const noData = !Array.isArray(GENRES) || GENRES.length === 0;
   const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
 
+  /* ======= CRITICAL FIX: measure bars and set CSS vars ======= */
+  const topBarRef = useRef(null);
+  const bottomBarRef = useRef(null);
+
+  const syncBars = useCallback(() => {
+    const topEl = topBarRef.current;
+    const botEl = bottomBarRef.current;
+    const topH = topEl ? Math.ceil(topEl.getBoundingClientRect().height) : 140;
+    const bottomH = botEl ? Math.ceil(botEl.getBoundingClientRect().height) : 92;
+    document.documentElement.style.setProperty("--topH", `${topH}px`);
+    document.documentElement.style.setProperty("--bottomH", `${bottomH}px`);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (mode !== "session") return;
+    syncBars();
+    const onResize = () => syncBars();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+    };
+  }, [mode, syncBars, autoOn, rhythmId, showRefImage, showNextPreview]);
+
+  useEffect(() => {
+    if (mode !== "session") return;
+    const t = setTimeout(syncBars, 0);
+    return () => clearTimeout(t);
+  }, [mode, syncBars]);
+
   return (
     <>
       <Styles />
@@ -1226,13 +1129,7 @@ function AppInner() {
                 <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
               </ul>
               <div className="modalActions">
-                <button
-                  className="btn"
-                  onClick={() => {
-                    setShowOnboarding(false);
-                    pushToast("Help is always available via the “?” button.");
-                  }}
-                >
+                <button className="btn" onClick={() => { setShowOnboarding(false); pushToast("Help is always available via the “?” button."); }}>
                   Got it
                 </button>
               </div>
@@ -1250,30 +1147,11 @@ function AppInner() {
       {mode === "prep" && (
         <div className="wrap">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <div className="pill">
-              <span className="dot" />
-              Prep
-            </div>
+            <div className="pill"><span className="dot" />Prep</div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <button
-                className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
-                onClick={() => setShowOnboarding(true)}
-                title="Help / How this works"
-                aria-label="Open help"
-              >
-                ?
-              </button>
-              <button
-                className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
-                onClick={resetApp}
-                title="Reset app (clears saved state and duplicates)"
-                aria-label="Reset app"
-              >
-                Reset
-              </button>
+              <button className="btn" style={{ height: 34, borderRadius: 999, padding: "0 12px" }} onClick={() => setShowOnboarding(true)} title="Help / How this works" aria-label="Open help">?</button>
+              <button className="btn" style={{ height: 34, borderRadius: 999, padding: "0 12px" }} onClick={resetApp} title="Reset app (clears saved state and duplicates)" aria-label="Reset app">Reset</button>
             </div>
           </div>
 
@@ -1286,43 +1164,25 @@ function AppInner() {
             <div className="cardInner">
               <div className="grid">
                 <div>
-                  <div className="label">
-                    Genre <span className="helpIcon" title="Choose the shoot category/library.">i</span>
-                  </div>
+                  <div className="label">Genre <span className="helpIcon" title="Choose the shoot category/library.">i</span></div>
                   <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
-                    {GENRES.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name}
-                      </option>
-                    ))}
+                    {GENRES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
                   </select>
                   <div className="helper">Pick the type of shoot this pose library belongs to.</div>
                 </div>
 
                 <div>
-                  <div className="label">
-                    Set <span className="helpIcon" title="Choose the setup/environment (stool, wall, table…).">i</span>
-                  </div>
+                  <div className="label">Set <span className="helpIcon" title="Choose the setup/environment (stool, wall, table…).">i</span></div>
                   <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
-                    {(genre?.sets ?? []).map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
+                    {(genre?.sets ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                   <div className="helper">This usually matches your lighting/background/prop setup.</div>
                 </div>
 
                 <div>
-                  <div className="label">
-                    Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span>
-                  </div>
+                  <div className="label">Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span></div>
                   <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
-                    {availableBases.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.name}
-                      </option>
-                    ))}
+                    {availableBases.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
                   </select>
 
                   <div className="row">
@@ -1332,9 +1192,7 @@ function AppInner() {
                     </label>
 
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>
-                        Favorite
-                      </span>
+                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>Favorite</span>
                       <button className="btn btnIcon" onClick={toggleFavorite} title="Sets the default base for this set next time." aria-label="Toggle favorite base for this set">
                         {isFavorite ? "★" : "☆"}
                       </button>
@@ -1345,17 +1203,12 @@ function AppInner() {
                     <button className="btn" onClick={duplicateAnchor} disabled={!selectedBase} title="Create a copy of this base." aria-label="Duplicate base">
                       Duplicate
                     </button>
-
-                    <button className="btn btnPrimary" onClick={beginSession} disabled={!flow.length} title={flow.length ? "Start the flow" : "No steps available"} aria-label="Begin session">
+                    <button className="btn btnPrimary" onClick={beginSession} disabled={!flow.length} title={flow.length ? "Start the step-by-step flow" : "No steps available for this base"} aria-label="Begin session">
                       Begin session
                     </button>
                   </div>
 
-                  {!flow.length ? (
-                    <div className="warn" style={{ marginTop: 12 }}>
-                      This base has no steps. Choose another base.
-                    </div>
-                  ) : null}
+                  {!flow.length ? <div className="warn" style={{ marginTop: 12 }}>This base has no steps. Choose another base.</div> : null}
                 </div>
               </div>
             </div>
@@ -1384,42 +1237,37 @@ function AppInner() {
       )}
 
       {mode === "session" && (
-        <div className="session" ref={sessionRef}>
+        <div className="session">
           <div className="topBar" ref={topBarRef}>
             <div className="topInner">
               <div className="topRow">
-                <div style={{ flex: 1, minWidth: 260 }}>
+                <div style={{ flex: 1, minWidth: 240 }}>
                   <div className="progLabel">Progress</div>
                   <div className="progNums">
                     <strong style={{ color: "var(--ink)" }}>{stepNow}</strong> / {flow.length || 0} ({progressPct}%)
                   </div>
-                  <div className="bar">
-                    <div className="barFill" style={{ width: `${progressPct}%` }} />
-                  </div>
+                  <div className="bar"><div className="barFill" style={{ width: `${progressPct}%` }} /></div>
                 </div>
 
                 <div className="topControls">
-                  <label className="toggle" title="Automatically go to the next cue." aria-label="Toggle auto-advance">
+                  <label className="toggle" title="Automatically go to the next cue after the chosen time." aria-label="Toggle auto-advance">
                     <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
                     Auto-advance
                   </label>
 
                   <select
-                    className="control rhythmSelect"
+                    className="control"
+                    style={{ height: 42, width: 170 }}
                     value={rhythmId}
                     onChange={(e) => setRhythmId(e.target.value)}
                     disabled={!autoOn || isOver}
                     title="Seconds per step for auto-advance."
                     aria-label="Select auto-advance speed"
                   >
-                    {RHYTHMS.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.label} ({r.seconds}s)
-                      </option>
-                    ))}
+                    {RHYTHMS.map((r) => <option key={r.id} value={r.id}>{r.label} ({r.seconds}s)</option>)}
                   </select>
 
-                  <label className="toggle" title={hasAnyImagesInFlow ? "Show reference sketch." : "No images available."} aria-label="Toggle reference image">
+                  <label className="toggle" title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."} aria-label="Toggle reference image">
                     <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={!hasAnyImagesInFlow} />
                     Image
                   </label>
@@ -1429,7 +1277,7 @@ function AppInner() {
                     Next preview
                   </label>
 
-                  <button className="btn exitBtn" onClick={exitSession} title="Return to prep" aria-label="Exit session">
+                  <button className="btn" onClick={exitSession} title="Return to prep screen" aria-label="Exit session">
                     Exit
                   </button>
                 </div>
@@ -1442,25 +1290,14 @@ function AppInner() {
               <div className="stage">
                 <div
                   className="tapZone"
-                  onClick={() => {
-                    if (!isOver) advance();
-                  }}
+                  onClick={() => { if (!isOver) advance(); }}
                   role="button"
                   tabIndex={0}
                   aria-label="Advance to next cue"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      if (!isOver) advance();
-                    }
-                    if (e.key === "ArrowRight") {
-                      e.preventDefault();
-                      if (!isOver) advance();
-                    }
-                    if (e.key === "ArrowLeft") {
-                      e.preventDefault();
-                      back();
-                    }
+                    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (!isOver) advance(); }
+                    if (e.key === "ArrowRight") { e.preventDefault(); if (!isOver) advance(); }
+                    if (e.key === "ArrowLeft") { e.preventDefault(); back(); }
                   }}
                 />
 
@@ -1487,17 +1324,11 @@ function AppInner() {
                   </div>
                 ) : (
                   <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
-                    <div className="progLabel" style={{ fontSize: 14 }}>
-                      Flow complete
-                    </div>
+                    <div className="progLabel" style={{ fontSize: 14 }}>Flow complete</div>
                     <div style={{ fontSize: 42, fontWeight: 950, marginTop: 8 }}>—</div>
                     <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
-                      <button className="btn" onClick={restartFlow} aria-label="Restart flow">
-                        Restart
-                      </button>
-                      <button className="btn btnPrimary" onClick={exitSession} aria-label="Exit session">
-                        Exit
-                      </button>
+                      <button className="btn" onClick={restartFlow} aria-label="Restart flow">Restart</button>
+                      <button className="btn btnPrimary" onClick={exitSession} aria-label="Exit session">Exit</button>
                     </div>
                   </div>
                 )}
@@ -1509,11 +1340,8 @@ function AppInner() {
             <div className="bottomBar" ref={bottomBarRef}>
               <div className="bottomInner">
                 <div className="navRow">
-                  <button className="btn navBtn" onClick={back} disabled={!flow.length || idx <= 0} aria-label="Back">
-                    Back
-                  </button>
-
-                  <button className="btn btnPrimary navBtn" onClick={advance} disabled={!flow.length || isOver} aria-label="Next" title="Go to next cue">
+                  <button className="btn navBtn" onClick={back} disabled={!flow.length || idx <= 0} aria-label="Back">Back</button>
+                  <button className="btn btnPrimary navBtn" onClick={advance} disabled={!flow.length || isOver} aria-label="Next" title="Go to the next cue">
                     Next
                   </button>
                 </div>
@@ -1526,9 +1354,6 @@ function AppInner() {
   );
 }
 
-/* =========================================
-   EXPORT
-   ========================================= */
 export default function App() {
   return (
     <ErrorBoundary>
