@@ -96,7 +96,7 @@ const BASE_GENRES = [
                 cue:
                   "Stay just like that.\n" +
                   "Bring your hands gently between your legs and let your elbows relax in.\n" +
-                  "Lovely — keep the shoulders soft.",
+                  "Keep the shoulders soft.",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
@@ -105,31 +105,25 @@ const BASE_GENRES = [
                 cue:
                   "From the same position, rotate your body a little more to the side.\n" +
                   "Keep your posture tall and your neck long.\n" +
-                  "Beautiful — hold that.",
+                  "Hold that.",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step4",
                 label: "Photographer",
-                cue:
-                  "Don’t move — this one’s for me.\n" +
-                  "I’m just tightening the framing slightly.",
+                cue: "Don’t move — I’m just tightening the framing slightly.",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step5",
                 label: "Photographer",
-                cue:
-                  "Stay exactly the same.\n" +
-                  "I’m switching to a horizontal framing.",
+                cue: "Stay exactly the same — switching to a horizontal framing.",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step6",
                 label: "Photographer",
-                cue:
-                  "Hold that pose.\n" +
-                  "I’m taking one more variation — you’re doing great.",
+                cue: "Hold that — one more clean variation.",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
             ],
@@ -566,7 +560,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const STORAGE_KEY = "pose_operator_state_v6";
+const STORAGE_KEY = "pose_operator_state_v7";
 
 /* =========================================
    HELPERS
@@ -594,34 +588,14 @@ function cueTierFromText(cue = "") {
   return "t1";
 }
 
-/* Client-safe rendering (80/20 tone alignment without rewriting the library) */
-function toClientSafeCue(raw) {
-  const text = String(raw || "").trim();
-  if (!text) return "";
-
-  const lines = text
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean);
-
-  const replaced = lines.map((l) => {
-    const low = l.toLowerCase();
-    // Photographer-only framing lines
-    if (low.includes("comp") || low.includes("composition") || low.includes("horizontal") || low.includes("tighten crop") || low.includes("widen frame")) {
-      return "Stay exactly there — I’m adjusting the framing.";
-    }
-    // Gentle punctuation
-    if (!/[.!?]$/.test(l)) return `${l}.`;
-    return l;
-  });
-
-  // If it’s very short / directive-only, add reassurance at the end.
-  const joined = replaced.join("\n");
-  const wordCount = joined.replace(/\s+/g, " ").trim().split(" ").filter(Boolean).length;
-  if (wordCount <= 8) {
-    return `${joined}\nYou’re doing great — keep breathing.`;
+function stableHash(str) {
+  const s = String(str || "");
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
-  return joined;
+  return (h >>> 0);
 }
 
 /* 7-day plan, always exactly 7 cards */
@@ -635,7 +609,7 @@ function build7DayPlan(genre) {
   };
 
   const full = () => {
-    if (!names.length) return "Full session — once, slow";
+    if (!names.length) return "Full session — once";
     const shown = names.slice(0, 5);
     return `Full session (${shown.join(", ")}) once`;
   };
@@ -649,6 +623,67 @@ function build7DayPlan(genre) {
     { day: "Day 6", text: `${full()} — slow` },
     { day: "Day 7", text: `${full()} — normal pace` },
   ];
+}
+
+/* Client-safe wording: less repetitive, more human, deterministic per step */
+function toClientSafeCue(rawCue, stepUid) {
+  const raw = String(rawCue || "").trim();
+  if (!raw) return "";
+
+  const uidKey = stepUid || raw;
+  const h = stableHash(uidKey);
+
+  const reassuranceSoft = [
+    "Nice — keep that soft.",
+    "That’s it — hold there.",
+    "Perfect — stay right there.",
+    "Lovely — keep it gentle.",
+    "Great — breathe and soften the hands.",
+    "Good — shoulders down, relaxed.",
+    "Beautiful — don’t change a thing.",
+    "Exactly — keep it calm.",
+  ];
+
+  const photoOnly = [
+    "Stay still — I’m just changing the framing.",
+    "Hold that — I’m taking a clean variation.",
+    "Don’t move — just a tighter crop.",
+    "Perfect — same pose, new angle.",
+  ];
+
+  const looksTechnical =
+    /\b(comp|composition|horizontal|crop|frame|widen|tighten|tilt camera)\b/i.test(raw);
+
+  // If already reassuring/human, don’t add extra fluff.
+  const alreadyHuman =
+    /\b(perfect|lovely|beautiful|great|nice|hold that|stay right)\b/i.test(raw);
+
+  // Normalize short, blunt cues into full sentences without sounding robotic
+  const lines = raw
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => (/[.!?]$/.test(l) ? l : `${l}.`));
+
+  let out = lines.join("\n");
+
+  if (looksTechnical) {
+    const pick = photoOnly[h % photoOnly.length];
+    return pick;
+  }
+
+  // Add ONE soft reassurance only when needed:
+  // - short cue
+  // - or very directive cue without any human marker
+  const wordCount = out.replace(/\s+/g, " ").trim().split(" ").filter(Boolean).length;
+  const needsSoftener = wordCount <= 10 && !alreadyHuman;
+
+  if (needsSoftener) {
+    const pick = reassuranceSoft[h % reassuranceSoft.length];
+    out = `${out}\n${pick}`;
+  }
+
+  return out;
 }
 
 /* =========================================
@@ -686,23 +721,8 @@ function Styles() {
 
       .wrap{ max-width: 980px; margin: 0 auto; padding: 18px 16px 44px; }
 
-      .pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:999px; font-size:12px; color:var(--muted); box-shadow: 0 2px 10px rgba(15,23,42,.06); }
-      .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
-
-      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 12px 0 8px; letter-spacing:-0.03em; }
+      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 10px 0 8px; letter-spacing:-0.03em; }
       .sub{ margin:0; font-size: 16px; color: var(--muted); }
-
-      .card{
-        margin-top: 16px;
-        border:1px solid var(--line);
-        background: var(--card);
-        border-radius: var(--radius2);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(10px);
-        overflow: hidden;
-      }
-      .cardInner{ padding: 18px; }
-      @media (min-width: 860px){ .cardInner{ padding: 22px; } }
 
       .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
       @media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
@@ -762,6 +782,18 @@ function Styles() {
       .btnPrimary:hover{ filter: brightness(1.06); }
 
       .footerActions{ margin-top: 16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
+
+      .card{
+        margin-top: 16px;
+        border:1px solid var(--line);
+        background: var(--card);
+        border-radius: var(--radius2);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+      }
+      .cardInner{ padding: 18px; }
+      @media (min-width: 860px){ .cardInner{ padding: 22px; } }
 
       .planGrid{ margin-top:14px; display:grid; grid-template-columns: 1fr; gap: 10px; }
       @media (min-width: 860px){ .planGrid{ grid-template-columns: 1fr 1fr; } }
@@ -845,10 +877,36 @@ function Styles() {
       .prepStickyInner{ padding: 14px; }
       @media (min-width: 860px){ .prepStickyInner{ padding: 18px; } }
 
-      /* Floating "Top" */
-      .floatTop{
+      .stickyHeader{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(15,23,42,.10);
+      }
+
+      .stickyTitle{
+        display:flex;
+        align-items:center;
+        gap: 10px;
+        font-weight: 950;
+        letter-spacing:-0.02em;
+      }
+
+      .stickyActions{
+        display:flex;
+        align-items:center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      /* Floating Help button */
+      .floatHelp{
         position: fixed;
-        right: 14px;
+        left: 14px;
         bottom: 14px;
         z-index: 20000;
       }
@@ -904,7 +962,6 @@ function Styles() {
 
       .mainPad{ height:100%; padding: 14px; }
 
-      /* ✅ FIX: prevent clipping of long text (no vertical centering + scrollable cueWrap) */
       .stage{
         height:100%;
         border-radius: var(--radius2);
@@ -915,7 +972,7 @@ function Styles() {
         position: relative;
         overflow:hidden;
         display:flex;
-        align-items:flex-start;   /* was center */
+        align-items:flex-start;
         justify-content:center;
         padding: 22px;
       }
@@ -944,21 +1001,11 @@ function Styles() {
         text-align: left;
         position: relative;
         z-index: 2;
-        overflow: auto;       /* ✅ scroll when long */
+        overflow: auto;
         max-height: 100%;
         padding-bottom: 18px;
-        padding-right: 180px; /* space for ref image */
+        padding-right: 180px;
         -webkit-overflow-scrolling: touch;
-      }
-
-      @media (max-width: 520px){
-        .topInner{ padding: 10px 10px; }
-        .topControls{ gap: 8px; }
-        .toggle{ padding: 6px 8px; font-size: 12px; }
-        .control{ height: 44px; }
-        .stage{ padding: 16px; }
-        .ref{ width: 120px; height: 120px; right: 10px; top: 10px; }
-        .cueWrap{ padding-right: 130px; }
       }
 
       .cue{
@@ -1003,7 +1050,6 @@ function Styles() {
 
       .hint{ margin-top: 14px; font-size: 13px; color: var(--muted); }
 
-      /* Tap layer behind content so scrolling works */
       .tapZone{
         position:absolute; inset:0;
         cursor: pointer;
@@ -1025,6 +1071,12 @@ function Styles() {
         border-radius: 20px;
         font-size: 18px;
         font-weight: 950;
+      }
+
+      @media (max-width: 520px){
+        .stage{ padding: 16px; }
+        .ref{ width: 120px; height: 120px; right: 10px; top: 10px; }
+        .cueWrap{ padding-right: 130px; }
       }
     `}</style>
   );
@@ -1208,7 +1260,6 @@ function AppInner() {
     return () => clearTimeout(t);
   }, [mode, autoOn, isOver, flow.length, rhythm]);
 
-  /* Reset flow when selection changes (prep only) */
   useEffect(() => {
     if (mode !== "prep") return;
     setIdx(0);
@@ -1223,7 +1274,6 @@ function AppInner() {
 
   const rehearsalPlan = useMemo(() => build7DayPlan(genre), [genre]);
 
-  /* Persist */
   useEffect(() => {
     const payload = {
       showFullLibrary,
@@ -1284,15 +1334,16 @@ function AppInner() {
 
   const displayCue = useMemo(() => {
     const raw = current?.cue ?? "";
-    return clientWording ? toClientSafeCue(raw) : String(raw || "");
-  }, [current?.cue, clientWording]);
+    const uid = current?.uid ?? "";
+    return clientWording ? toClientSafeCue(raw, uid) : String(raw || "");
+  }, [current?.cue, current?.uid, clientWording]);
 
   const displayNextCue = useMemo(() => {
     const raw = nextStep?.cue ?? "";
-    return clientWording ? toClientSafeCue(raw) : String(raw || "");
-  }, [nextStep?.cue, clientWording]);
+    const uid = nextStep?.uid ?? "";
+    return clientWording ? toClientSafeCue(raw, uid) : String(raw || "");
+  }, [nextStep?.cue, nextStep?.uid, clientWording]);
 
-  /* Measure top/bottom bars so content never hides underneath */
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
 
@@ -1326,26 +1377,15 @@ function AppInner() {
     syncBars();
   }, [mode, isOver, syncBars]);
 
-  /* always land at top when entering PREP */
+  // Floating help appears when scrolled (prep only)
+  const [showFloatHelp, setShowFloatHelp] = useState(false);
   useEffect(() => {
     if (mode !== "prep") return;
-    requestAnimationFrame(() => {
-      try {
-        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-      } catch {
-        window.scrollTo(0, 0);
-      }
-    });
-  }, [mode]);
-
-  /* floating Top button */
-  const [showTopBtn, setShowTopBtn] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setShowTopBtn(window.scrollY > 260);
+    const onScroll = () => setShowFloatHelp(window.scrollY > 260);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [mode]);
 
   return (
     <>
@@ -1358,12 +1398,11 @@ function AppInner() {
             <div className="modalInner">
               <div className="modalTitle">Help (quick)</div>
               <div className="modalBody">
-                This tool runs a pose session step-by-step so you don’t need to memorize a full shoot.
+                Choose a library (Genre), choose the setup (Set), choose a starting pose (Base),
+                then run the flow step-by-step.
               </div>
               <ul className="modalList">
-                <li><strong>Genre</strong> = the library (Women’s / Corporate Men’s).</li>
-                <li><strong>Set</strong> = the setup (stool, wall, table…)</li>
-                <li><strong>Base</strong> = the starting pose for that set.</li>
+                <li><strong>Base pose</strong> = your starting position.</li>
                 <li><strong>Flow</strong> = small movements from the base pose, one step at a time.</li>
                 <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
               </ul>
@@ -1383,7 +1422,7 @@ function AppInner() {
         </div>
       )}
 
-      {/* SYSTEM MODAL (Scale-ready system deliverables) */}
+      {/* SYSTEM MODAL */}
       {mode === "prep" && showSystem && (
         <div className="overlay" role="dialog" aria-modal="true" aria-label="System">
           <div className="modal">
@@ -1391,33 +1430,22 @@ function AppInner() {
               <div className="modalTitle">The System (ONE scale-ready system)</div>
 
               <div className="modalBody">
-                <strong>Purpose (1–2 sentences):</strong><br />
-                Run consistent, calm, step-by-step posing sessions without relying on memory, while training in 7 days so you can execute the same workflow for 10 clients unchanged.
+                <strong>Purpose:</strong><br />
+                Run a consistent, calm posing workflow without memory. Train it in 7 days, then execute the exact same flow for any client.
               </div>
 
               <div className="modalBody" style={{ marginTop: 12 }}>
-                <strong>Step-by-step process (instructions):</strong>
+                <strong>Steps:</strong>
               </div>
               <ul className="modalList">
-                <li><strong>Prep (2 minutes):</strong> choose Genre → Set → Base. Keep “Client wording” ON if you want calm, reassuring directions.</li>
-                <li><strong>Practice (7 days):</strong> follow the 7-day rehearsal plan shown on the Prep screen.</li>
-                <li><strong>Run session:</strong> press Begin session. Read the cue, then click Next. Keep movements small—base pose first, then micro-adjustments.</li>
-                <li><strong>Consistency rule:</strong> do not invent new steps. Follow the flow as written so results are repeatable.</li>
+                <li><strong>Prep (2 min):</strong> Genre → Set → Base. Keep “Client wording” ON for calm verbal direction.</li>
+                <li><strong>Practice (7 days):</strong> follow the 7-day rehearsal plan.</li>
+                <li><strong>Run:</strong> Begin session → read cue → Next. Keep changes small and deliberate.</li>
               </ul>
 
               <div className="modalBody" style={{ marginTop: 12 }}>
-                <strong>Templates / prompts (outputs):</strong>
-              </div>
-              <ul className="modalList">
-                <li><strong>Client reassurance line:</strong> “Perfect. Stay right there — we’ll do tiny adjustments step by step.”</li>
-                <li><strong>When changing framing:</strong> “Don’t move — this one is just me adjusting the framing.”</li>
-                <li><strong>When client is tense:</strong> “Great. Drop the shoulders, breathe out, and soften the hands.”</li>
-                <li><strong>End of set:</strong> “That’s it — you did really well. We’re moving to the next setup.”</li>
-              </ul>
-
-              <div className="modalBody" style={{ marginTop: 12 }}>
-                <strong>Handoff note (delegate tomorrow):</strong><br />
-                Any assistant can run this by selecting the correct Genre/Set/Base and pressing Begin session. They read each cue exactly, advance with Next, and avoid improvising. If unsure, keep “Client wording” ON and use the reassurance line above.
+                <strong>Handoff:</strong><br />
+                Anyone can run it by selecting the correct Genre/Set/Base and reading each cue as written, step-by-step.
               </div>
 
               <div className="modalActions">
@@ -1428,67 +1456,23 @@ function AppInner() {
         </div>
       )}
 
+      {/* Floating Help (prep only) */}
+      {mode === "prep" && showFloatHelp ? (
+        <div className="floatHelp">
+          <button className="btn btnPrimary" onClick={() => setShowHelp(true)} aria-label="Open help">
+            Help
+          </button>
+        </div>
+      ) : null}
+
       {toast ? (
         <div className="toastWrap" aria-live="polite" aria-atomic="true">
           <div className="toast">{toast}</div>
         </div>
       ) : null}
 
-      {mode === "prep" && showTopBtn ? (
-        <div className="floatTop">
-          <button
-            className="btn"
-            style={{ borderRadius: 999, height: 44, padding: "0 14px" }}
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            aria-label="Scroll to top"
-            title="Back to top"
-          >
-            Top ↑
-          </button>
-        </div>
-      ) : null}
-
       {mode === "prep" && (
         <div className="wrap">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <div className="pill">
-              <span className="dot" />
-              Prep
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              <button
-                className="btn"
-                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
-                onClick={() => setShowHelp(true)}
-                title="Help"
-                aria-label="Open help"
-              >
-                Help
-              </button>
-
-              <button
-                className="btn"
-                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
-                onClick={() => setShowSystem(true)}
-                title="System"
-                aria-label="Open system"
-              >
-                System
-              </button>
-
-              <button
-                className="btn"
-                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
-                onClick={resetApp}
-                title="Reset app (clears saved state)"
-                aria-label="Reset app"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-
           <h1 className="h1">Pose Flow Operator</h1>
           <p className="sub">Step-by-step cues to run a session without memorising poses.</p>
 
@@ -1500,6 +1484,18 @@ function AppInner() {
 
           <div className="prepSticky" aria-label="Pose selection controls">
             <div className="prepStickyInner">
+              {/* ✅ ALWAYS VISIBLE ACTIONS */}
+              <div className="stickyHeader">
+                <div className="stickyTitle">
+                  Prep controls
+                </div>
+                <div className="stickyActions">
+                  <button className="btn" onClick={() => setShowHelp(true)}>Help</button>
+                  <button className="btn" onClick={() => setShowSystem(true)}>System</button>
+                  <button className="btn" onClick={resetApp}>Reset</button>
+                </div>
+              </div>
+
               <div className="grid">
                 <div>
                   <div className="label">Genre</div>
@@ -1510,7 +1506,7 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">Pick the type of shoot this pose library belongs to.</div>
+                  <div className="helper">Pick the library you’re practicing or running today.</div>
                 </div>
 
                 <div>
@@ -1522,7 +1518,7 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">This matches your lighting/background/prop setup.</div>
+                  <div className="helper">This matches the setup (stool, wall, table…).</div>
                 </div>
 
                 <div>
@@ -1624,7 +1620,7 @@ function AppInner() {
                     ))}
                   </select>
 
-                  <label className="toggle" title="Client-safe wording (calm, reassuring) for verbal direction.">
+                  <label className="toggle" title="Calmer, more human direction for clients.">
                     <input type="checkbox" checked={clientWording} onChange={(e) => setClientWording(e.target.checked)} />
                     Client wording
                   </label>
@@ -1684,10 +1680,9 @@ function AppInner() {
                   <div className="cueWrap">
                     <div className={`cue ${cueTier}`}>{displayCue}</div>
 
-                    {/* Base → flow explanation */}
                     {idx === 0 ? (
                       <div className="miniHint">
-                        <strong>Base pose</strong> = the starting position. <strong>Flow</strong> = small movements from that base, one step at a time.
+                        <strong>Base pose</strong> = starting position. <strong>Flow</strong> = small movements from that base, one step at a time.
                       </div>
                     ) : null}
 
