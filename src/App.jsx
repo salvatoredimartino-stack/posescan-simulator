@@ -139,6 +139,7 @@ const BASE_GENRES = [
     img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
   },
 ],
+          },
           {
             id: "beauty_seated_base2",
             name: "Base Pose 2",
