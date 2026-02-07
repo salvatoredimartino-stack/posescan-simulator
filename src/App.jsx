@@ -763,9 +763,13 @@ Shoulders to me`,
             name: "Base Pose 4",
             curated: true,
             flow: [
-              { uid: "pbm_set4_base4_step1", label: "Base Pose 4", cue: `Sit tall, 45 degrees
+              {
+                uid: "pbm_set4_base4_step1",
+                label: "Base Pose 4",
+                cue: `Sit tall, 45 degrees
 Back foot on a half box
-Hands on thigh, loose` },
+Hands on thigh, loose`,
+              },
               { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture" },
               { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile" },
             ],
@@ -872,6 +876,9 @@ function Styles() {
         /* runtime-measured bar heights */
         --topH: 140px;
         --bottomH: 96px;
+
+        /* prep sticky */
+        --prepStickyTop: 10px;
       }
 
       *{ box-sizing:border-box; }
@@ -884,16 +891,16 @@ function Styles() {
         overflow-y: auto;
       }
 
-      .wrap{ max-width: 980px; margin: 0 auto; padding: 24px 16px 44px; }
+      .wrap{ max-width: 980px; margin: 0 auto; padding: 18px 16px 44px; }
 
       .pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:999px; font-size:12px; color:var(--muted); box-shadow: 0 2px 10px rgba(15,23,42,.06); }
       .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
 
-      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 14px 0 8px; letter-spacing:-0.03em; }
+      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 12px 0 8px; letter-spacing:-0.03em; }
       .sub{ margin:0; font-size: 16px; color: var(--muted); }
 
       .card{
-        margin-top: 18px;
+        margin-top: 16px;
         border:1px solid var(--line);
         background: var(--card);
         border-radius: var(--radius2);
@@ -1048,6 +1055,45 @@ function Styles() {
         color: var(--ink);
       }
 
+      .warn{
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(251,113,133,.35);
+        background: rgba(251,113,133,.08);
+        color: #9f1239;
+        font-weight: 900;
+      }
+
+      /* ✅ NEW: Sticky selector panel in PREP so you never lose Genre/Set/Base */
+      .prepSticky{
+        position: sticky;
+        top: var(--prepStickyTop);
+        z-index: 50;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.92);
+        box-shadow: 0 16px 40px rgba(15,23,42,.10);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius2);
+        overflow: hidden;
+      }
+      .prepStickyInner{ padding: 14px; }
+      @media (min-width: 860px){ .prepStickyInner{ padding: 18px; } }
+
+      /* Prevent the sticky panel from feeling too tall on small screens */
+      @media (max-width: 520px){
+        :root{ --prepStickyTop: 6px; }
+        .prepStickyInner{ padding: 12px; }
+      }
+
+      /* ✅ NEW: floating "Top" button when scrolled down */
+      .floatTop{
+        position: fixed;
+        right: 14px;
+        bottom: 14px;
+        z-index: 20000;
+      }
+
       /* SESSION */
       .session{
         position: fixed; inset: 0; z-index: 9999;
@@ -1192,16 +1238,6 @@ function Styles() {
         font-weight: 950;
       }
 
-      .warn{
-        margin-top: 14px;
-        padding: 12px 14px;
-        border-radius: 18px;
-        border: 1px solid rgba(251,113,133,.35);
-        background: rgba(251,113,133,.08);
-        color: #9f1239;
-        font-weight: 900;
-      }
-
       @media (max-width: 520px){
         .topInner{ padding: 10px 10px; }
         .topControls{ gap: 8px; }
@@ -1271,8 +1307,7 @@ function AppInner() {
   });
 
   const selectedSet = useMemo(
-    () =>
-      genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
+    () => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
     [genre, setId]
   );
 
@@ -1293,23 +1328,6 @@ function AppInner() {
 
     return availableBases?.[0]?.id ?? "";
   });
-
-  /* ✅ FIX #1: keep setId valid when genre changes (PREP ONLY) */
-  useEffect(() => {
-    if (mode !== "prep") return;
-
-    const sets = genre?.sets ?? [];
-    if (!sets.length) return;
-
-    const stillValid = sets.some((s) => s.id === setId);
-    if (stillValid) return;
-
-    const byLast = lastSelection?.setId;
-    const nextSet =
-      byLast && sets.some((s) => s.id === byLast) ? byLast : sets[0].id;
-
-    setSetId(nextSet);
-  }, [mode, genreId, genre, setId, lastSelection]);
 
   useEffect(() => {
     const basesAll = selectedSet?.bases ?? [];
@@ -1455,11 +1473,16 @@ function AppInner() {
     copy.id = makeId("my_base");
     copy.name = nextName;
     copy.curated = true;
-    copy.flow = (copy.flow || []).map((step) => ({ ...step, uid: makeId("my_step") }));
+    copy.flow = (copy.flow || []).map((step) => ({
+      ...step,
+      uid: makeId("my_step"),
+    }));
 
     setUserBasesBySet((prev) => {
       const next = { ...(prev || {}) };
-      const arr = Array.isArray(next[selectedSet.id]) ? [...next[selectedSet.id]] : [];
+      const arr = Array.isArray(next[selectedSet.id])
+        ? [...next[selectedSet.id]]
+        : [];
       arr.push(copy);
       next[selectedSet.id] = arr;
       return next;
@@ -1469,13 +1492,13 @@ function AppInner() {
     pushToast("Duplicated. You are now on your copy.");
   };
 
-  /* ✅ FIX #2: DO NOT reset flow while in session */
+  /* ✅ IMPORTANT: only reset flow when in PREP, never during session */
   useEffect(() => {
     if (mode !== "prep") return;
     setIdx(0);
     setIsOver(false);
     setAutoOn(false);
-  }, [mode, genreId, setId, baseId]);
+  }, [genreId, setId, baseId, mode]);
 
   const hasAnyImagesInFlow = useMemo(
     () => (flow || []).some((s) => !!s?.img),
@@ -1495,7 +1518,10 @@ function AppInner() {
         day: `Day ${usable.length + 1}`,
         text: `Full session (${usable.map((x) => x.name).join(", ")}) once, slow`,
       });
-      dayItems.push({ day: `Day ${usable.length + 2}`, text: `Full session once, normal pace` });
+      dayItems.push({
+        day: `Day ${usable.length + 2}`,
+        text: `Full session once, normal pace`,
+      });
     } else if (usable.length === 1) {
       dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
       dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
@@ -1516,7 +1542,9 @@ function AppInner() {
       lastSelection: { genreId, setId, baseId },
       showRefImage,
       showNextPreview,
-      seenOnboarding: !showOnboarding ? true : persisted?.seenOnboarding ?? false,
+      seenOnboarding: !showOnboarding
+        ? true
+        : persisted?.seenOnboarding ?? false,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1546,12 +1574,6 @@ function AppInner() {
     pushToast("Exited session.");
   };
 
-  /* ✅ FIX #3: stop “missing top part” caused by scroll restoration */
-  useEffect(() => {
-    if (mode !== "prep") return;
-    window.scrollTo(0, 0);
-  }, [mode]);
-
   const resetApp = () => {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -1572,9 +1594,12 @@ function AppInner() {
   };
 
   const noData = !Array.isArray(GENRES) || GENRES.length === 0;
-  const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
+  const cueTier = useMemo(
+    () => cueTierFromText(current?.cue ?? ""),
+    [current?.cue]
+  );
 
-  /* Measure top/bottom bars so content never hides underneath */
+  /* ✅ FIX: Measure top/bottom bars so content never hides underneath */
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
 
@@ -1607,6 +1632,27 @@ function AppInner() {
     if (mode !== "session") return;
     syncBars();
   }, [mode, isOver, syncBars]);
+
+  /* ✅ NEW: always land at the top when entering PREP */
+  useEffect(() => {
+    if (mode !== "prep") return;
+    requestAnimationFrame(() => {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      } catch {
+        window.scrollTo(0, 0);
+      }
+    });
+  }, [mode]);
+
+  /* ✅ NEW: floating Top button */
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowTopBtn(window.scrollY > 260);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
@@ -1645,6 +1691,20 @@ function AppInner() {
       {toast ? (
         <div className="toastWrap" aria-live="polite" aria-atomic="true">
           <div className="toast">{toast}</div>
+        </div>
+      ) : null}
+
+      {mode === "prep" && showTopBtn ? (
+        <div className="floatTop">
+          <button
+            className="btn"
+            style={{ borderRadius: 999, height: 44, padding: "0 14px" }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Scroll to top"
+            title="Back to top"
+          >
+            Top ↑
+          </button>
         </div>
       ) : null}
 
@@ -1687,8 +1747,9 @@ function AppInner() {
             </div>
           ) : null}
 
-          <div className="card">
-            <div className="cardInner">
+          {/* ✅ NEW: STICKY selector panel so Genre/Set/Base never disappear */}
+          <div className="prepSticky" aria-label="Pose selection controls">
+            <div className="prepStickyInner">
               <div className="grid">
                 <div>
                   <div className="label">
@@ -1751,7 +1812,13 @@ function AppInner() {
                       Duplicate
                     </button>
 
-                    <button className="btn btnPrimary" onClick={beginSession} disabled={!flow.length} title={flow.length ? "Start the step-by-step flow" : "No steps available for this base"} aria-label="Begin session">
+                    <button
+                      className="btn btnPrimary"
+                      onClick={beginSession}
+                      disabled={!flow.length}
+                      title={flow.length ? "Start the step-by-step flow" : "No steps available for this base"}
+                      aria-label="Begin session"
+                    >
                       Begin session
                     </button>
                   </div>
@@ -1766,6 +1833,7 @@ function AppInner() {
             </div>
           </div>
 
+          {/* Keep the rest of the page normal scroll */}
           <div className="card">
             <div className="cardInner">
               <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
@@ -1796,7 +1864,8 @@ function AppInner() {
                 <div style={{ flex: 1, minWidth: 260 }}>
                   <div className="progLabel">Progress</div>
                   <div className="progNums">
-                    <strong style={{ color: "var(--ink)" }}>{stepNow}</strong> / {flow.length || 0} ({progressPct}%)
+                    <strong style={{ color: "var(--ink)" }}>{stepNow}</strong> /{" "}
+                    {flow.length || 0} ({progressPct}%)
                   </div>
                   <div className="bar">
                     <div className="barFill" style={{ width: `${progressPct}%` }} />
