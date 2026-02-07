@@ -1583,3 +1583,45 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+/* MOBILE ONLY — keep laptop unchanged */
+@media (max-width: 859px){
+  /* Stack content in a clean column */
+  .stageInner{
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    align-items: stretch !important;
+  }
+
+  /* Make sure text uses the full width (no narrow column feel) */
+  .cueWrap{
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Ensure nothing overlaps the content */
+  .tapZone{
+    z-index: 0 !important;
+  }
+  .cueWrap, .refPanel{
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Put the image AFTER the text, and prevent clipping */
+  .refPanel{
+    order: 3 !important;                 /* image last */
+    width: 100% !important;
+    max-height: 38vh !important;         /* key: stop image from being cut */
+    overflow: auto !important;           /* if the card is taller, scroll inside */
+    padding: 10px !important;
+  }
+
+  .refPanel img{
+    width: 100% !important;
+    height: auto !important;
+    max-height: 34vh !important;
+    object-fit: contain !important;
+    display: block !important;
+  }
+}
