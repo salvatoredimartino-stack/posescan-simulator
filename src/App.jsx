@@ -925,6 +925,39 @@ function Styles() {
 }
 
       }
+@media (max-width: 859px){
+  /* Make text use the full width */
+  .cueWrap{
+    width: 100% !important;
+    max-width: 100% !important;
+
+    /* KEY: prevent the text from pushing the image off-screen */
+    max-height: 34vh !important;
+    overflow: auto !important;
+    padding-right: 6px !important;
+  }
+
+  /* Simple hint so users know there's more */
+  .cueWrap::after{
+    content: "Image below ↓";
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--muted);
+  }
+
+  /* Keep the image big enough to be seen */
+  .refPanel{
+    max-height: 40vh !important;
+    overflow: hidden !important;
+  }
+
+  .refPanel img{
+    max-height: 36vh !important;
+  }
+}
+
     `}</style>
   );
 }
