@@ -58,7 +58,8 @@ class ErrorBoundary extends React.Component {
 /* =========================================
    ASSET PATHS (CRITICAL)
    ========================================= */
-const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
+const ASSET = (p) =>
+  `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* =========================================
    FULL DATA (as you provided)
@@ -587,8 +588,18 @@ const BASE_GENRES = [
             name: "Base Pose 1",
             curated: true,
             flow: [
-              { uid: "50p_set1_base1_step1", label: "Base Pose 1", cue: "Seated tall, apple box, chin around, fingertips light" },
-              { uid: "50p_set1_base1_step2", label: "Pose 2", cue: `Hands together and down and forward\nShoulders dropped\nRemove the second box` },
+              {
+                uid: "50p_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: "Seated tall, apple box, chin around, fingertips light",
+              },
+              {
+                uid: "50p_set1_base1_step2",
+                label: "Pose 2",
+                cue: `Hands together and down and forward
+Shoulders dropped
+Remove the second box`,
+              },
               { uid: "50p_set1_base1_step3", label: "Pose 3", cue: "Comp 1 Baby smile" },
               { uid: "50p_set1_base1_step4", label: "Pose 4", cue: "Comp 2" },
             ],
@@ -618,8 +629,19 @@ Tilt the camera`,
               { uid: "50p_set2_base2_step2", label: "Pose 3", cue: "Chin around, soften eyes" },
               { uid: "50p_set2_base2_step3", label: "Pose 4", cue: "Chin down, baby smile" },
               { uid: "50p_set2_base2_step4", label: "Pose 5", cue: "Chin down and horizontal" },
-              { uid: "50p_set2_base2_step5", label: "Pose 6", cue: `Keep your shoulder drop to me\nRoll your shoulder back to the wall\nChange weight to the other foot` },
-              { uid: "50p_set2_base2_step6", label: "Pose 7", cue: `Hold hands around the body\nShoulders down to me` },
+              {
+                uid: "50p_set2_base2_step5",
+                label: "Pose 6",
+                cue: `Keep your shoulder drop to me
+Roll your shoulder back to the wall
+Change weight to the other foot`,
+              },
+              {
+                uid: "50p_set2_base2_step6",
+                label: "Pose 7",
+                cue: `Hold hands around the body
+Shoulders down to me`,
+              },
             ],
           },
         ],
@@ -633,7 +655,17 @@ Tilt the camera`,
             name: "Base Pose 5",
             curated: true,
             flow: [
-              { uid: "50p_set5_base5_step1", label: "Base Pose 5", cue: `Hands down\nTouch\nElbow back\nFoot towards me\nChin forward and down\nDrop shoulder down\nTilt camera` },
+              {
+                uid: "50p_set5_base5_step1",
+                label: "Base Pose 5",
+                cue: `Hands down
+Touch
+Elbow back
+Foot towards me
+Chin forward and down
+Drop shoulder down
+Tilt camera`,
+              },
               { uid: "50p_set5_base5_step2", label: "Pose 6", cue: "Horizontal" },
               { uid: "50p_set5_base5_step3", label: "Pose 7", cue: "Chin forward and down" },
               { uid: "50p_set5_base5_step4", label: "Pose 8", cue: "More air, chin around" },
@@ -657,9 +689,25 @@ Tilt the camera`,
             name: "Base Pose 1",
             curated: true,
             flow: [
-              { uid: "pbm_set1_base1_step1", label: "Base Pose 1", cue: `Sitting on a stool\n45 degrees\nOne foot raised\nHands together\nSit upright\nChin towards me` },
+              {
+                uid: "pbm_set1_base1_step1",
+                label: "Base Pose 1",
+                cue: `Sitting on a stool
+45 degrees
+One foot raised
+Hands together
+Sit upright
+Chin towards me`,
+              },
               { uid: "pbm_set1_base1_step2", label: "Pose 2", cue: "Step back, easy smile" },
-              { uid: "pbm_set1_base1_step3", label: "Pose 3", cue: `Lean onto that knee a bit more\nDrop right back shoulder\nChin forward\nSoft smile` },
+              {
+                uid: "pbm_set1_base1_step3",
+                label: "Pose 3",
+                cue: `Lean onto that knee a bit more
+Drop right back shoulder
+Chin forward
+Soft smile`,
+              },
               { uid: "pbm_set1_base1_step4", label: "Pose 4", cue: "Relax your posture and chin around to me" },
               { uid: "pbm_set1_base1_step5", label: "Pose 5", cue: "More smile" },
               { uid: "pbm_set1_base1_step6", label: "Pose 6", cue: "Hands on your thigh, easy smile" },
@@ -695,7 +743,13 @@ Tilt the camera`,
               { uid: "pbm_set3_base3_step1", label: "Base Pose 3", cue: "45 degrees, weight on the back foot, arms crossed" },
               { uid: "pbm_set3_base3_step2", label: "Pose 4", cue: "Arms crossed low, weight settled" },
               { uid: "pbm_set3_base3_step3", label: "Pose 5", cue: "Arms down, open shoulders" },
-              { uid: "pbm_set3_base3_step4", label: "Pose 6", cue: `Stand away from the wall\nFeet apart\nShoulders to me` },
+              {
+                uid: "pbm_set3_base3_step4",
+                label: "Pose 6",
+                cue: `Stand away from the wall
+Feet apart
+Shoulders to me`,
+              },
             ],
           },
         ],
@@ -709,7 +763,9 @@ Tilt the camera`,
             name: "Base Pose 4",
             curated: true,
             flow: [
-              { uid: "pbm_set4_base4_step1", label: "Base Pose 4", cue: `Sit tall, 45 degrees\nBack foot on a half box\nHands on thigh, loose` },
+              { uid: "pbm_set4_base4_step1", label: "Base Pose 4", cue: `Sit tall, 45 degrees
+Back foot on a half box
+Hands on thigh, loose` },
               { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture" },
               { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile" },
             ],
@@ -813,7 +869,7 @@ function Styles() {
         --grad: linear-gradient(90deg,#4f46e5,#d946ef,#fb7185);
         --bg: linear-gradient(135deg,#fff7fb,#ffffff,#f2f6ff);
 
-        /* NEW: runtime-measured bar heights */
+        /* runtime-measured bar heights */
         --topH: 140px;
         --bottomH: 96px;
       }
@@ -1035,7 +1091,6 @@ function Styles() {
       }
       .toggle input{ width:18px; height:18px; accent-color:#4f46e5; }
 
-      /* ✅ FIX: main padding is now driven by measured bar heights */
       .main{
         position:absolute; inset:0;
         padding-top: calc(var(--topH, 140px) + 10px);
@@ -1147,7 +1202,6 @@ function Styles() {
         font-weight: 900;
       }
 
-      /* Extra tightening for small screens to reduce wrapping */
       @media (max-width: 520px){
         .topInner{ padding: 10px 10px; }
         .topControls{ gap: 8px; }
@@ -1165,14 +1219,26 @@ function Styles() {
    APP
    ========================================= */
 function AppInner() {
-  const persisted = useMemo(() => safeJsonParse(localStorage.getItem(STORAGE_KEY), null), []);
+  const persisted = useMemo(
+    () => safeJsonParse(localStorage.getItem(STORAGE_KEY), null),
+    []
+  );
 
-  const [showFullLibrary, setShowFullLibrary] = useState(!!persisted?.showFullLibrary);
+  const [showFullLibrary, setShowFullLibrary] = useState(
+    !!persisted?.showFullLibrary
+  );
   const [favorites, setFavorites] = useState(persisted?.favorites ?? {});
-  const [userBasesBySet, setUserBasesBySet] = useState(persisted?.userBasesBySet ?? {});
-  const [lastSelection, setLastSelection] = useState(persisted?.lastSelection ?? null);
+  const [userBasesBySet, setUserBasesBySet] = useState(
+    persisted?.userBasesBySet ?? {}
+  );
+  const [lastSelection, setLastSelection] = useState(
+    persisted?.lastSelection ?? null
+  );
 
-  const GENRES = useMemo(() => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet), [userBasesBySet]);
+  const GENRES = useMemo(
+    () => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet),
+    [userBasesBySet]
+  );
 
   const [mode, setMode] = useState("prep"); // prep | session
 
@@ -1190,8 +1256,13 @@ function AppInner() {
   }, []);
 
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
-  const [genreId, setGenreId] = useState(() => lastSelection?.genreId ?? fallbackGenreId);
-  const genre = useMemo(() => GENRES.find((g) => g.id === genreId) ?? GENRES[0] ?? null, [GENRES, genreId]);
+  const [genreId, setGenreId] = useState(
+    () => lastSelection?.genreId ?? fallbackGenreId
+  );
+  const genre = useMemo(
+    () => GENRES.find((g) => g.id === genreId) ?? GENRES[0] ?? null,
+    [GENRES, genreId]
+  );
 
   const [setId, setSetId] = useState(() => {
     const byLast = lastSelection?.setId;
@@ -1199,14 +1270,11 @@ function AppInner() {
     return genre?.sets?.[0]?.id ?? "";
   });
 
-  useEffect(() => {
-    const byLast = lastSelection?.setId;
-    const nextSet = byLast && genre?.sets?.some((s) => s.id === byLast) ? byLast : genre?.sets?.[0]?.id ?? "";
-    setSetId(nextSet);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [genreId, lastSelection, genre?.sets]);
-
-  const selectedSet = useMemo(() => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null, [genre, setId]);
+  const selectedSet = useMemo(
+    () =>
+      genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
+    [genre, setId]
+  );
 
   const availableBases = useMemo(() => {
     const bases = selectedSet?.bases ?? [];
@@ -1225,6 +1293,23 @@ function AppInner() {
 
     return availableBases?.[0]?.id ?? "";
   });
+
+  /* ✅ FIX #1: keep setId valid when genre changes (PREP ONLY) */
+  useEffect(() => {
+    if (mode !== "prep") return;
+
+    const sets = genre?.sets ?? [];
+    if (!sets.length) return;
+
+    const stillValid = sets.some((s) => s.id === setId);
+    if (stillValid) return;
+
+    const byLast = lastSelection?.setId;
+    const nextSet =
+      byLast && sets.some((s) => s.id === byLast) ? byLast : sets[0].id;
+
+    setSetId(nextSet);
+  }, [mode, genreId, genre, setId, lastSelection]);
 
   useEffect(() => {
     const basesAll = selectedSet?.bases ?? [];
@@ -1254,10 +1339,17 @@ function AppInner() {
 
   const [autoOn, setAutoOn] = useState(false);
   const [rhythmId, setRhythmId] = useState("normal");
-  const rhythm = useMemo(() => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1], [rhythmId]);
+  const rhythm = useMemo(
+    () => RHYTHMS.find((r) => r.id === rhythmId) ?? RHYTHMS[1],
+    [rhythmId]
+  );
 
-  const [showRefImage, setShowRefImage] = useState(persisted?.showRefImage ?? true);
-  const [showNextPreview, setShowNextPreview] = useState(persisted?.showNextPreview ?? true);
+  const [showRefImage, setShowRefImage] = useState(
+    persisted?.showRefImage ?? true
+  );
+  const [showNextPreview, setShowNextPreview] = useState(
+    persisted?.showNextPreview ?? true
+  );
 
   const current = useMemo(() => {
     if (!flow.length) return null;
@@ -1354,7 +1446,9 @@ function AppInner() {
   const duplicateAnchor = () => {
     if (!selectedBase || !selectedSet) return;
 
-    const allNames = (selectedSet?.bases ?? []).map((b) => b?.name).filter(Boolean);
+    const allNames = (selectedSet?.bases ?? [])
+      .map((b) => b?.name)
+      .filter(Boolean);
     const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
 
     const copy = deepClone(selectedBase);
@@ -1375,13 +1469,18 @@ function AppInner() {
     pushToast("Duplicated. You are now on your copy.");
   };
 
+  /* ✅ FIX #2: DO NOT reset flow while in session */
   useEffect(() => {
+    if (mode !== "prep") return;
     setIdx(0);
     setIsOver(false);
     setAutoOn(false);
-  }, [genreId, setId, baseId]);
+  }, [mode, genreId, setId, baseId]);
 
-  const hasAnyImagesInFlow = useMemo(() => (flow || []).some((s) => !!s?.img), [flow]);
+  const hasAnyImagesInFlow = useMemo(
+    () => (flow || []).some((s) => !!s?.img),
+    [flow]
+  );
 
   const rehearsalPlan = useMemo(() => {
     const sets = genre?.sets ?? [];
@@ -1421,7 +1520,17 @@ function AppInner() {
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview, showOnboarding]);
+  }, [
+    showFullLibrary,
+    favorites,
+    userBasesBySet,
+    genreId,
+    setId,
+    baseId,
+    showRefImage,
+    showNextPreview,
+    showOnboarding,
+  ]);
 
   const beginSession = () => {
     setLastSelection({ genreId, setId, baseId });
@@ -1436,6 +1545,12 @@ function AppInner() {
     setAutoOn(false);
     pushToast("Exited session.");
   };
+
+  /* ✅ FIX #3: stop “missing top part” caused by scroll restoration */
+  useEffect(() => {
+    if (mode !== "prep") return;
+    window.scrollTo(0, 0);
+  }, [mode]);
 
   const resetApp = () => {
     try {
@@ -1459,7 +1574,7 @@ function AppInner() {
   const noData = !Array.isArray(GENRES) || GENRES.length === 0;
   const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
 
-  /* ✅ FIX: Measure top/bottom bars so content never hides underneath */
+  /* Measure top/bottom bars so content never hides underneath */
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
 
@@ -1488,7 +1603,6 @@ function AppInner() {
     };
   }, [mode, isOver, syncBars]);
 
-  /* When bottom bar appears/disappears (isOver), resync */
   useEffect(() => {
     if (mode !== "session") return;
     syncBars();
