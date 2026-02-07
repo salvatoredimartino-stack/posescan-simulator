@@ -62,15 +62,12 @@ const ASSET = (p) =>
   `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* =========================================
-   DATA
-   - 50+ removed
-   - Beauty renamed to Women’s Poses
-   - Personal Branding (Man) renamed to Corporate Men’s Poses
+   FULL DATA (as you provided)
    ========================================= */
 const BASE_GENRES = [
   {
     id: "beauty",
-    name: "Women’s Poses",
+    name: "Women's Poses",
     sets: [
       {
         id: "beauty_set1_seated_stool",
@@ -84,46 +81,37 @@ const BASE_GENRES = [
               {
                 uid: "beauty_seated_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Sit on the edge of the stool with your body turned slightly to the side.\n" +
-                  "Keep both feet on the floor and rest your hands flat and relaxed.\n" +
-                  "Perfect — this is your base pose. From here we’ll make small changes step-by-step.",
+                cue: "Edge of stool, 45°, feet down, hands flat",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay just like that.\n" +
-                  "Bring your hands gently between your legs and let your elbows relax in.\n" +
-                  "Keep the shoulders soft.",
+                label: "Pose 2",
+                cue: "Hands between legs, elbows relaxed inward",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, rotate your body a little more to the side.\n" +
-                  "Keep your posture tall and your neck long.\n" +
-                  "Hold that.",
+                label: "Pose 3",
+                cue: "Rotate side-on, maintain torso length",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step4",
-                label: "Photographer",
-                cue: "Don’t move — I’m just tightening the framing slightly.",
+                label: "Pose 4",
+                cue: "Change composition, tighten crop",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step5",
-                label: "Photographer",
-                cue: "Stay exactly the same — switching to a horizontal framing.",
+                label: "Pose 5",
+                cue: "Horizontal camera, same body position",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
               {
                 uid: "beauty_seated_base1_step6",
-                label: "Photographer",
-                cue: "Hold that — one more clean variation.",
+                label: "Pose 6",
+                cue: "Alternate composition, hold expression",
                 img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
               },
             ],
@@ -404,6 +392,66 @@ const BASE_GENRES = [
                 cue: "Hands out, crossing lightly",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
+              {
+                uid: "beauty_table_base1_step7",
+                label: "Pose 7",
+                cue: "Smoking hands, elbows in",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step8",
+                label: "Pose 8",
+                cue: "Hands behind hair, elbows crossed",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step9",
+                label: "Pose 9",
+                cue: "Elbow one way, hands across",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step10",
+                label: "Pose 10",
+                cue: "Body out, head left",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step11",
+                label: "Pose 11",
+                cue: "Hand in hair, body sideways",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step12",
+                label: "Pose 12",
+                cue: "Both hands up",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step13",
+                label: "Pose 13",
+                cue: "Hands tucked, tight composition",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step14",
+                label: "Pose 14",
+                cue: "Hugging motion, one hand off",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step15",
+                label: "Pose 15",
+                cue: "Double hug, compress shape",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
+              {
+                uid: "beauty_table_base1_step16",
+                label: "Pose 16",
+                cue: "Elbow off, one up one down, tilt",
+                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
+              },
             ],
           },
         ],
@@ -441,12 +489,92 @@ const BASE_GENRES = [
                 cue: "Triangle shape, elbow anchored",
                 img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
+              {
+                uid: "beauty_box_base1_step5",
+                label: "Pose 5",
+                cue: "Elbows together, hands on chin",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+              {
+                uid: "beauty_box_base1_step6",
+                label: "Pose 6",
+                cue: "Rotate body around elbows",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+              {
+                uid: "beauty_box_base1_step7",
+                label: "Pose 7",
+                cue: "Feet on box, hug knees",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+              {
+                uid: "beauty_box_base1_step8",
+                label: "Pose 8",
+                cue: "Remove box, horizontal tilt",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+              {
+                uid: "beauty_box_base1_step9",
+                label: "Pose 9",
+                cue: "Big smile, tilt, hold",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+              {
+                uid: "beauty_box_base1_step10",
+                label: "Pose 10",
+                cue: "One knee hugged, elbow down",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+              },
+            ],
+          },
+          {
+            id: "beauty_box_base2",
+            name: "Base Pose 2",
+            curated: true,
+            flow: [
+              {
+                uid: "beauty_box_base2_step1",
+                label: "Base Pose 2",
+                cue: "Seated sideways on box, torso upright, knees angled",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
+              {
+                uid: "beauty_box_base2_step2",
+                label: "Pose 2",
+                cue: "Elbow resting on knee, hand relaxed",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
+              {
+                uid: "beauty_box_base2_step3",
+                label: "Pose 3",
+                cue: "Lean slightly forward, keep spine long",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
+              {
+                uid: "beauty_box_base2_step4",
+                label: "Pose 4",
+                cue: "Hands together, soften shoulders",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
+              {
+                uid: "beauty_box_base2_step5",
+                label: "Pose 5",
+                cue: "Chin around, small tilt",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
+              {
+                uid: "beauty_box_base2_step6",
+                label: "Pose 6",
+                cue: "Change composition, tighter crop",
+                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+              },
             ],
           },
         ],
       },
     ],
   },
+
   {
     id: "personal_branding_man",
     name: "Corporate Men’s Poses",
@@ -560,7 +688,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const STORAGE_KEY = "pose_operator_state_v7";
+const STORAGE_KEY = "pose_rehearsal_app_state_css_v4";
 
 /* =========================================
    HELPERS
@@ -571,6 +699,25 @@ function safeJsonParse(str, fallback) {
   } catch {
     return fallback;
   }
+}
+function deepClone(x) {
+  return JSON.parse(JSON.stringify(x));
+}
+function makeId(prefix = "id") {
+  return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
+}
+function mergeUserBasesIntoGenres(baseGenres, userBasesBySet) {
+  if (!userBasesBySet) return baseGenres;
+  const genres = deepClone(baseGenres);
+  for (const g of genres) {
+    for (const s of g.sets || []) {
+      const extra = userBasesBySet[s.id];
+      if (Array.isArray(extra) && extra.length) {
+        s.bases = [...(s.bases || []), ...extra];
+      }
+    }
+  }
+  return genres;
 }
 function clamp(n, a, b) {
   return Math.max(a, Math.min(b, n));
@@ -587,103 +734,35 @@ function cueTierFromText(cue = "") {
   if (lines >= 4 || len >= 120 || words >= 14) return "t2";
   return "t1";
 }
+function normalizeMyPrefix(name) {
+  let n = String(name || "").trim();
+  while (n.toLowerCase().startsWith("my ")) n = n.slice(3).trim();
+  return n;
+}
+function makeDuplicateName(originalName, existingNames) {
+  const base = normalizeMyPrefix(originalName);
+  const cleanBase = base || "Base Pose";
+  const prefix = `My ${cleanBase}`;
 
-function stableHash(str) {
-  const s = String(str || "");
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0);
+  if (!existingNames || !existingNames.length) return prefix;
+
+  const lowerExisting = new Set(existingNames.map((x) => String(x).toLowerCase()));
+  if (!lowerExisting.has(prefix.toLowerCase())) return prefix;
+
+  let k = 2;
+  while (lowerExisting.has(`${prefix} (${k})`.toLowerCase())) k += 1;
+  return `${prefix} (${k})`;
 }
 
-/* 7-day plan, always exactly 7 cards */
-function build7DayPlan(genre) {
-  const sets = genre?.sets ?? [];
-  const names = sets.map((s) => s?.name).filter(Boolean);
+/** ✅ Make cues look premium: capitalise first letter consistently. */
+function toSentenceCase(text) {
+  const s = String(text ?? "");
+  const trimmed = s.trimStart();
+  if (!trimmed) return s;
 
-  const pick = (i) => {
-    if (!names.length) return "Choose a set and run it 3 times";
-    return `${names[i % names.length]} — run 3 times`;
-  };
-
-  const full = () => {
-    if (!names.length) return "Full session — once";
-    const shown = names.slice(0, 5);
-    return `Full session (${shown.join(", ")}) once`;
-  };
-
-  return [
-    { day: "Day 1", text: pick(0) },
-    { day: "Day 2", text: pick(1) },
-    { day: "Day 3", text: pick(2) },
-    { day: "Day 4", text: pick(3) },
-    { day: "Day 5", text: pick(4) },
-    { day: "Day 6", text: `${full()} — slow` },
-    { day: "Day 7", text: `${full()} — normal pace` },
-  ];
-}
-
-/* Client-safe wording: less repetitive, more human, deterministic per step */
-function toClientSafeCue(rawCue, stepUid) {
-  const raw = String(rawCue || "").trim();
-  if (!raw) return "";
-
-  const uidKey = stepUid || raw;
-  const h = stableHash(uidKey);
-
-  const reassuranceSoft = [
-    "Nice — keep that soft.",
-    "That’s it — hold there.",
-    "Perfect — stay right there.",
-    "Lovely — keep it gentle.",
-    "Great — breathe and soften the hands.",
-    "Good — shoulders down, relaxed.",
-    "Beautiful — don’t change a thing.",
-    "Exactly — keep it calm.",
-  ];
-
-  const photoOnly = [
-    "Stay still — I’m just changing the framing.",
-    "Hold that — I’m taking a clean variation.",
-    "Don’t move — just a tighter crop.",
-    "Perfect — same pose, new angle.",
-  ];
-
-  const looksTechnical =
-    /\b(comp|composition|horizontal|crop|frame|widen|tighten|tilt camera)\b/i.test(raw);
-
-  // If already reassuring/human, don’t add extra fluff.
-  const alreadyHuman =
-    /\b(perfect|lovely|beautiful|great|nice|hold that|stay right)\b/i.test(raw);
-
-  // Normalize short, blunt cues into full sentences without sounding robotic
-  const lines = raw
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean)
-    .map((l) => (/[.!?]$/.test(l) ? l : `${l}.`));
-
-  let out = lines.join("\n");
-
-  if (looksTechnical) {
-    const pick = photoOnly[h % photoOnly.length];
-    return pick;
-  }
-
-  // Add ONE soft reassurance only when needed:
-  // - short cue
-  // - or very directive cue without any human marker
-  const wordCount = out.replace(/\s+/g, " ").trim().split(" ").filter(Boolean).length;
-  const needsSoftener = wordCount <= 10 && !alreadyHuman;
-
-  if (needsSoftener) {
-    const pick = reassuranceSoft[h % reassuranceSoft.length];
-    out = `${out}\n${pick}`;
-  }
-
-  return out;
+  const i = s.indexOf(trimmed[0]); // preserve leading whitespace/newlines if any
+  const first = trimmed[0].toUpperCase();
+  return s.slice(0, i) + first + trimmed.slice(1);
 }
 
 /* =========================================
@@ -699,13 +778,13 @@ function Styles() {
         --card:rgba(255,255,255,.86);
         --shadow: 0 20px 45px rgba(15,23,42,.12);
         --shadow2: 0 10px 25px rgba(15,23,42,.10);
+        --radius: 22px;
         --radius2: 28px;
         --grad: linear-gradient(90deg,#4f46e5,#d946ef,#fb7185);
         --bg: linear-gradient(135deg,#fff7fb,#ffffff,#f2f6ff);
 
         --topH: 140px;
         --bottomH: 96px;
-
         --prepStickyTop: 10px;
       }
 
@@ -721,13 +800,42 @@ function Styles() {
 
       .wrap{ max-width: 980px; margin: 0 auto; padding: 18px 16px 44px; }
 
-      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 10px 0 8px; letter-spacing:-0.03em; }
+      .pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:999px; font-size:12px; color:var(--muted); box-shadow: 0 2px 10px rgba(15,23,42,.06); }
+      .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
+
+      .h1{ font-size: clamp(26px, 3.8vw, 52px); line-height: 1.02; margin: 12px 0 8px; letter-spacing:-0.03em; }
       .sub{ margin:0; font-size: 16px; color: var(--muted); }
+
+      .card{
+        margin-top: 16px;
+        border:1px solid var(--line);
+        background: var(--card);
+        border-radius: var(--radius2);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+      }
+      .cardInner{ padding: 18px; }
+      @media (min-width: 860px){ .cardInner{ padding: 22px; } }
 
       .grid{ display:grid; grid-template-columns: 1fr; gap: 14px; }
       @media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
       .label{ font-size:12px; font-weight: 900; color: var(--muted); display:flex; align-items:center; gap:8px; }
+
+      .helpIcon{
+        width: 18px; height: 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.92);
+        color: var(--muted);
+        font-weight: 950;
+        font-size: 12px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        user-select:none;
+      }
 
       .helper{
         margin-top: 6px;
@@ -769,7 +877,6 @@ function Styles() {
         font-size: 14px;
         cursor: pointer;
         box-shadow: 0 8px 18px rgba(15,23,42,.08);
-        white-space: nowrap;
       }
       .btn:hover{ background: rgba(255,255,255,1); }
       .btn:disabled{ opacity:.45; cursor: not-allowed; }
@@ -780,20 +887,23 @@ function Styles() {
         color: #ffffff !important;
       }
       .btnPrimary:hover{ filter: brightness(1.06); }
+      .btnPrimary:active{ background: var(--grad) !important; color:#ffffff !important; }
+      .btnPrimary:focus{ background: var(--grad) !important; color:#ffffff !important; }
+      .btnPrimary:focus-visible{
+        outline: 3px solid rgba(79,70,229,.35);
+        outline-offset: 2px;
+      }
+
+      .btnIcon{
+        width: 46px;
+        padding:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size: 18px;
+      }
 
       .footerActions{ margin-top: 16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
-
-      .card{
-        margin-top: 16px;
-        border:1px solid var(--line);
-        background: var(--card);
-        border-radius: var(--radius2);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(10px);
-        overflow: hidden;
-      }
-      .cardInner{ padding: 18px; }
-      @media (min-width: 860px){ .cardInner{ padding: 22px; } }
 
       .planGrid{ margin-top:14px; display:grid; grid-template-columns: 1fr; gap: 10px; }
       @media (min-width: 860px){ .planGrid{ grid-template-columns: 1fr 1fr; } }
@@ -816,7 +926,7 @@ function Styles() {
         padding: 18px;
       }
       .modal{
-        width: min(780px, 100%);
+        width: min(720px, 100%);
         border-radius: 22px;
         border:1px solid rgba(255,255,255,.25);
         background: rgba(255,255,255,.96);
@@ -862,7 +972,6 @@ function Styles() {
         font-weight: 900;
       }
 
-      /* Sticky selector panel */
       .prepSticky{
         position: sticky;
         top: var(--prepStickyTop);
@@ -877,36 +986,14 @@ function Styles() {
       .prepStickyInner{ padding: 14px; }
       @media (min-width: 860px){ .prepStickyInner{ padding: 18px; } }
 
-      .stickyHeader{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap: 10px;
-        flex-wrap: wrap;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid rgba(15,23,42,.10);
+      @media (max-width: 520px){
+        :root{ --prepStickyTop: 6px; }
+        .prepStickyInner{ padding: 12px; }
       }
 
-      .stickyTitle{
-        display:flex;
-        align-items:center;
-        gap: 10px;
-        font-weight: 950;
-        letter-spacing:-0.02em;
-      }
-
-      .stickyActions{
-        display:flex;
-        align-items:center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      /* Floating Help button */
-      .floatHelp{
+      .floatTop{
         position: fixed;
-        left: 14px;
+        right: 14px;
         bottom: 14px;
         z-index: 20000;
       }
@@ -961,7 +1048,6 @@ function Styles() {
       }
 
       .mainPad{ height:100%; padding: 14px; }
-
       .stage{
         height:100%;
         border-radius: var(--radius2);
@@ -971,41 +1057,63 @@ function Styles() {
         backdrop-filter: blur(10px);
         position: relative;
         overflow:hidden;
-        display:flex;
-        align-items:flex-start;
-        justify-content:center;
-        padding: 22px;
+        padding: 18px;
       }
 
+      /* ✅ NEW: Responsive layout container (no overlap, uses full width) */
+      .stageLayout{
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+
+      /* Desktop: text + image side-by-side */
+      @media (min-width: 900px){
+        .stageLayout{
+          grid-template-columns: minmax(520px, 1fr) 320px;
+          gap: 18px;
+          align-items: center;
+        }
+      }
+
+      /* ✅ Ref image now participates in layout, can scale up */
       .ref{
-        position:absolute;
-        right: 14px;
-        top: 14px;
-        width: 160px;
-        height: 160px;
-        border-radius: 20px;
+        width: 100%;
+        max-width: 360px;
+        aspect-ratio: 1 / 1;
+        justify-self: center;
+        align-self: center;
+
+        border-radius: 22px;
         border:1px solid var(--line);
         background: rgba(255,255,255,.95);
         box-shadow: var(--shadow2);
-        padding: 10px;
+        padding: 14px;
+
         display:flex;
         align-items:center;
         justify-content:center;
-        z-index: 1;
+        overflow: hidden;
       }
-      .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
+      .ref img{
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 16px;
+      }
 
+      /* ✅ Cue uses full available width (no 40ch column) */
       .cueWrap{
         width: 100%;
-        max-width: min(40ch, 92vw);
+        max-width: 100%;
         text-align: left;
-        position: relative;
-        z-index: 2;
         overflow: auto;
-        max-height: 100%;
-        padding-bottom: 18px;
-        padding-right: 180px;
-        -webkit-overflow-scrolling: touch;
+        padding-right: 6px;
       }
 
       .cue{
@@ -1014,25 +1122,13 @@ function Styles() {
         white-space: pre-line;
         word-break: break-word;
       }
-      .cue.t1{ font-size: clamp(24px, 4.2vw, 56px); line-height: 1.07; }
-      .cue.t2{ font-size: clamp(21px, 3.6vw, 46px); line-height: 1.09; }
-      .cue.t3{ font-size: clamp(18px, 3.1vw, 38px); line-height: 1.11; }
-      .cue.t4{ font-size: clamp(16px, 2.7vw, 32px); line-height: 1.14; }
-
-      .miniHint{
-        margin-top: 10px;
-        border-radius: 16px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,.94);
-        padding: 10px 12px;
-        box-shadow: 0 10px 22px rgba(15,23,42,.08);
-        font-size: 13px;
-        color: var(--muted);
-        line-height: 1.25;
-      }
+      .cue.t1{ font-size: clamp(26px, 3.6vw, 56px); line-height: 1.07; }
+      .cue.t2{ font-size: clamp(22px, 3.2vw, 46px); line-height: 1.09; }
+      .cue.t3{ font-size: clamp(18px, 2.8vw, 38px); line-height: 1.11; }
+      .cue.t4{ font-size: clamp(16px, 2.4vw, 32px); line-height: 1.14; }
 
       .nextBox{
-        margin-top: 18px;
+        margin-top: 16px;
         border-radius: 18px;
         border: 1px solid var(--line);
         background: rgba(255,255,255,.94);
@@ -1048,8 +1144,9 @@ function Styles() {
         line-height: 1.22;
       }
 
-      .hint{ margin-top: 14px; font-size: 13px; color: var(--muted); }
+      .hint{ margin-top: 12px; font-size: 13px; color: var(--muted); }
 
+      /* Tap overlay stays, but content is always above it */
       .tapZone{
         position:absolute; inset:0;
         cursor: pointer;
@@ -1074,9 +1171,13 @@ function Styles() {
       }
 
       @media (max-width: 520px){
-        .stage{ padding: 16px; }
-        .ref{ width: 120px; height: 120px; right: 10px; top: 10px; }
-        .cueWrap{ padding-right: 130px; }
+        .topInner{ padding: 10px 10px; }
+        .topControls{ gap: 8px; }
+        .toggle{ padding: 6px 8px; font-size: 12px; }
+        .control{ height: 44px; }
+        .stage{ padding: 14px; }
+        .navBtn{ height: 58px; font-size: 17px; }
+        .ref{ max-width: 240px; padding: 12px; border-radius: 20px; }
       }
     `}</style>
   );
@@ -1091,12 +1192,28 @@ function AppInner() {
     []
   );
 
-  const GENRES = BASE_GENRES;
+  const [showFullLibrary, setShowFullLibrary] = useState(
+    !!persisted?.showFullLibrary
+  );
+  const [favorites, setFavorites] = useState(persisted?.favorites ?? {});
+  const [userBasesBySet, setUserBasesBySet] = useState(
+    persisted?.userBasesBySet ?? {}
+  );
+  const [lastSelection, setLastSelection] = useState(
+    persisted?.lastSelection ?? null
+  );
+
+  const GENRES = useMemo(
+    () => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet),
+    [userBasesBySet]
+  );
 
   const [mode, setMode] = useState("prep"); // prep | session
 
-  const [showHelp, setShowHelp] = useState(() => !persisted?.seenHelp);
-  const [showSystem, setShowSystem] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    const seen = persisted?.seenOnboarding;
+    return !seen;
+  });
 
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
@@ -1108,7 +1225,7 @@ function AppInner() {
 
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
   const [genreId, setGenreId] = useState(
-    () => persisted?.lastSelection?.genreId ?? fallbackGenreId
+    () => lastSelection?.genreId ?? fallbackGenreId
   );
   const genre = useMemo(
     () => GENRES.find((g) => g.id === genreId) ?? GENRES[0] ?? null,
@@ -1116,7 +1233,7 @@ function AppInner() {
   );
 
   const [setId, setSetId] = useState(() => {
-    const byLast = persisted?.lastSelection?.setId;
+    const byLast = lastSelection?.setId;
     if (byLast && genre?.sets?.some((s) => s.id === byLast)) return byLast;
     return genre?.sets?.[0]?.id ?? "";
   });
@@ -1124,10 +1241,6 @@ function AppInner() {
   const selectedSet = useMemo(
     () => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
     [genre, setId]
-  );
-
-  const [showFullLibrary, setShowFullLibrary] = useState(
-    !!persisted?.showFullLibrary
   );
 
   const availableBases = useMemo(() => {
@@ -1139,21 +1252,30 @@ function AppInner() {
 
   const [baseId, setBaseId] = useState(() => {
     const basesAll = selectedSet?.bases ?? [];
-    const byLast = persisted?.lastSelection?.baseId;
+    const fav = favorites?.[setId];
+    if (fav && basesAll.some((b) => b.id === fav)) return fav;
+
+    const byLast = lastSelection?.baseId;
     if (byLast && basesAll.some((b) => b.id === byLast)) return byLast;
+
     return availableBases?.[0]?.id ?? "";
   });
 
   useEffect(() => {
     const basesAll = selectedSet?.bases ?? [];
-    const byLast = persisted?.lastSelection?.baseId;
+    const fav = favorites?.[setId];
+    if (fav && basesAll.some((b) => b.id === fav)) {
+      setBaseId(fav);
+      return;
+    }
+    const byLast = lastSelection?.baseId;
     if (byLast && basesAll.some((b) => b.id === byLast)) {
       setBaseId(byLast);
       return;
     }
     setBaseId(availableBases?.[0]?.id ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setId, selectedSet?.bases, availableBases]);
+  }, [setId, selectedSet?.bases, favorites, lastSelection, availableBases]);
 
   const selectedBase = useMemo(() => {
     const all = selectedSet?.bases ?? [];
@@ -1177,10 +1299,6 @@ function AppInner() {
   );
   const [showNextPreview, setShowNextPreview] = useState(
     persisted?.showNextPreview ?? true
-  );
-
-  const [clientWording, setClientWording] = useState(
-    persisted?.clientWording ?? true
   );
 
   const current = useMemo(() => {
@@ -1260,6 +1378,52 @@ function AppInner() {
     return () => clearTimeout(t);
   }, [mode, autoOn, isOver, flow.length, rhythm]);
 
+  const isFavorite = favorites?.[setId] === baseId;
+  const toggleFavorite = () => {
+    setFavorites((prev) => {
+      const next = { ...(prev || {}) };
+      if (next[setId] === baseId) {
+        delete next[setId];
+        pushToast("Removed favorite for this set.");
+      } else {
+        next[setId] = baseId;
+        pushToast("Saved favorite: this will be the default base for this set.");
+      }
+      return next;
+    });
+  };
+
+  const duplicateAnchor = () => {
+    if (!selectedBase || !selectedSet) return;
+
+    const allNames = (selectedSet?.bases ?? [])
+      .map((b) => b?.name)
+      .filter(Boolean);
+    const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
+
+    const copy = deepClone(selectedBase);
+    copy.id = makeId("my_base");
+    copy.name = nextName;
+    copy.curated = true;
+    copy.flow = (copy.flow || []).map((step) => ({
+      ...step,
+      uid: makeId("my_step"),
+    }));
+
+    setUserBasesBySet((prev) => {
+      const next = { ...(prev || {}) };
+      const arr = Array.isArray(next[selectedSet.id])
+        ? [...next[selectedSet.id]]
+        : [];
+      arr.push(copy);
+      next[selectedSet.id] = arr;
+      return next;
+    });
+
+    setTimeout(() => setBaseId(copy.id), 0);
+    pushToast("Duplicated. You are now on your copy.");
+  };
+
   useEffect(() => {
     if (mode !== "prep") return;
     setIdx(0);
@@ -1272,31 +1436,63 @@ function AppInner() {
     [flow]
   );
 
-  const rehearsalPlan = useMemo(() => build7DayPlan(genre), [genre]);
+  const rehearsalPlan = useMemo(() => {
+    const sets = genre?.sets ?? [];
+    const usable = sets.slice(0, Math.min(5, sets.length));
+    const dayItems = usable.map((s, i) => ({
+      day: `Day ${i + 1}`,
+      text: `${s.name} — run 3 times`,
+    }));
+
+    if (usable.length >= 2) {
+      dayItems.push({
+        day: `Day ${usable.length + 1}`,
+        text: `Full session (${usable.map((x) => x.name).join(", ")}) once, slow`,
+      });
+      dayItems.push({
+        day: `Day ${usable.length + 2}`,
+        text: `Full session once, normal pace`,
+      });
+    } else if (usable.length === 1) {
+      dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 4", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 5", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
+      dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
+    }
+
+    return dayItems.slice(0, 7);
+  }, [genre]);
 
   useEffect(() => {
     const payload = {
       showFullLibrary,
+      favorites,
+      userBasesBySet,
       lastSelection: { genreId, setId, baseId },
       showRefImage,
       showNextPreview,
-      seenHelp: !showHelp ? true : persisted?.seenHelp ?? false,
-      clientWording,
+      seenOnboarding: !showOnboarding
+        ? true
+        : persisted?.seenOnboarding ?? false,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     showFullLibrary,
+    favorites,
+    userBasesBySet,
     genreId,
     setId,
     baseId,
     showRefImage,
     showNextPreview,
-    showHelp,
-    clientWording,
+    showOnboarding,
   ]);
 
   const beginSession = () => {
+    setLastSelection({ genreId, setId, baseId });
     setMode("session");
     restartFlow();
     pushToast("Session started. Use Next / Back.");
@@ -1314,15 +1510,17 @@ function AppInner() {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
     setShowFullLibrary(false);
+    setFavorites({});
+    setUserBasesBySet({});
+    setLastSelection(null);
     setGenreId(fallbackGenreId);
     setShowRefImage(true);
     setShowNextPreview(true);
-    setClientWording(true);
     setMode("prep");
     setIdx(0);
     setIsOver(false);
     setAutoOn(false);
-    setShowHelp(true);
+    setShowOnboarding(true);
     pushToast("App reset. Starting fresh.");
   };
 
@@ -1331,18 +1529,6 @@ function AppInner() {
     () => cueTierFromText(current?.cue ?? ""),
     [current?.cue]
   );
-
-  const displayCue = useMemo(() => {
-    const raw = current?.cue ?? "";
-    const uid = current?.uid ?? "";
-    return clientWording ? toClientSafeCue(raw, uid) : String(raw || "");
-  }, [current?.cue, current?.uid, clientWording]);
-
-  const displayNextCue = useMemo(() => {
-    const raw = nextStep?.cue ?? "";
-    const uid = nextStep?.uid ?? "";
-    return clientWording ? toClientSafeCue(raw, uid) : String(raw || "");
-  }, [nextStep?.cue, nextStep?.uid, clientWording]);
 
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
@@ -1377,44 +1563,57 @@ function AppInner() {
     syncBars();
   }, [mode, isOver, syncBars]);
 
-  // Floating help appears when scrolled (prep only)
-  const [showFloatHelp, setShowFloatHelp] = useState(false);
   useEffect(() => {
     if (mode !== "prep") return;
-    const onScroll = () => setShowFloatHelp(window.scrollY > 260);
+    requestAnimationFrame(() => {
+      try {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      } catch {
+        window.scrollTo(0, 0);
+      }
+    });
+  }, [mode]);
+
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowTopBtn(window.scrollY > 260);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [mode]);
+  }, []);
+
+  // ✅ Apply sentence case at render time (current + next)
+  const currentCue = useMemo(() => toSentenceCase(current?.cue ?? ""), [current?.cue]);
+  const nextCue = useMemo(() => toSentenceCase(nextStep?.cue ?? ""), [nextStep?.cue]);
 
   return (
     <>
       <Styles />
 
-      {/* HELP MODAL */}
-      {mode === "prep" && showHelp && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="Help">
+      {mode === "prep" && showOnboarding && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
           <div className="modal">
             <div className="modalInner">
-              <div className="modalTitle">Help (quick)</div>
+              <div className="modalTitle">How this works (quick)</div>
               <div className="modalBody">
-                Choose a library (Genre), choose the setup (Set), choose a starting pose (Base),
-                then run the flow step-by-step.
+                This tool shows pose cues step-by-step so you don’t need to memorise a full session.
               </div>
               <ul className="modalList">
-                <li><strong>Base pose</strong> = your starting position.</li>
-                <li><strong>Flow</strong> = small movements from the base pose, one step at a time.</li>
+                <li><strong>Genre</strong> = the pose library for this type of shoot.</li>
+                <li><strong>Set</strong> = the setup (stool, wall, table…).</li>
+                <li><strong>Base</strong> = the starting pose.</li>
+                <li>From the base pose, you’ll make <strong>small changes step-by-step</strong> (that’s the flow).</li>
                 <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
               </ul>
               <div className="modalActions">
                 <button
-                  className="btn btnPrimary"
+                  className="btn"
                   onClick={() => {
-                    setShowHelp(false);
-                    pushToast("Help closed.");
+                    setShowOnboarding(false);
+                    pushToast("Help is always available via the “?” button.");
                   }}
                 >
-                  Close
+                  Got it
                 </button>
               </div>
             </div>
@@ -1422,57 +1621,56 @@ function AppInner() {
         </div>
       )}
 
-      {/* SYSTEM MODAL */}
-      {mode === "prep" && showSystem && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="System">
-          <div className="modal">
-            <div className="modalInner">
-              <div className="modalTitle">The System (ONE scale-ready system)</div>
-
-              <div className="modalBody">
-                <strong>Purpose:</strong><br />
-                Run a consistent, calm posing workflow without memory. Train it in 7 days, then execute the exact same flow for any client.
-              </div>
-
-              <div className="modalBody" style={{ marginTop: 12 }}>
-                <strong>Steps:</strong>
-              </div>
-              <ul className="modalList">
-                <li><strong>Prep (2 min):</strong> Genre → Set → Base. Keep “Client wording” ON for calm verbal direction.</li>
-                <li><strong>Practice (7 days):</strong> follow the 7-day rehearsal plan.</li>
-                <li><strong>Run:</strong> Begin session → read cue → Next. Keep changes small and deliberate.</li>
-              </ul>
-
-              <div className="modalBody" style={{ marginTop: 12 }}>
-                <strong>Handoff:</strong><br />
-                Anyone can run it by selecting the correct Genre/Set/Base and reading each cue as written, step-by-step.
-              </div>
-
-              <div className="modalActions">
-                <button className="btn" onClick={() => setShowSystem(false)}>Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Floating Help (prep only) */}
-      {mode === "prep" && showFloatHelp ? (
-        <div className="floatHelp">
-          <button className="btn btnPrimary" onClick={() => setShowHelp(true)} aria-label="Open help">
-            Help
-          </button>
-        </div>
-      ) : null}
-
       {toast ? (
         <div className="toastWrap" aria-live="polite" aria-atomic="true">
           <div className="toast">{toast}</div>
         </div>
       ) : null}
 
+      {mode === "prep" && showTopBtn ? (
+        <div className="floatTop">
+          <button
+            className="btn"
+            style={{ borderRadius: 999, height: 44, padding: "0 14px" }}
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Scroll to top"
+            title="Back to top"
+          >
+            Top ↑
+          </button>
+        </div>
+      ) : null}
+
       {mode === "prep" && (
         <div className="wrap">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <div className="pill">
+              <span className="dot" />
+              Prep
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <button
+                className="btn"
+                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                onClick={() => setShowOnboarding(true)}
+                title="Help / How this works"
+                aria-label="Open help"
+              >
+                ?
+              </button>
+              <button
+                className="btn"
+                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                onClick={resetApp}
+                title="Reset app (clears saved state and duplicates)"
+                aria-label="Reset app"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
           <h1 className="h1">Pose Flow Operator</h1>
           <p className="sub">Step-by-step cues to run a session without memorising poses.</p>
 
@@ -1484,21 +1682,11 @@ function AppInner() {
 
           <div className="prepSticky" aria-label="Pose selection controls">
             <div className="prepStickyInner">
-              {/* ✅ ALWAYS VISIBLE ACTIONS */}
-              <div className="stickyHeader">
-                <div className="stickyTitle">
-                  Prep controls
-                </div>
-                <div className="stickyActions">
-                  <button className="btn" onClick={() => setShowHelp(true)}>Help</button>
-                  <button className="btn" onClick={() => setShowSystem(true)}>System</button>
-                  <button className="btn" onClick={resetApp}>Reset</button>
-                </div>
-              </div>
-
               <div className="grid">
                 <div>
-                  <div className="label">Genre</div>
+                  <div className="label">
+                    Genre <span className="helpIcon" title="Choose the shoot category/library.">i</span>
+                  </div>
                   <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
                     {GENRES.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -1506,11 +1694,13 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">Pick the library you’re practicing or running today.</div>
+                  <div className="helper">Pick the type of shoot this pose library belongs to.</div>
                 </div>
 
                 <div>
-                  <div className="label">Set</div>
+                  <div className="label">
+                    Set <span className="helpIcon" title="Choose the setup/environment (stool, wall, table…).">i</span>
+                  </div>
                   <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
                     {(genre?.sets ?? []).map((s) => (
                       <option key={s.id} value={s.id}>
@@ -1518,11 +1708,13 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">This matches the setup (stool, wall, table…).</div>
+                  <div className="helper">This usually matches your lighting/background/prop setup.</div>
                 </div>
 
                 <div>
-                  <div className="label">Base</div>
+                  <div className="label">
+                    Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span>
+                  </div>
                   <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                     {availableBases.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -1532,13 +1724,26 @@ function AppInner() {
                   </select>
 
                   <div className="row">
-                    <label className="check" title="Off = curated bases only. On = all bases in this set.">
+                    <label className="check" title="Off = curated bases only. On = all bases in this set." aria-label="Show full library">
                       <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
                       Show full library
                     </label>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>
+                        Favorite
+                      </span>
+                      <button className="btn btnIcon" onClick={toggleFavorite} title="Sets the default base for this set next time." aria-label="Toggle favorite base for this set">
+                        {isFavorite ? "★" : "☆"}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="footerActions">
+                    <button className="btn" onClick={duplicateAnchor} disabled={!selectedBase} title="Create a copy of this base." aria-label="Duplicate base">
+                      Duplicate
+                    </button>
+
                     <button
                       className="btn btnPrimary"
                       onClick={beginSession}
@@ -1563,10 +1768,11 @@ function AppInner() {
           <div className="card">
             <div className="cardInner">
               <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
-                7-day rehearsal plan
+                7-day rehearsal plan ({rehearsalPlan.length} days)
               </div>
               <p className="sub" style={{ marginTop: 6 }}>
-                Practice before shoots: each day is simple and repeatable. Built from <strong>{genre?.name ?? "this genre"}</strong>.
+                Practice before shoots: each day is simple and repeatable. Built from{" "}
+                <strong>{genre?.name ?? "this genre"}</strong>.
               </p>
 
               <div className="planGrid">
@@ -1599,7 +1805,7 @@ function AppInner() {
                 </div>
 
                 <div className="topControls">
-                  <label className="toggle" title="Automatically go to the next cue after the chosen time.">
+                  <label className="toggle" title="Automatically go to the next cue after the chosen time." aria-label="Toggle auto-advance">
                     <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
                     Auto-advance
                   </label>
@@ -1620,22 +1826,17 @@ function AppInner() {
                     ))}
                   </select>
 
-                  <label className="toggle" title="Calmer, more human direction for clients.">
-                    <input type="checkbox" checked={clientWording} onChange={(e) => setClientWording(e.target.checked)} />
-                    Client wording
-                  </label>
-
-                  <label className="toggle" title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."}>
+                  <label className="toggle" title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."} aria-label="Toggle reference image">
                     <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={!hasAnyImagesInFlow} />
                     Image
                   </label>
 
-                  <label className="toggle" title="Show the next cue preview.">
+                  <label className="toggle" title="Show the next cue preview." aria-label="Toggle next cue preview">
                     <input type="checkbox" checked={showNextPreview} onChange={(e) => setShowNextPreview(e.target.checked)} />
                     Next preview
                   </label>
 
-                  <button className="btn" onClick={exitSession} title="Return to prep screen">
+                  <button className="btn" onClick={exitSession} title="Return to prep screen" aria-label="Exit session">
                     Exit
                   </button>
                 </div>
@@ -1670,35 +1871,31 @@ function AppInner() {
                   }}
                 />
 
-                {showRefImage && hasAnyImagesInFlow && current?.img ? (
-                  <div className="ref" aria-hidden="true">
-                    <img src={current.img} alt="" draggable={false} />
-                  </div>
-                ) : null}
-
                 {!isOver ? (
-                  <div className="cueWrap">
-                    <div className={`cue ${cueTier}`}>{displayCue}</div>
+                  <div className="stageLayout">
+                    <div className="cueWrap">
+                      <div className={`cue ${cueTier}`}>{currentCue}</div>
 
-                    {idx === 0 ? (
-                      <div className="miniHint">
-                        <strong>Base pose</strong> = starting position. <strong>Flow</strong> = small movements from that base, one step at a time.
+                      {showNextPreview && nextStep?.cue ? (
+                        <div className="nextBox">
+                          <div className="nextLabel">Next</div>
+                          <div className="nextCue">{nextCue}</div>
+                        </div>
+                      ) : null}
+
+                      <div className="hint">
+                        Tip: use <strong>Next</strong> / <strong>Back</strong>. (← → keys also work.)
                       </div>
-                    ) : null}
-
-                    {showNextPreview && nextStep?.cue ? (
-                      <div className="nextBox">
-                        <div className="nextLabel">Next</div>
-                        <div className="nextCue">{displayNextCue}</div>
-                      </div>
-                    ) : null}
-
-                    <div className="hint">
-                      Tip: use <strong>Next</strong> / <strong>Back</strong>. (← → keys also work.)
                     </div>
+
+                    {showRefImage && hasAnyImagesInFlow && current?.img ? (
+                      <div className="ref" aria-hidden="true">
+                        <img src={current.img} alt="" draggable={false} />
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
-                  <div style={{ textAlign: "center", position: "relative", zIndex: 2 }}>
+                  <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
                     <div className="progLabel" style={{ fontSize: 14 }}>
                       Flow complete
                     </div>
