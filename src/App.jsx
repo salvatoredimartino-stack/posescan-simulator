@@ -87,44 +87,58 @@ const BASE_GENRES = [
             name: "Base Pose 1",
             curated: true,
             flow: [
-              {
-                uid: "beauty_seated_base1_step1",
-                label: "Base Pose 1",
-                cue: "Edge of stool, 45°, feet down, hands flat",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "beauty_seated_base1_step2",
-                label: "Pose 2",
-                cue: "Hands between legs, elbows relaxed inward",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "beauty_seated_base1_step3",
-                label: "Pose 3",
-                cue: "Rotate side-on, maintain torso length",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "beauty_seated_base1_step4",
-                label: "Pose 4",
-                cue: "Change composition, tighten crop",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "beauty_seated_base1_step5",
-                label: "Pose 5",
-                cue: "Horizontal camera, same body position",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "beauty_seated_base1_step6",
-                label: "Pose 6",
-                cue: "Alternate composition, hold expression",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-            ],
-          },
+  {
+    uid: "beauty_seated_base1_step1",
+    label: "Base Pose 1",
+    cue:
+      "Sit on the edge of the stool with your body turned slightly to the side.\n" +
+      "Keep both feet on the floor and rest your hands flat and relaxed.\n" +
+      "Perfect — this is your base pose. From here we’ll make small changes step-by-step.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+  {
+    uid: "beauty_seated_base1_step2",
+    label: "Flow 1",
+    cue:
+      "Stay just like that.\n" +
+      "Bring your hands gently between your legs and let your elbows relax in.\n" +
+      "Lovely — keep the shoulders soft.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+  {
+    uid: "beauty_seated_base1_step3",
+    label: "Flow 2",
+    cue:
+      "From the same position, rotate your body a little more to the side.\n" +
+      "Keep your posture tall and your neck long.\n" +
+      "Beautiful — hold that.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+  {
+    uid: "beauty_seated_base1_step4",
+    label: "Photographer",
+    cue:
+      "Don’t move — this one’s for me.\n" +
+      "I’m just tightening the framing slightly.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+  {
+    uid: "beauty_seated_base1_step5",
+    label: "Photographer",
+    cue:
+      "Stay exactly the same.\n" +
+      "I’m switching to a horizontal framing.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+  {
+    uid: "beauty_seated_base1_step6",
+    label: "Photographer",
+    cue:
+      "Hold that pose.\n" +
+      "I’m taking one more variation — you’re doing great.",
+    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+  },
+],
           {
             id: "beauty_seated_base2",
             name: "Base Pose 2",
