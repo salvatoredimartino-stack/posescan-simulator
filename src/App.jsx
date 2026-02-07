@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 /* =========================================
    ERROR BOUNDARY
@@ -24,9 +24,7 @@ class ErrorBoundary extends React.Component {
               boxShadow: "0 10px 25px rgba(15,23,42,.12)",
             }}
           >
-            <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 10 }}>
-              App crashed (runtime error)
-            </div>
+            <div style={{ fontWeight: 900, fontSize: 18, marginBottom: 10 }}>App crashed (runtime error)</div>
             <pre
               style={{
                 margin: 0,
@@ -54,7 +52,6 @@ const ASSET = (p) => `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")
 
 /* =========================================
    FULL DATA (as you provided)
-   (Only minor text label change: “50+” -> “Age 50+” for clarity)
    ========================================= */
 const BASE_GENRES = [
   {
@@ -392,7 +389,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const STORAGE_KEY = "pose_rehearsal_app_state_css_v4";
+const STORAGE_KEY = "pose_rehearsal_app_state_css_v5_measuredbars";
 
 /* =========================================
    HELPERS
@@ -427,21 +424,18 @@ function clamp(n, a, b) {
   return Math.max(a, Math.min(b, n));
 }
 function cueTierFromText(cue = "") {
-  // More aggressive scaling to prevent awkward single-word line breaks (v10-5)
   const text = String(cue);
   const normalized = text.replace(/\s+/g, " ").trim();
   const len = normalized.length;
   const lines = (text.match(/\n/g) || []).length + 1;
   const words = normalized ? normalized.split(" ").length : 0;
 
-  // Long / multi-line cues drop size sooner.
   if (lines >= 6 || len >= 180 || words >= 22) return "t4";
   if (lines >= 5 || len >= 150 || words >= 18) return "t3";
   if (lines >= 4 || len >= 120 || words >= 14) return "t2";
   return "t1";
 }
 function normalizeMyPrefix(name) {
-  // Prevent “My My …” by stripping repeated leading “My ”
   let n = String(name || "").trim();
   while (n.toLowerCase().startsWith("my ")) n = n.slice(3).trim();
   return n;
@@ -451,13 +445,11 @@ function makeDuplicateName(originalName, existingNames) {
   const cleanBase = base || "Base Pose";
   const prefix = `My ${cleanBase}`;
 
-  // If no conflict, return prefix.
   if (!existingNames || !existingNames.length) return prefix;
 
   const lowerExisting = new Set(existingNames.map((x) => String(x).toLowerCase()));
   if (!lowerExisting.has(prefix.toLowerCase())) return prefix;
 
-  // Find next available numeric suffix: “My X (2)”, “My X (3)”, ...
   let k = 2;
   while (lowerExisting.has(`${prefix} (${k})`.toLowerCase())) k += 1;
   return `${prefix} (${k})`;
@@ -489,7 +481,7 @@ function Styles() {
         background:var(--bg);
         color:var(--ink);
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-        overflow-y: auto; /* P-12: ensure scroll works */
+        overflow-y: auto;
       }
 
       .wrap{ max-width: 980px; margin: 0 auto; padding: 24px 16px 44px; }
@@ -575,7 +567,6 @@ function Styles() {
       .btn:hover{ background: rgba(255,255,255,1); }
       .btn:disabled{ opacity:.45; cursor: not-allowed; }
 
-      /* V10-1: harden primary button styles so they never “disappear” */
       .btnPrimary{
         border: none !important;
         background: var(--grad) !important;
@@ -665,6 +656,8 @@ function Styles() {
         position: fixed; inset: 0; z-index: 9999;
         background: var(--bg);
         color: var(--ink);
+        --topbar-h: 0px;
+        --bottombar-h: 0px;
       }
       .topBar{
         position: fixed; left:0; right:0; top:0; z-index: 2;
@@ -673,8 +666,10 @@ function Styles() {
         border-bottom: 1px solid var(--line);
         backdrop-filter: blur(10px);
       }
-      .topInner{ padding: 12px 14px; }
-      .topRow{ display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+      .topInner{ padding: 10px 12px; }
+      @media (min-width: 860px){ .topInner{ padding: 12px 14px; } }
+
+      .topRow{ display:flex; align-items:flex-start; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
       .progLabel{ font-size:12px; font-weight: 900; color: var(--muted); }
       .progNums{ font-size:12px; color: var(--muted); margin-top: 4px; }
       .bar{
@@ -693,21 +688,70 @@ function Styles() {
         transition: width .18s ease;
       }
 
-      .topControls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+      /* MOBILE-FIRST SESSION CONTROLS */
+      .topControls{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        margin-top: 10px;
+      }
+      @media (min-width: 860px){
+        .topControls{
+          display:flex;
+          align-items:center;
+          justify-content:flex-end;
+          gap:10px;
+          flex-wrap:wrap;
+          width:auto;
+          margin-top: 0;
+        }
+      }
+
       .toggle{
-        display:flex; align-items:center; gap:8px; font-size: 13px; color: var(--muted);
-        padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px;
+        display:flex; align-items:center; justify-content:center; gap:8px;
+        font-size: 13px; color: var(--muted);
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
         background: rgba(255,255,255,.9);
         user-select:none;
         white-space: nowrap;
+        width: 100%;
+      }
+      @media (min-width: 860px){
+        .toggle{
+          width:auto;
+          border-radius: 999px;
+          justify-content:flex-start;
+        }
       }
       .toggle input{ width:18px; height:18px; accent-color:#4f46e5; }
 
+      .rhythmSelect{
+        margin-top: 0;
+        height: 42px;
+        width: 100%;
+        border-radius: 16px;
+      }
+      @media (min-width: 860px){
+        .rhythmSelect{ width: 170px; }
+      }
+
+      .exitBtn{
+        grid-column: 1 / -1;
+      }
+      @media (min-width: 860px){
+        .exitBtn{ grid-column:auto; }
+      }
+
+      /* ✅ FIX: NO HARDCODED PADDING. MEASURED VARIABLES. */
       .main{
         position:absolute; inset:0;
-        padding-top: calc(env(safe-area-inset-top) + 118px);
-        padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
+        padding-top: calc(env(safe-area-inset-top) + var(--topbar-h, 0px));
+        padding-bottom: calc(env(safe-area-inset-bottom) + var(--bottombar-h, 0px));
       }
+
       .mainPad{ height:100%; padding: 14px; }
       .stage{
         height:100%;
@@ -724,28 +768,36 @@ function Styles() {
         padding: 22px;
       }
 
-      /* P-7: larger reference image box */
       .ref{
         position:absolute;
-        right: 14px;
-        top: 14px;
-        width: 160px;
-        height: 160px;
-        border-radius: 20px;
+        right: 12px;
+        top: 12px;
+        width: 92px;
+        height: 92px;
+        border-radius: 18px;
         border:1px solid var(--line);
         background: rgba(255,255,255,.95);
         box-shadow: var(--shadow2);
-        padding: 10px;
+        padding: 8px;
         display:flex;
         align-items:center;
         justify-content:center;
       }
+      @media (min-width: 860px){
+        .ref{
+          right: 14px;
+          top: 14px;
+          width: 160px;
+          height: 160px;
+          border-radius: 20px;
+          padding: 10px;
+        }
+      }
       .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
 
-      /* P-8: no inner scrolling. Scale text instead. */
       .cueWrap{
         width: 100%;
-        max-width: 40ch;   /* slightly wider to avoid “one word per line” */
+        max-width: 40ch;
         text-align: left;
         position: relative;
         z-index: 1;
@@ -759,10 +811,10 @@ function Styles() {
         white-space: pre-line;
         word-break: break-word;
       }
-      .cue.t1{ font-size: clamp(26px, 3.8vw, 56px); line-height: 1.07; }
-      .cue.t2{ font-size: clamp(22px, 3.1vw, 46px); line-height: 1.09; }
-      .cue.t3{ font-size: clamp(18px, 2.6vw, 38px); line-height: 1.11; }
-      .cue.t4{ font-size: clamp(16px, 2.2vw, 32px); line-height: 1.14; }
+      .cue.t1{ font-size: clamp(24px, 5.4vw, 56px); line-height: 1.07; }
+      .cue.t2{ font-size: clamp(20px, 4.6vw, 46px); line-height: 1.09; }
+      .cue.t3{ font-size: clamp(18px, 4.0vw, 38px); line-height: 1.11; }
+      .cue.t4{ font-size: clamp(16px, 3.6vw, 32px); line-height: 1.14; }
 
       .nextBox{
         margin-top: 18px;
@@ -833,13 +885,12 @@ function AppInner() {
 
   const [mode, setMode] = useState("prep"); // prep | session
 
-  // P-1: onboarding (first-run), reopen via “?”
   const [showOnboarding, setShowOnboarding] = useState(() => {
     const seen = persisted?.seenOnboarding;
     return !seen;
   });
 
-  // Toast for feedback (P-4, P-3)
+  // Toast
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
   const pushToast = useCallback((msg) => {
@@ -848,7 +899,11 @@ function AppInner() {
     toastTimer.current = setTimeout(() => setToast(null), 2200);
   }, []);
 
-  // Safe defaults
+  // ✅ MEASURED BAR FIX (refs)
+  const sessionRef = useRef(null);
+  const topBarRef = useRef(null);
+  const bottomBarRef = useRef(null);
+
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
   const [genreId, setGenreId] = useState(() => lastSelection?.genreId ?? fallbackGenreId);
   const genre = useMemo(() => GENRES.find((g) => g.id === genreId) ?? GENRES[0] ?? null, [GENRES, genreId]);
@@ -934,7 +989,6 @@ function AppInner() {
     return flow[ni] ?? null;
   }, [flow, idx]);
 
-  // P-11: progress derived only from idx/isOver (consistent)
   const stepNow = useMemo(() => {
     if (!flow.length) return 0;
     return isOver ? flow.length : clamp(idx + 1, 1, flow.length);
@@ -967,7 +1021,6 @@ function AppInner() {
   const back = useCallback(() => {
     if (!flow.length) return;
 
-    // Back from completion: go to last step and clear over-state (P-11)
     if (isOver) {
       setIsOver(false);
       setIdx(Math.max(0, flow.length - 1));
@@ -979,539 +1032,42 @@ function AppInner() {
     setIdx(pi);
   }, [flow.length, idx, isOver]);
 
-  // Auto-advance timer (stable)
+  // ✅ MEASURE TOP/BOTTOM BAR HEIGHTS (NO GUESSES)
+  useLayoutEffect(() => {
+    if (mode !== "session") return;
+    const elSession = sessionRef.current;
+    if (!elSession) return;
+
+    const apply = () => {
+      const topH = topBarRef.current ? Math.ceil(topBarRef.current.getBoundingClientRect().height) : 0;
+      const bottomH = bottomBarRef.current ? Math.ceil(bottomBarRef.current.getBoundingClientRect().height) : 0;
+      elSession.style.setProperty("--topbar-h", `${topH}px`);
+      elSession.style.setProperty("--bottombar-h", `${bottomH}px`);
+    };
+
+    apply();
+
+    const canRO = typeof ResizeObserver !== "undefined";
+    const ro = canRO ? new ResizeObserver(() => apply()) : null;
+
+    if (ro && topBarRef.current) ro.observe(topBarRef.current);
+    if (ro && bottomBarRef.current) ro.observe(bottomBarRef.current);
+
+    window.addEventListener("resize", apply);
+    window.addEventListener("orientationchange", apply);
+
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", apply);
+      window.removeEventListener("orientationchange", apply);
+    };
+  }, [mode, autoOn, rhythmId, showNextPreview, showRefImage, isOver, flow.length]);
+
+  // Auto-advance timer
   useEffect(() => {
     if (mode !== "session") return;
     if (!autoOn) return;
     if (isOver) return;
     if (!flow.length) return;
 
-    const ms = (rhythm?.seconds ?? 8) * 1000;
-    const t = setTimeout(() => {
-      setIdx((prev) => {
-        const ni = prev + 1;
-        if (ni >= flow.length) {
-          setIsOver(true);
-          setAutoOn(false);
-          return prev;
-        }
-        return ni;
-      });
-    }, ms);
-
-    return () => clearTimeout(t);
-  }, [mode, autoOn, isOver, flow.length, rhythm]);
-
-  // Favorite toggle (P-3 + V10-M3)
-  const isFavorite = favorites?.[setId] === baseId;
-  const toggleFavorite = () => {
-    setFavorites((prev) => {
-      const next = { ...(prev || {}) };
-      if (next[setId] === baseId) {
-        delete next[setId];
-        pushToast("Removed favorite for this set.");
-      } else {
-        next[setId] = baseId;
-        pushToast("Saved favorite: this will be the default base for this set.");
-      }
-      return next;
-    });
-  };
-
-  // Duplicate (V10-3 + P-4)
-  const duplicateAnchor = () => {
-    if (!selectedBase || !selectedSet) return;
-
-    const allNames = (selectedSet?.bases ?? []).map((b) => b?.name).filter(Boolean);
-    const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
-
-    const copy = deepClone(selectedBase);
-    copy.id = makeId("my_base");
-    copy.name = nextName;
-    copy.curated = true;
-    copy.flow = (copy.flow || []).map((step) => ({ ...step, uid: makeId("my_step") }));
-
-    setUserBasesBySet((prev) => {
-      const next = { ...(prev || {}) };
-      const arr = Array.isArray(next[selectedSet.id]) ? [...next[selectedSet.id]] : [];
-      arr.push(copy);
-      next[selectedSet.id] = arr;
-      return next;
-    });
-
-    setTimeout(() => setBaseId(copy.id), 0);
-    pushToast("Duplicated. You are now on your copy.");
-  };
-
-  // Reset session when selection changes
-  useEffect(() => {
-    setIdx(0);
-    setIsOver(false);
-    setAutoOn(false);
-  }, [genreId, setId, baseId]);
-
-  // Images exist?
-  const hasAnyImagesInFlow = useMemo(() => (flow || []).some((s) => !!s?.img), [flow]);
-
-  // P-6 + V10-2: dynamic rehearsal plan from selected genre
-  const rehearsalPlan = useMemo(() => {
-    const sets = genre?.sets ?? [];
-    const usable = sets.slice(0, Math.min(5, sets.length));
-    const dayItems = usable.map((s, i) => ({
-      day: `Day ${i + 1}`,
-      text: `${s.name} — run 3 times`,
-    }));
-
-    if (usable.length >= 2) {
-      dayItems.push({
-        day: `Day ${usable.length + 1}`,
-        text: `Full session (${usable.map((x) => x.name).join(", ")}) once, slow`,
-      });
-      dayItems.push({ day: `Day ${usable.length + 2}`, text: `Full session once, normal pace` });
-    } else if (usable.length === 1) {
-      dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 4", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 5", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
-      dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
-    }
-
-    return dayItems.slice(0, 7);
-  }, [genre]);
-
-  // Persist
-  useEffect(() => {
-    const payload = {
-      showFullLibrary,
-      favorites,
-      userBasesBySet,
-      lastSelection: { genreId, setId, baseId },
-      showRefImage,
-      showNextPreview,
-      seenOnboarding: !showOnboarding ? true : (persisted?.seenOnboarding ?? false),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview, showOnboarding]);
-
-  const beginSession = () => {
-    setLastSelection({ genreId, setId, baseId });
-    setMode("session");
-    restartFlow();
-    pushToast("Session started. Use Next / Back.");
-  };
-
-  const exitSession = () => {
-    setMode("prep");
-    setIsOver(false);
-    setAutoOn(false);
-    pushToast("Exited session.");
-  };
-
-  // Reset app (P-4 recovery + P-13 trust)
-  const resetApp = () => {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {}
-    // hard reset state to clean defaults
-    setShowFullLibrary(false);
-    setFavorites({});
-    setUserBasesBySet({});
-    setLastSelection(null);
-    setGenreId(fallbackGenreId);
-    setShowRefImage(true);
-    setShowNextPreview(true);
-    setMode("prep");
-    setIdx(0);
-    setIsOver(false);
-    setAutoOn(false);
-    setShowOnboarding(true);
-    pushToast("App reset. Starting fresh.");
-  };
-
-  const noData = !Array.isArray(GENRES) || GENRES.length === 0;
-  const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
-
-  return (
-    <>
-      <Styles />
-
-      {/* Onboarding (P-1) */}
-      {mode === "prep" && showOnboarding && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
-          <div className="modal">
-            <div className="modalInner">
-              <div className="modalTitle">How this works (quick)</div>
-              <div className="modalBody">
-                This tool shows pose cues step-by-step so you don’t need to memorize a full session.
-              </div>
-              <ul className="modalList">
-                <li><strong>Genre</strong> = type of shoot/library.</li>
-                <li><strong>Set</strong> = setup/environment (stool, wall, table…).</li>
-                <li><strong>Base</strong> = starting pose for that set.</li>
-                <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
-              </ul>
-              <div className="modalActions">
-                <button
-                  className="btn"
-                  onClick={() => {
-                    setShowOnboarding(false);
-                    pushToast("Help is always available via the “?” button.");
-                  }}
-                >
-                  Got it
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Toast */}
-      {toast ? (
-        <div className="toastWrap" aria-live="polite" aria-atomic="true">
-          <div className="toast">{toast}</div>
-        </div>
-      ) : null}
-
-      {/* PREP */}
-      {mode === "prep" && (
-        <div className="wrap">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-            <div className="pill">
-              <span className="dot" />
-              Prep
-            </div>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <button
-                className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
-                onClick={() => setShowOnboarding(true)}
-                title="Help / How this works"
-                aria-label="Open help"
-              >
-                ?
-              </button>
-              <button
-                className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
-                onClick={resetApp}
-                title="Reset app (clears saved state and duplicates)"
-                aria-label="Reset app"
-              >
-                Reset
-              </button>
-            </div>
-          </div>
-
-          <h1 className="h1">Pose Flow Operator</h1>
-          <p className="sub">Step-by-step cues to run a session without memorising poses.</p>
-
-          {noData ? (
-            <div className="warn">
-              DATA ERROR: GENRES is empty. Check App.jsx has the full BASE_GENRES array.
-            </div>
-          ) : null}
-
-          <div className="card">
-            <div className="cardInner">
-              <div className="grid">
-                <div>
-                  <div className="label">
-                    Genre <span className="helpIcon" title="Choose the shoot category/library.">i</span>
-                  </div>
-                  <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
-                    {GENRES.map((g) => (
-                      <option key={g.id} value={g.id}>
-                        {g.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="helper">Pick the type of shoot this pose library belongs to.</div>
-                </div>
-
-                <div>
-                  <div className="label">
-                    Set <span className="helpIcon" title="Choose the setup/environment (stool, wall, table…).">i</span>
-                  </div>
-                  <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
-                    {(genre?.sets ?? []).map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="helper">This usually matches your lighting/background/prop setup.</div>
-                </div>
-
-                <div>
-                  <div className="label">
-                    Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span>
-                  </div>
-                  <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
-                    {availableBases.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.name}
-                      </option>
-                    ))}
-                  </select>
-
-                  <div className="row">
-                    <label
-                      className="check"
-                      title="Off = curated bases only. On = all bases in this set."
-                      aria-label="Show full library"
-                    >
-                      <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
-                      Show full library
-                    </label>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>
-                        Favorite
-                      </span>
-                      <button
-                        className="btn btnIcon"
-                        onClick={toggleFavorite}
-                        title="Sets the default base for this set next time."
-                        aria-label="Toggle favorite base for this set"
-                      >
-                        {isFavorite ? "★" : "☆"}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="footerActions">
-                    <button
-                      className="btn"
-                      onClick={duplicateAnchor}
-                      disabled={!selectedBase}
-                      title="Create a copy of this base (clean name, no repeated prefixes)."
-                      aria-label="Duplicate base"
-                    >
-                      Duplicate
-                    </button>
-
-                    <button
-                      className="btn btnPrimary"
-                      onClick={beginSession}
-                      disabled={!flow.length}
-                      title={flow.length ? "Start the step-by-step flow" : "No steps available for this base"}
-                      aria-label="Begin session"
-                    >
-                      Begin session
-                    </button>
-                  </div>
-
-                  {!flow.length ? (
-                    <div className="warn" style={{ marginTop: 12 }}>
-                      This base has no steps. Choose another base.
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Rehearsal plan (dynamic count, V10-2) */}
-          <div className="card">
-            <div className="cardInner">
-              <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
-                Rehearsal plan ({rehearsalPlan.length} days)
-              </div>
-              <p className="sub" style={{ marginTop: 6 }}>
-                A simple practice plan built from the sets in <strong>{genre?.name ?? "this genre"}</strong>.
-              </p>
-
-              <div className="planGrid">
-                {rehearsalPlan.map((x) => (
-                  <div key={x.day} className="planItem">
-                    <div className="planDay">{x.day}</div>
-                    <div className="planText">{x.text}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* SESSION */}
-      {mode === "session" && (
-        <div className="session">
-          <div className="topBar">
-            <div className="topInner">
-              <div className="topRow">
-                <div style={{ flex: 1, minWidth: 260 }}>
-                  <div className="progLabel">Progress</div>
-                  <div className="progNums">
-                    <strong style={{ color: "var(--ink)" }}>{stepNow}</strong> / {flow.length || 0} ({progressPct}%)
-                  </div>
-                  <div className="bar">
-                    <div className="barFill" style={{ width: `${progressPct}%` }} />
-                  </div>
-                </div>
-
-                <div className="topControls">
-                  <label
-                    className="toggle"
-                    title="Automatically go to the next cue after the chosen time."
-                    aria-label="Toggle auto-advance"
-                  >
-                    <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
-                    Auto-advance
-                  </label>
-
-                  <select
-                    className="control"
-                    style={{ height: 42, width: 170 }}
-                    value={rhythmId}
-                    onChange={(e) => setRhythmId(e.target.value)}
-                    disabled={!autoOn || isOver}
-                    title="Seconds per step for auto-advance."
-                    aria-label="Select auto-advance speed"
-                  >
-                    {RHYTHMS.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.label} ({r.seconds}s)
-                      </option>
-                    ))}
-                  </select>
-
-                  <label
-                    className="toggle"
-                    title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."}
-                    aria-label="Toggle reference image"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={showRefImage}
-                      onChange={(e) => setShowRefImage(e.target.checked)}
-                      disabled={!hasAnyImagesInFlow}
-                    />
-                    Image
-                  </label>
-
-                  <label className="toggle" title="Show the next cue preview." aria-label="Toggle next cue preview">
-                    <input type="checkbox" checked={showNextPreview} onChange={(e) => setShowNextPreview(e.target.checked)} />
-                    Next preview
-                  </label>
-
-                  <button className="btn" onClick={exitSession} title="Return to prep screen" aria-label="Exit session">
-                    Exit
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="main">
-            <div className="mainPad">
-              <div className="stage">
-                {/* Tap-to-advance kept, de-emphasized (P-10) */}
-                <div
-                  className="tapZone"
-                  onClick={() => {
-                    if (!isOver) advance();
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Advance to next cue"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      if (!isOver) advance();
-                    }
-                    if (e.key === "ArrowRight") {
-                      e.preventDefault();
-                      if (!isOver) advance();
-                    }
-                    if (e.key === "ArrowLeft") {
-                      e.preventDefault();
-                      back();
-                    }
-                  }}
-                />
-
-                {showRefImage && hasAnyImagesInFlow && current?.img ? (
-                  <div className="ref" aria-hidden="true">
-                    <img src={current.img} alt="" draggable={false} />
-                  </div>
-                ) : null}
-
-                {!isOver ? (
-                  <div className="cueWrap">
-                    <div className={`cue ${cueTier}`}>{current?.cue ?? ""}</div>
-
-                    {showNextPreview && nextStep?.cue ? (
-                      <div className="nextBox">
-                        <div className="nextLabel">Next</div>
-                        <div className="nextCue">{nextStep.cue}</div>
-                      </div>
-                    ) : null}
-
-                    <div className="hint">
-                      Tip: use <strong>Next</strong> / <strong>Back</strong>. (← → keys also work.)
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
-                    <div className="progLabel" style={{ fontSize: 14 }}>
-                      Flow complete
-                    </div>
-                    <div style={{ fontSize: 42, fontWeight: 950, marginTop: 8 }}>—</div>
-                    <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
-                      <button className="btn" onClick={restartFlow} aria-label="Restart flow">
-                        Restart
-                      </button>
-                      <button className="btn btnPrimary" onClick={exitSession} aria-label="Exit session">
-                        Exit
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* V10-4: hide bottom bar when complete (no blank space) */}
-          {!isOver ? (
-            <div className="bottomBar">
-              <div className="bottomInner">
-                <div className="navRow">
-                  <button className="btn navBtn" onClick={back} disabled={!flow.length || idx <= 0} aria-label="Back">
-                    Back
-                  </button>
-
-                  {/* V10-1: keep label + gradient stable */}
-                  <button
-                    className="btn btnPrimary navBtn"
-                    onClick={advance}
-                    disabled={!flow.length || isOver}
-                    aria-label="Next"
-                    title="Go to the next cue"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      )}
-    </>
-  );
-}
-
-/* =========================================
-   EXPORT
-   ========================================= */
-export default function App() {
-  return (
-    <ErrorBoundary>
-      <AppInner />
-    </ErrorBoundary>
-  );
-}
+    const ms = (rhythm?.seconds
