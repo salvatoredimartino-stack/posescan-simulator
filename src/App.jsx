@@ -1070,4 +1070,469 @@ function AppInner() {
     if (isOver) return;
     if (!flow.length) return;
 
-    const ms = (rhythm?.seconds
+    const ms = (rhythm?.seconds ?? 8) * 1000;
+    const t = setTimeout(() => {
+      setIdx((prev) => {
+        const ni = prev + 1;
+        if (ni >= flow.length) {
+          setIsOver(true);
+          setAutoOn(false);
+          return prev;
+        }
+        return ni;
+      });
+    }, ms);
+
+    return () => clearTimeout(t);
+  }, [mode, autoOn, isOver, flow.length, rhythm]);
+
+  const isFavorite = favorites?.[setId] === baseId;
+  const toggleFavorite = () => {
+    setFavorites((prev) => {
+      const next = { ...(prev || {}) };
+      if (next[setId] === baseId) {
+        delete next[setId];
+        pushToast("Removed favorite for this set.");
+      } else {
+        next[setId] = baseId;
+        pushToast("Saved favorite: this will be the default base for this set.");
+      }
+      return next;
+    });
+  };
+
+  const duplicateAnchor = () => {
+    if (!selectedBase || !selectedSet) return;
+
+    const allNames = (selectedSet?.bases ?? []).map((b) => b?.name).filter(Boolean);
+    const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
+
+    const copy = deepClone(selectedBase);
+    copy.id = makeId("my_base");
+    copy.name = nextName;
+    copy.curated = true;
+    copy.flow = (copy.flow || []).map((step) => ({ ...step, uid: makeId("my_step") }));
+
+    setUserBasesBySet((prev) => {
+      const next = { ...(prev || {}) };
+      const arr = Array.isArray(next[selectedSet.id]) ? [...next[selectedSet.id]] : [];
+      arr.push(copy);
+      next[selectedSet.id] = arr;
+      return next;
+    });
+
+    setTimeout(() => setBaseId(copy.id), 0);
+    pushToast("Duplicated. You are now on your copy.");
+  };
+
+  useEffect(() => {
+    setIdx(0);
+    setIsOver(false);
+    setAutoOn(false);
+  }, [genreId, setId, baseId]);
+
+  const hasAnyImagesInFlow = useMemo(() => (flow || []).some((s) => !!s?.img), [flow]);
+
+  const rehearsalPlan = useMemo(() => {
+    const sets = genre?.sets ?? [];
+    const usable = sets.slice(0, Math.min(5, sets.length));
+    const dayItems = usable.map((s, i) => ({
+      day: `Day ${i + 1}`,
+      text: `${s.name} — run 3 times`,
+    }));
+
+    if (usable.length >= 2) {
+      dayItems.push({
+        day: `Day ${usable.length + 1}`,
+        text: `Full session (${usable.map((x) => x.name).join(", ")}) once, slow`,
+      });
+      dayItems.push({ day: `Day ${usable.length + 2}`, text: `Full session once, normal pace` });
+    } else if (usable.length === 1) {
+      dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 4", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 5", text: "Repeat the same set — run 3 times" });
+      dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
+      dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
+    }
+
+    return dayItems.slice(0, 7);
+  }, [genre]);
+
+  useEffect(() => {
+    const payload = {
+      showFullLibrary,
+      favorites,
+      userBasesBySet,
+      lastSelection: { genreId, setId, baseId },
+      showRefImage,
+      showNextPreview,
+      seenOnboarding: !showOnboarding ? true : persisted?.seenOnboarding ?? false,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showFullLibrary, favorites, userBasesBySet, genreId, setId, baseId, showRefImage, showNextPreview, showOnboarding]);
+
+  const beginSession = () => {
+    setLastSelection({ genreId, setId, baseId });
+    setMode("session");
+    restartFlow();
+    pushToast("Session started. Use Next / Back.");
+  };
+
+  const exitSession = () => {
+    setMode("prep");
+    setIsOver(false);
+    setAutoOn(false);
+    pushToast("Exited session.");
+  };
+
+  const resetApp = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+    setShowFullLibrary(false);
+    setFavorites({});
+    setUserBasesBySet({});
+    setLastSelection(null);
+    setGenreId(fallbackGenreId);
+    setShowRefImage(true);
+    setShowNextPreview(true);
+    setMode("prep");
+    setIdx(0);
+    setIsOver(false);
+    setAutoOn(false);
+    setShowOnboarding(true);
+    pushToast("App reset. Starting fresh.");
+  };
+
+  const noData = !Array.isArray(GENRES) || GENRES.length === 0;
+  const cueTier = useMemo(() => cueTierFromText(current?.cue ?? ""), [current?.cue]);
+
+  return (
+    <>
+      <Styles />
+
+      {mode === "prep" && showOnboarding && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
+          <div className="modal">
+            <div className="modalInner">
+              <div className="modalTitle">How this works (quick)</div>
+              <div className="modalBody">This tool shows pose cues step-by-step so you don’t need to memorize a full session.</div>
+              <ul className="modalList">
+                <li><strong>Genre</strong> = type of shoot/library.</li>
+                <li><strong>Set</strong> = setup/environment (stool, wall, table…).</li>
+                <li><strong>Base</strong> = starting pose for that set.</li>
+                <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
+              </ul>
+              <div className="modalActions">
+                <button
+                  className="btn"
+                  onClick={() => {
+                    setShowOnboarding(false);
+                    pushToast("Help is always available via the “?” button.");
+                  }}
+                >
+                  Got it
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toast ? (
+        <div className="toastWrap" aria-live="polite" aria-atomic="true">
+          <div className="toast">{toast}</div>
+        </div>
+      ) : null}
+
+      {mode === "prep" && (
+        <div className="wrap">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <div className="pill">
+              <span className="dot" />
+              Prep
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <button
+                className="btn"
+                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                onClick={() => setShowOnboarding(true)}
+                title="Help / How this works"
+                aria-label="Open help"
+              >
+                ?
+              </button>
+              <button
+                className="btn"
+                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                onClick={resetApp}
+                title="Reset app (clears saved state and duplicates)"
+                aria-label="Reset app"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <h1 className="h1">Pose Flow Operator</h1>
+          <p className="sub">Step-by-step cues to run a session without memorising poses.</p>
+
+          {noData ? <div className="warn">DATA ERROR: GENRES is empty. Check App.jsx has the full BASE_GENRES array.</div> : null}
+
+          <div className="card">
+            <div className="cardInner">
+              <div className="grid">
+                <div>
+                  <div className="label">
+                    Genre <span className="helpIcon" title="Choose the shoot category/library.">i</span>
+                  </div>
+                  <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
+                    {GENRES.map((g) => (
+                      <option key={g.id} value={g.id}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="helper">Pick the type of shoot this pose library belongs to.</div>
+                </div>
+
+                <div>
+                  <div className="label">
+                    Set <span className="helpIcon" title="Choose the setup/environment (stool, wall, table…).">i</span>
+                  </div>
+                  <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
+                    {(genre?.sets ?? []).map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="helper">This usually matches your lighting/background/prop setup.</div>
+                </div>
+
+                <div>
+                  <div className="label">
+                    Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span>
+                  </div>
+                  <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
+                    {availableBases.map((b) => (
+                      <option key={b.id} value={b.id}>
+                        {b.name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="row">
+                    <label className="check" title="Off = curated bases only. On = all bases in this set." aria-label="Show full library">
+                      <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
+                      Show full library
+                    </label>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>
+                        Favorite
+                      </span>
+                      <button className="btn btnIcon" onClick={toggleFavorite} title="Sets the default base for this set next time." aria-label="Toggle favorite base for this set">
+                        {isFavorite ? "★" : "☆"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="footerActions">
+                    <button className="btn" onClick={duplicateAnchor} disabled={!selectedBase} title="Create a copy of this base." aria-label="Duplicate base">
+                      Duplicate
+                    </button>
+
+                    <button className="btn btnPrimary" onClick={beginSession} disabled={!flow.length} title={flow.length ? "Start the flow" : "No steps available"} aria-label="Begin session">
+                      Begin session
+                    </button>
+                  </div>
+
+                  {!flow.length ? (
+                    <div className="warn" style={{ marginTop: 12 }}>
+                      This base has no steps. Choose another base.
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="cardInner">
+              <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
+                Rehearsal plan ({rehearsalPlan.length} days)
+              </div>
+              <p className="sub" style={{ marginTop: 6 }}>
+                A simple practice plan built from the sets in <strong>{genre?.name ?? "this genre"}</strong>.
+              </p>
+
+              <div className="planGrid">
+                {rehearsalPlan.map((x) => (
+                  <div key={x.day} className="planItem">
+                    <div className="planDay">{x.day}</div>
+                    <div className="planText">{x.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {mode === "session" && (
+        <div className="session" ref={sessionRef}>
+          <div className="topBar" ref={topBarRef}>
+            <div className="topInner">
+              <div className="topRow">
+                <div style={{ flex: 1, minWidth: 260 }}>
+                  <div className="progLabel">Progress</div>
+                  <div className="progNums">
+                    <strong style={{ color: "var(--ink)" }}>{stepNow}</strong> / {flow.length || 0} ({progressPct}%)
+                  </div>
+                  <div className="bar">
+                    <div className="barFill" style={{ width: `${progressPct}%` }} />
+                  </div>
+                </div>
+
+                <div className="topControls">
+                  <label className="toggle" title="Automatically go to the next cue." aria-label="Toggle auto-advance">
+                    <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
+                    Auto-advance
+                  </label>
+
+                  <select
+                    className="control rhythmSelect"
+                    value={rhythmId}
+                    onChange={(e) => setRhythmId(e.target.value)}
+                    disabled={!autoOn || isOver}
+                    title="Seconds per step for auto-advance."
+                    aria-label="Select auto-advance speed"
+                  >
+                    {RHYTHMS.map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {r.label} ({r.seconds}s)
+                      </option>
+                    ))}
+                  </select>
+
+                  <label className="toggle" title={hasAnyImagesInFlow ? "Show reference sketch." : "No images available."} aria-label="Toggle reference image">
+                    <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={!hasAnyImagesInFlow} />
+                    Image
+                  </label>
+
+                  <label className="toggle" title="Show the next cue preview." aria-label="Toggle next cue preview">
+                    <input type="checkbox" checked={showNextPreview} onChange={(e) => setShowNextPreview(e.target.checked)} />
+                    Next preview
+                  </label>
+
+                  <button className="btn exitBtn" onClick={exitSession} title="Return to prep" aria-label="Exit session">
+                    Exit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="main">
+            <div className="mainPad">
+              <div className="stage">
+                <div
+                  className="tapZone"
+                  onClick={() => {
+                    if (!isOver) advance();
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Advance to next cue"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      if (!isOver) advance();
+                    }
+                    if (e.key === "ArrowRight") {
+                      e.preventDefault();
+                      if (!isOver) advance();
+                    }
+                    if (e.key === "ArrowLeft") {
+                      e.preventDefault();
+                      back();
+                    }
+                  }}
+                />
+
+                {showRefImage && hasAnyImagesInFlow && current?.img ? (
+                  <div className="ref" aria-hidden="true">
+                    <img src={current.img} alt="" draggable={false} />
+                  </div>
+                ) : null}
+
+                {!isOver ? (
+                  <div className="cueWrap">
+                    <div className={`cue ${cueTier}`}>{current?.cue ?? ""}</div>
+
+                    {showNextPreview && nextStep?.cue ? (
+                      <div className="nextBox">
+                        <div className="nextLabel">Next</div>
+                        <div className="nextCue">{nextStep.cue}</div>
+                      </div>
+                    ) : null}
+
+                    <div className="hint">
+                      Tip: use <strong>Next</strong> / <strong>Back</strong>. (← → keys also work.)
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+                    <div className="progLabel" style={{ fontSize: 14 }}>
+                      Flow complete
+                    </div>
+                    <div style={{ fontSize: 42, fontWeight: 950, marginTop: 8 }}>—</div>
+                    <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16, flexWrap: "wrap" }}>
+                      <button className="btn" onClick={restartFlow} aria-label="Restart flow">
+                        Restart
+                      </button>
+                      <button className="btn btnPrimary" onClick={exitSession} aria-label="Exit session">
+                        Exit
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {!isOver ? (
+            <div className="bottomBar" ref={bottomBarRef}>
+              <div className="bottomInner">
+                <div className="navRow">
+                  <button className="btn navBtn" onClick={back} disabled={!flow.length || idx <= 0} aria-label="Back">
+                    Back
+                  </button>
+
+                  <button className="btn btnPrimary navBtn" onClick={advance} disabled={!flow.length || isOver} aria-label="Next" title="Go to next cue">
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
+    </>
+  );
+}
+
+/* =========================================
+   EXPORT
+   ========================================= */
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppInner />
+    </ErrorBoundary>
+  );
+}
