@@ -62,21 +62,15 @@ const ASSET = (p) =>
   `${import.meta.env.BASE_URL}${String(p).replace(/^\/+/, "")}`;
 
 /* =========================================
-   FULL DATA (UPDATED per V1 scope + tone alignment)
-   - Removed 50+ genre
-   - Renamed genres:
-     * Beauty -> Women’s Portrait Posing
-     * Personal Branding (Man) -> Corporate Portrait Posing (Men)
-   - Tone-aligned cues:
-     * Women’s: Seated (Bases 2–4 steps 1–4), Standing Base1 steps 1–4,
-               Wall Base1 steps 1–4, Table Base1 steps 1–4, Box Base1 steps 1–4
-     * Corporate (Men): Set1 stool base1 steps 1–4, Wall/Standing base3 steps 1–4,
-                        Seated chair base4 steps 1–4 (added step4)
+   DATA
+   - 50+ removed
+   - Beauty renamed to Women’s Poses
+   - Personal Branding (Man) renamed to Corporate Men’s Poses
    ========================================= */
 const BASE_GENRES = [
   {
     id: "beauty",
-    name: "Women’s Portrait Posing",
+    name: "Women’s Poses",
     sets: [
       {
         id: "beauty_set1_seated_stool",
@@ -87,58 +81,58 @@ const BASE_GENRES = [
             name: "Base Pose 1",
             curated: true,
             flow: [
-  {
-    uid: "beauty_seated_base1_step1",
-    label: "Base Pose 1",
-    cue:
-      "Sit on the edge of the stool with your body turned slightly to the side.\n" +
-      "Keep both feet on the floor and rest your hands flat and relaxed.\n" +
-      "Perfect — this is your base pose. From here we’ll make small changes step-by-step.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-  {
-    uid: "beauty_seated_base1_step2",
-    label: "Flow 1",
-    cue:
-      "Stay just like that.\n" +
-      "Bring your hands gently between your legs and let your elbows relax in.\n" +
-      "Lovely — keep the shoulders soft.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-  {
-    uid: "beauty_seated_base1_step3",
-    label: "Flow 2",
-    cue:
-      "From the same position, rotate your body a little more to the side.\n" +
-      "Keep your posture tall and your neck long.\n" +
-      "Beautiful — hold that.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-  {
-    uid: "beauty_seated_base1_step4",
-    label: "Photographer",
-    cue:
-      "Don’t move — this one’s for me.\n" +
-      "I’m just tightening the framing slightly.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-  {
-    uid: "beauty_seated_base1_step5",
-    label: "Photographer",
-    cue:
-      "Stay exactly the same.\n" +
-      "I’m switching to a horizontal framing.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-  {
-    uid: "beauty_seated_base1_step6",
-    label: "Photographer",
-    cue:
-      "Hold that pose.\n" +
-      "I’m taking one more variation — you’re doing great.",
-    img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-  },
-],
+              {
+                uid: "beauty_seated_base1_step1",
+                label: "Base Pose 1",
+                cue:
+                  "Sit on the edge of the stool with your body turned slightly to the side.\n" +
+                  "Keep both feet on the floor and rest your hands flat and relaxed.\n" +
+                  "Perfect — this is your base pose. From here we’ll make small changes step-by-step.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+              {
+                uid: "beauty_seated_base1_step2",
+                label: "Flow 1",
+                cue:
+                  "Stay just like that.\n" +
+                  "Bring your hands gently between your legs and let your elbows relax in.\n" +
+                  "Lovely — keep the shoulders soft.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+              {
+                uid: "beauty_seated_base1_step3",
+                label: "Flow 2",
+                cue:
+                  "From the same position, rotate your body a little more to the side.\n" +
+                  "Keep your posture tall and your neck long.\n" +
+                  "Beautiful — hold that.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+              {
+                uid: "beauty_seated_base1_step4",
+                label: "Photographer",
+                cue:
+                  "Don’t move — this one’s for me.\n" +
+                  "I’m just tightening the framing slightly.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+              {
+                uid: "beauty_seated_base1_step5",
+                label: "Photographer",
+                cue:
+                  "Stay exactly the same.\n" +
+                  "I’m switching to a horizontal framing.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+              {
+                uid: "beauty_seated_base1_step6",
+                label: "Photographer",
+                cue:
+                  "Hold that pose.\n" +
+                  "I’m taking one more variation — you’re doing great.",
+                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
+              },
+            ],
           },
           {
             id: "beauty_seated_base2",
@@ -148,37 +142,25 @@ const BASE_GENRES = [
               {
                 uid: "beauty_seated_base2_step1",
                 label: "Base Pose 2",
-                cue:
-                  "Sit on the stool at a slight angle.\n" +
-                  "Lift your left foot onto the support and rest your elbow gently on your knee.\n" +
-                  "Lean your body forward just a little — perfect.",
+                cue: "Left foot raised, elbow on knee, torso forward",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
                 uid: "beauty_seated_base2_step2",
                 label: "Pose 2",
-                cue:
-                  "Stay exactly there.\n" +
-                  "Soften your fingers and relax your wrists.\n" +
-                  "Lovely — keep the shoulders calm.",
+                cue: "Cup fingers softly, relax wrists",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
                 uid: "beauty_seated_base2_step3",
                 label: "Pose 3",
-                cue:
-                  "From the same position, place your right hand lightly near your back pocket.\n" +
-                  "Open your chest just a touch.\n" +
-                  "Great — hold that.",
+                cue: "Right hand back pocket, chest open",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
                 uid: "beauty_seated_base2_step4",
                 label: "Pose 4",
-                cue:
-                  "Keep your body exactly the same.\n" +
-                  "Bring your hands gently between your legs and let the weight feel grounded.\n" +
-                  "That’s beautiful.",
+                cue: "Hands between legs, weight grounded",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
@@ -209,37 +191,25 @@ const BASE_GENRES = [
               {
                 uid: "beauty_seated_base3_step1",
                 label: "Base Pose 3",
-                cue:
-                  "Turn your body slightly to the side and face your shoulders back to me.\n" +
-                  "Rest your elbow on your knee and place your other hand softly on your thigh.\n" +
-                  "Perfect — nice and relaxed.",
+                cue: "Open to camera, elbow on knee, hand on thigh",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
               {
                 uid: "beauty_seated_base3_step2",
                 label: "Pose 2",
-                cue:
-                  "Stay just like that.\n" +
-                  "Bring your hand lightly to your chin — gentle touch.\n" +
-                  "Lovely.",
+                cue: "Hand to chin, thoughtful pause",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
               {
                 uid: "beauty_seated_base3_step3",
                 label: "Pose 3",
-                cue:
-                  "Keep the pose exactly the same.\n" +
-                  "Give me a warm smile — with your eyes first.\n" +
-                  "Beautiful — hold.",
+                cue: "Big smile, hold structure",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
               {
                 uid: "beauty_seated_base3_step4",
                 label: "Pose 4",
-                cue:
-                  "Don’t move your body.\n" +
-                  "Add a small head tilt and rest your hands low and relaxed.\n" +
-                  "Perfect.",
+                cue: "Tilt head, smile, hands crossed low",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
             ],
@@ -252,37 +222,25 @@ const BASE_GENRES = [
               {
                 uid: "beauty_seated_base4_step1",
                 label: "Base Pose 4",
-                cue:
-                  "Sit forward on the stool and cross your legs comfortably.\n" +
-                  "Keep your body turned slightly to the side and let your arms rest in a staggered, relaxed way.\n" +
-                  "Great — easy and natural.",
+                cue: "Body forward, legs crossed, arms staggered",
                 img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
               },
               {
                 uid: "beauty_seated_base4_step2",
                 label: "Pose 2",
-                cue:
-                  "Stay where you are.\n" +
-                  "Bring one hand gently to your chin and keep the other hand relaxed and grounded.\n" +
-                  "Lovely.",
+                cue: "Hand to chin, other grounded",
                 img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
               },
               {
                 uid: "beauty_seated_base4_step3",
                 label: "Pose 3",
-                cue:
-                  "Keep the pose the same.\n" +
-                  "Soften your fingers and relax the wrist — light and elegant.\n" +
-                  "Perfect.",
+                cue: "Smoking-style fingers, relaxed wrist",
                 img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
               },
               {
                 uid: "beauty_seated_base4_step4",
                 label: "Pose 4",
-                cue:
-                  "Don’t change anything in your body.\n" +
-                  "Let your hands come down and give me a bigger smile.\n" +
-                  "Beautiful — hold that.",
+                cue: "Hands down, big smile, head tilt",
                 img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
               },
             ],
@@ -301,36 +259,13 @@ const BASE_GENRES = [
               {
                 uid: "beauty_standing_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Stand with your feet a little apart and let your weight settle comfortably onto one leg.\n" +
-                  "Rest your hands softly on your hips and keep your shoulders relaxed.\n" +
-                  "Perfect — nice and grounded.",
+                cue: "Feet apart, hip rocked, hands on hips",
                 img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
               },
               {
                 uid: "beauty_standing_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay just like that.\n" +
-                  "Shift your weight a touch more into the back leg and let the front knee soften.\n" +
-                  "Lovely — don’t rush.",
-                img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
-              },
-              {
-                uid: "beauty_standing_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, turn your body slightly more to the side.\n" +
-                  "Keep your chest open and your posture tall.\n" +
-                  "Beautiful — hold that.",
-                img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
-              },
-              {
-                uid: "beauty_standing_base1_step4",
-                label: "Photographer",
-                cue:
-                  "Don’t move at all — this one’s for me.\n" +
-                  "I’m just changing my angle slightly.",
+                label: "Pose 2",
+                cue: "Change composition, shoot low",
                 img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
               },
             ],
@@ -380,35 +315,19 @@ const BASE_GENRES = [
               {
                 uid: "beauty_wall_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Stand with your body turned slightly to the side and let your back rest gently against the wall.\n" +
-                  "Keep both feet on the floor and allow your shoulders to relax into the support.\n" +
-                  "Perfect — very natural.",
+                cue: "45° to camera, weight back, knee forward",
                 img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
               },
               {
                 uid: "beauty_wall_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay exactly where you are.\n" +
-                  "Bring one knee a little forward and let the weight stay easy through your hips.\n" +
-                  "That’s lovely.",
+                label: "Pose 2",
+                cue: "Same pose, tighter composition",
                 img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
               },
               {
                 uid: "beauty_wall_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, let your arms cross softly in front of you.\n" +
-                  "Keep everything relaxed — no tension in the hands.\n" +
-                  "Beautiful — hold that.",
-                img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
-              },
-              {
-                uid: "beauty_wall_base1_step4",
-                label: "Photographer",
-                cue:
-                  "Don’t change anything — I’m just stepping in a bit closer.",
+                label: "Pose 3",
+                cue: "Hands crossed, left under",
                 img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
               },
             ],
@@ -458,40 +377,27 @@ const BASE_GENRES = [
               {
                 uid: "beauty_table_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Stand comfortably at the table and rest both elbows gently on the surface.\n" +
-                  "Let your arms come in naturally and keep your shoulders relaxed.\n" +
-                  "Perfect — easy and calm.",
+                cue: "Symmetric elbows, tapered arms",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
               {
                 uid: "beauty_table_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay just like that.\n" +
-                  "Bring one elbow slightly forward so the arms aren’t perfectly even.\n" +
-                  "Lovely — that feels very natural.",
+                label: "Pose 2",
+                cue: "Asymmetric, right elbow out",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
               {
                 uid: "beauty_table_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "Keep your body exactly the same.\n" +
-                  "Lift your hands a little higher and let them frame your face softly.\n" +
-                  "Beautiful — hold.",
+                label: "Pose 3",
+                cue: "Hands up, right higher, tilt",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
               {
                 uid: "beauty_table_base1_step4",
-                label: "Photographer",
-                cue:
-                  "Don’t move — this one’s for me.\n" +
-                  "I’m just adjusting the framing.",
+                label: "Pose 4",
+                cue: "Elbows together, frame face",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
-
-              // Remaining steps kept as-is for V1 scope (80/20)
               {
                 uid: "beauty_table_base1_step5",
                 label: "Pose 5",
@@ -502,66 +408,6 @@ const BASE_GENRES = [
                 uid: "beauty_table_base1_step6",
                 label: "Pose 6",
                 cue: "Hands out, crossing lightly",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step7",
-                label: "Pose 7",
-                cue: "Smoking hands, elbows in",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step8",
-                label: "Pose 8",
-                cue: "Hands behind hair, elbows crossed",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step9",
-                label: "Pose 9",
-                cue: "Elbow one way, hands across",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step10",
-                label: "Pose 10",
-                cue: "Body out, head left",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step11",
-                label: "Pose 11",
-                cue: "Hand in hair, body sideways",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step12",
-                label: "Pose 12",
-                cue: "Both hands up",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step13",
-                label: "Pose 13",
-                cue: "Hands tucked, tight composition",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step14",
-                label: "Pose 14",
-                cue: "Hugging motion, one hand off",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step15",
-                label: "Pose 15",
-                cue: "Double hug, compress shape",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "beauty_table_base1_step16",
-                label: "Pose 16",
-                cue: "Elbow off, one up one down, tilt",
                 img: ASSET("poses/beauty/set4-table/base1/step1.png"),
               },
             ],
@@ -580,119 +426,26 @@ const BASE_GENRES = [
               {
                 uid: "beauty_box_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Sit comfortably against the box and let your body recline slightly into it.\n" +
-                  "Rest one elbow down for support and keep your posture relaxed, not stiff.\n" +
-                  "Perfect — very comfortable.",
+                cue: "Recline on box, elbow down, body relaxed",
                 img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
               {
                 uid: "beauty_box_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay exactly where you are.\n" +
-                  "Bring your hands in closer to your body and let the elbows feel supported.\n" +
-                  "Lovely — nothing forced.",
+                label: "Pose 2",
+                cue: "Hands inside, elbows supported",
                 img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
               {
                 uid: "beauty_box_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, bring one hand gently up toward your hair.\n" +
-                  "Keep everything else relaxed and easy.\n" +
-                  "Beautiful — hold that.",
+                label: "Pose 3",
+                cue: "Hand behind hair",
                 img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
               {
                 uid: "beauty_box_base1_step4",
-                label: "Flow 3",
-                cue:
-                  "Keep your body the same.\n" +
-                  "Create a soft triangle shape with your arms by letting one elbow stay anchored.\n" +
-                  "Perfect — that’s it.",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-
-              // Remaining steps kept as-is for V1 scope (80/20)
-              {
-                uid: "beauty_box_base1_step5",
-                label: "Pose 5",
-                cue: "Elbows together, hands on chin",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step6",
-                label: "Pose 6",
-                cue: "Rotate body around elbows",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step7",
-                label: "Pose 7",
-                cue: "Feet on box, hug knees",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step8",
-                label: "Pose 8",
-                cue: "Remove box, horizontal tilt",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step9",
-                label: "Pose 9",
-                cue: "Big smile, tilt, hold",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "beauty_box_base1_step10",
-                label: "Pose 10",
-                cue: "One knee hugged, elbow down",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-            ],
-          },
-          {
-            id: "beauty_box_base2",
-            name: "Base Pose 2",
-            curated: true,
-            flow: [
-              {
-                uid: "beauty_box_base2_step1",
-                label: "Base Pose 2",
-                cue: "Seated sideways on box, torso upright, knees angled",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step2",
-                label: "Pose 2",
-                cue: "Elbow resting on knee, hand relaxed",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step3",
-                label: "Pose 3",
-                cue: "Lean slightly forward, keep spine long",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step4",
                 label: "Pose 4",
-                cue: "Hands together, soften shoulders",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step5",
-                label: "Pose 5",
-                cue: "Chin around, small tilt",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
-              },
-              {
-                uid: "beauty_box_base2_step6",
-                label: "Pose 6",
-                cue: "Change composition, tighter crop",
-                img: ASSET("poses/beauty/set5-box/base2/step1.png"),
+                cue: "Triangle shape, elbow anchored",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
             ],
           },
@@ -700,10 +453,9 @@ const BASE_GENRES = [
       },
     ],
   },
-
   {
     id: "personal_branding_man",
-    name: "Corporate Portrait Posing (Men)",
+    name: "Corporate Men’s Poses",
     sets: [
       {
         id: "pbm_set1_stool_dark_side_light",
@@ -717,45 +469,25 @@ const BASE_GENRES = [
               {
                 uid: "pbm_set1_base1_step1",
                 label: "Base Pose 1",
-                cue:
-                  "Sit on the stool with your body turned slightly to the side.\n" +
-                  "Place one foot up on the support and keep your hands together comfortably.\n" +
-                  "Sit tall — perfect.",
+                cue: `Sitting on a stool
+45 degrees
+One foot raised
+Hands together
+Sit upright
+Chin towards me`,
               },
-              {
-                uid: "pbm_set1_base1_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay just like that.\n" +
-                  "Shift a little more weight onto the raised leg and lean forward slightly.\n" +
-                  "Good — very natural.",
-              },
+              { uid: "pbm_set1_base1_step2", label: "Pose 2", cue: "Step back, easy smile" },
               {
                 uid: "pbm_set1_base1_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, drop the back shoulder just a touch.\n" +
-                  "Bring your chin slightly forward.\n" +
-                  "Great — hold that.",
+                label: "Pose 3",
+                cue: `Lean onto that knee a bit more
+Drop right back shoulder
+Chin forward
+Soft smile`,
               },
-              {
-                uid: "pbm_set1_base1_step4",
-                label: "Flow 3",
-                cue:
-                  "Keep everything the same.\n" +
-                  "Turn your chin gently back toward me.\n" +
-                  "Perfect.",
-              },
-              {
-                uid: "pbm_set1_base1_step5",
-                label: "Pose 5",
-                cue: "More smile",
-              },
-              {
-                uid: "pbm_set1_base1_step6",
-                label: "Pose 6",
-                cue: "Hands on your thigh, easy smile",
-              },
+              { uid: "pbm_set1_base1_step4", label: "Pose 4", cue: "Relax your posture and chin around to me" },
+              { uid: "pbm_set1_base1_step5", label: "Pose 5", cue: "More smile" },
+              { uid: "pbm_set1_base1_step6", label: "Pose 6", cue: "Hands on your thigh, easy smile" },
             ],
           },
         ],
@@ -769,11 +501,7 @@ const BASE_GENRES = [
             name: "Base Pose 2",
             curated: true,
             flow: [
-              {
-                uid: "pbm_set2_base2_step1",
-                label: "Base Pose 2",
-                cue: "Same pose but go down, fingers together",
-              },
+              { uid: "pbm_set2_base2_step1", label: "Base Pose 2", cue: "Same pose but go down, fingers together" },
               { uid: "pbm_set2_base2_step2", label: "Pose 3", cue: "Hands together" },
               { uid: "pbm_set2_base2_step3", label: "Pose 4", cue: "Easy smile, show me some teeth" },
             ],
@@ -789,36 +517,15 @@ const BASE_GENRES = [
             name: "Base Pose 3",
             curated: true,
             flow: [
-              {
-                uid: "pbm_set3_base3_step1",
-                label: "Base Pose 3",
-                cue:
-                  "Stand with your body turned slightly to the side and let your weight settle onto the back leg.\n" +
-                  "Cross your arms comfortably and keep your shoulders relaxed.\n" +
-                  "Good — confident and easy.",
-              },
-              {
-                uid: "pbm_set3_base3_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay exactly where you are.\n" +
-                  "Lower the arms a little so they sit more relaxed across your body.\n" +
-                  "Great — don’t rush.",
-              },
-              {
-                uid: "pbm_set3_base3_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, let your arms come down and open your shoulders slightly.\n" +
-                  "Keep your posture upright but comfortable.\n" +
-                  "Perfect.",
-              },
+              { uid: "pbm_set3_base3_step1", label: "Base Pose 3", cue: "45 degrees, weight on the back foot, arms crossed" },
+              { uid: "pbm_set3_base3_step2", label: "Pose 4", cue: "Arms crossed low, weight settled" },
+              { uid: "pbm_set3_base3_step3", label: "Pose 5", cue: "Arms down, open shoulders" },
               {
                 uid: "pbm_set3_base3_step4",
-                label: "Photographer",
-                cue:
-                  "Don’t move — this one’s for me.\n" +
-                  "I’m just changing my position slightly.",
+                label: "Pose 6",
+                cue: `Stand away from the wall
+Feet apart
+Shoulders to me`,
               },
             ],
           },
@@ -836,34 +543,12 @@ const BASE_GENRES = [
               {
                 uid: "pbm_set4_base4_step1",
                 label: "Base Pose 4",
-                cue:
-                  "Sit back on the chair with your body turned slightly to the side.\n" +
-                  "Place your back foot on the support and rest your hands loosely on your thigh.\n" +
-                  "Sit tall — relaxed, not stiff.",
+                cue: `Sit tall, 45 degrees
+Back foot on a half box
+Hands on thigh, loose`,
               },
-              {
-                uid: "pbm_set4_base4_step2",
-                label: "Flow 1",
-                cue:
-                  "Stay just like that.\n" +
-                  "Rotate your body a touch more toward me.\n" +
-                  "Good — hold that.",
-              },
-              {
-                uid: "pbm_set4_base4_step3",
-                label: "Flow 2",
-                cue:
-                  "From the same position, soften your posture slightly.\n" +
-                  "Let the shoulders drop and keep the chin relaxed.\n" +
-                  "Perfect.",
-              },
-              {
-                uid: "pbm_set4_base4_step4",
-                label: "Photographer",
-                cue:
-                  "Keep everything the same — this one’s for me.\n" +
-                  "I’m just adjusting the framing.",
-              },
+              { uid: "pbm_set4_base4_step2", label: "Pose 5", cue: "Rotate a bit more, relax into that posture" },
+              { uid: "pbm_set4_base4_step3", label: "Pose 6", cue: "Easy smile" },
             ],
           },
         ],
@@ -881,7 +566,7 @@ const RHYTHMS = [
   { id: "fast", label: "Fast", seconds: 6 },
 ];
 
-const STORAGE_KEY = "pose_rehearsal_app_state_css_v4";
+const STORAGE_KEY = "pose_operator_state_v6";
 
 /* =========================================
    HELPERS
@@ -892,25 +577,6 @@ function safeJsonParse(str, fallback) {
   } catch {
     return fallback;
   }
-}
-function deepClone(x) {
-  return JSON.parse(JSON.stringify(x));
-}
-function makeId(prefix = "id") {
-  return `${prefix}_${Math.random().toString(16).slice(2)}_${Date.now().toString(16)}`;
-}
-function mergeUserBasesIntoGenres(baseGenres, userBasesBySet) {
-  if (!userBasesBySet) return baseGenres;
-  const genres = deepClone(baseGenres);
-  for (const g of genres) {
-    for (const s of g.sets || []) {
-      const extra = userBasesBySet[s.id];
-      if (Array.isArray(extra) && extra.length) {
-        s.bases = [...(s.bases || []), ...extra];
-      }
-    }
-  }
-  return genres;
 }
 function clamp(n, a, b) {
   return Math.max(a, Math.min(b, n));
@@ -927,24 +593,62 @@ function cueTierFromText(cue = "") {
   if (lines >= 4 || len >= 120 || words >= 14) return "t2";
   return "t1";
 }
-function normalizeMyPrefix(name) {
-  let n = String(name || "").trim();
-  while (n.toLowerCase().startsWith("my ")) n = n.slice(3).trim();
-  return n;
+
+/* Client-safe rendering (80/20 tone alignment without rewriting the library) */
+function toClientSafeCue(raw) {
+  const text = String(raw || "").trim();
+  if (!text) return "";
+
+  const lines = text
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+
+  const replaced = lines.map((l) => {
+    const low = l.toLowerCase();
+    // Photographer-only framing lines
+    if (low.includes("comp") || low.includes("composition") || low.includes("horizontal") || low.includes("tighten crop") || low.includes("widen frame")) {
+      return "Stay exactly there — I’m adjusting the framing.";
+    }
+    // Gentle punctuation
+    if (!/[.!?]$/.test(l)) return `${l}.`;
+    return l;
+  });
+
+  // If it’s very short / directive-only, add reassurance at the end.
+  const joined = replaced.join("\n");
+  const wordCount = joined.replace(/\s+/g, " ").trim().split(" ").filter(Boolean).length;
+  if (wordCount <= 8) {
+    return `${joined}\nYou’re doing great — keep breathing.`;
+  }
+  return joined;
 }
-function makeDuplicateName(originalName, existingNames) {
-  const base = normalizeMyPrefix(originalName);
-  const cleanBase = base || "Base Pose";
-  const prefix = `My ${cleanBase}`;
 
-  if (!existingNames || !existingNames.length) return prefix;
+/* 7-day plan, always exactly 7 cards */
+function build7DayPlan(genre) {
+  const sets = genre?.sets ?? [];
+  const names = sets.map((s) => s?.name).filter(Boolean);
 
-  const lowerExisting = new Set(existingNames.map((x) => String(x).toLowerCase()));
-  if (!lowerExisting.has(prefix.toLowerCase())) return prefix;
+  const pick = (i) => {
+    if (!names.length) return "Choose a set and run it 3 times";
+    return `${names[i % names.length]} — run 3 times`;
+  };
 
-  let k = 2;
-  while (lowerExisting.has(`${prefix} (${k})`.toLowerCase())) k += 1;
-  return `${prefix} (${k})`;
+  const full = () => {
+    if (!names.length) return "Full session — once, slow";
+    const shown = names.slice(0, 5);
+    return `Full session (${shown.join(", ")}) once`;
+  };
+
+  return [
+    { day: "Day 1", text: pick(0) },
+    { day: "Day 2", text: pick(1) },
+    { day: "Day 3", text: pick(2) },
+    { day: "Day 4", text: pick(3) },
+    { day: "Day 5", text: pick(4) },
+    { day: "Day 6", text: `${full()} — slow` },
+    { day: "Day 7", text: `${full()} — normal pace` },
+  ];
 }
 
 /* =========================================
@@ -960,16 +664,13 @@ function Styles() {
         --card:rgba(255,255,255,.86);
         --shadow: 0 20px 45px rgba(15,23,42,.12);
         --shadow2: 0 10px 25px rgba(15,23,42,.10);
-        --radius: 22px;
         --radius2: 28px;
         --grad: linear-gradient(90deg,#4f46e5,#d946ef,#fb7185);
         --bg: linear-gradient(135deg,#fff7fb,#ffffff,#f2f6ff);
 
-        /* runtime-measured bar heights */
         --topH: 140px;
         --bottomH: 96px;
 
-        /* prep sticky */
         --prepStickyTop: 10px;
       }
 
@@ -1007,20 +708,6 @@ function Styles() {
       @media (min-width: 860px){ .grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
       .label{ font-size:12px; font-weight: 900; color: var(--muted); display:flex; align-items:center; gap:8px; }
-
-      .helpIcon{
-        width: 18px; height: 18px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,.92);
-        color: var(--muted);
-        font-weight: 950;
-        font-size: 12px;
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        user-select:none;
-      }
 
       .helper{
         margin-top: 6px;
@@ -1062,6 +749,7 @@ function Styles() {
         font-size: 14px;
         cursor: pointer;
         box-shadow: 0 8px 18px rgba(15,23,42,.08);
+        white-space: nowrap;
       }
       .btn:hover{ background: rgba(255,255,255,1); }
       .btn:disabled{ opacity:.45; cursor: not-allowed; }
@@ -1072,21 +760,6 @@ function Styles() {
         color: #ffffff !important;
       }
       .btnPrimary:hover{ filter: brightness(1.06); }
-      .btnPrimary:active{ background: var(--grad) !important; color:#ffffff !important; }
-      .btnPrimary:focus{ background: var(--grad) !important; color:#ffffff !important; }
-      .btnPrimary:focus-visible{
-        outline: 3px solid rgba(79,70,229,.35);
-        outline-offset: 2px;
-      }
-
-      .btnIcon{
-        width: 46px;
-        padding:0;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size: 18px;
-      }
 
       .footerActions{ margin-top: 16px; display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap; }
 
@@ -1111,7 +784,7 @@ function Styles() {
         padding: 18px;
       }
       .modal{
-        width: min(720px, 100%);
+        width: min(780px, 100%);
         border-radius: 22px;
         border:1px solid rgba(255,255,255,.25);
         background: rgba(255,255,255,.96);
@@ -1157,7 +830,7 @@ function Styles() {
         font-weight: 900;
       }
 
-      /* ✅ NEW: Sticky selector panel in PREP so you never lose Genre/Set/Base */
+      /* Sticky selector panel */
       .prepSticky{
         position: sticky;
         top: var(--prepStickyTop);
@@ -1172,13 +845,7 @@ function Styles() {
       .prepStickyInner{ padding: 14px; }
       @media (min-width: 860px){ .prepStickyInner{ padding: 18px; } }
 
-      /* Prevent the sticky panel from feeling too tall on small screens */
-      @media (max-width: 520px){
-        :root{ --prepStickyTop: 6px; }
-        .prepStickyInner{ padding: 12px; }
-      }
-
-      /* ✅ NEW: floating "Top" button when scrolled down */
+      /* Floating "Top" */
       .floatTop{
         position: fixed;
         right: 14px;
@@ -1236,6 +903,8 @@ function Styles() {
       }
 
       .mainPad{ height:100%; padding: 14px; }
+
+      /* ✅ FIX: prevent clipping of long text (no vertical centering + scrollable cueWrap) */
       .stage{
         height:100%;
         border-radius: var(--radius2);
@@ -1246,7 +915,7 @@ function Styles() {
         position: relative;
         overflow:hidden;
         display:flex;
-        align-items:center;
+        align-items:flex-start;   /* was center */
         justify-content:center;
         padding: 22px;
       }
@@ -1265,6 +934,7 @@ function Styles() {
         display:flex;
         align-items:center;
         justify-content:center;
+        z-index: 1;
       }
       .ref img{ max-width:100%; max-height:100%; object-fit:contain; border-radius: 14px; }
 
@@ -1273,9 +943,22 @@ function Styles() {
         max-width: min(40ch, 92vw);
         text-align: left;
         position: relative;
-        z-index: 1;
-        overflow: visible;
-        max-height: none;
+        z-index: 2;
+        overflow: auto;       /* ✅ scroll when long */
+        max-height: 100%;
+        padding-bottom: 18px;
+        padding-right: 180px; /* space for ref image */
+        -webkit-overflow-scrolling: touch;
+      }
+
+      @media (max-width: 520px){
+        .topInner{ padding: 10px 10px; }
+        .topControls{ gap: 8px; }
+        .toggle{ padding: 6px 8px; font-size: 12px; }
+        .control{ height: 44px; }
+        .stage{ padding: 16px; }
+        .ref{ width: 120px; height: 120px; right: 10px; top: 10px; }
+        .cueWrap{ padding-right: 130px; }
       }
 
       .cue{
@@ -1288,6 +971,18 @@ function Styles() {
       .cue.t2{ font-size: clamp(21px, 3.6vw, 46px); line-height: 1.09; }
       .cue.t3{ font-size: clamp(18px, 3.1vw, 38px); line-height: 1.11; }
       .cue.t4{ font-size: clamp(16px, 2.7vw, 32px); line-height: 1.14; }
+
+      .miniHint{
+        margin-top: 10px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.94);
+        padding: 10px 12px;
+        box-shadow: 0 10px 22px rgba(15,23,42,.08);
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.25;
+      }
 
       .nextBox{
         margin-top: 18px;
@@ -1308,9 +1003,11 @@ function Styles() {
 
       .hint{ margin-top: 14px; font-size: 13px; color: var(--muted); }
 
+      /* Tap layer behind content so scrolling works */
       .tapZone{
         position:absolute; inset:0;
         cursor: pointer;
+        z-index: 0;
       }
 
       .bottomBar{
@@ -1329,16 +1026,6 @@ function Styles() {
         font-size: 18px;
         font-weight: 950;
       }
-
-      @media (max-width: 520px){
-        .topInner{ padding: 10px 10px; }
-        .topControls{ gap: 8px; }
-        .toggle{ padding: 6px 8px; font-size: 12px; }
-        .control{ height: 44px; }
-        .stage{ padding: 16px; }
-        .ref{ width: 120px; height: 120px; right: 10px; top: 10px; }
-        .navBtn{ height: 58px; font-size: 17px; }
-      }
     `}</style>
   );
 }
@@ -1352,28 +1039,12 @@ function AppInner() {
     []
   );
 
-  const [showFullLibrary, setShowFullLibrary] = useState(
-    !!persisted?.showFullLibrary
-  );
-  const [favorites, setFavorites] = useState(persisted?.favorites ?? {});
-  const [userBasesBySet, setUserBasesBySet] = useState(
-    persisted?.userBasesBySet ?? {}
-  );
-  const [lastSelection, setLastSelection] = useState(
-    persisted?.lastSelection ?? null
-  );
-
-  const GENRES = useMemo(
-    () => mergeUserBasesIntoGenres(BASE_GENRES, userBasesBySet),
-    [userBasesBySet]
-  );
+  const GENRES = BASE_GENRES;
 
   const [mode, setMode] = useState("prep"); // prep | session
 
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    const seen = persisted?.seenOnboarding;
-    return !seen;
-  });
+  const [showHelp, setShowHelp] = useState(() => !persisted?.seenHelp);
+  const [showSystem, setShowSystem] = useState(false);
 
   const [toast, setToast] = useState(null);
   const toastTimer = useRef(null);
@@ -1385,7 +1056,7 @@ function AppInner() {
 
   const fallbackGenreId = GENRES?.[0]?.id ?? "beauty";
   const [genreId, setGenreId] = useState(
-    () => lastSelection?.genreId ?? fallbackGenreId
+    () => persisted?.lastSelection?.genreId ?? fallbackGenreId
   );
   const genre = useMemo(
     () => GENRES.find((g) => g.id === genreId) ?? GENRES[0] ?? null,
@@ -1393,7 +1064,7 @@ function AppInner() {
   );
 
   const [setId, setSetId] = useState(() => {
-    const byLast = lastSelection?.setId;
+    const byLast = persisted?.lastSelection?.setId;
     if (byLast && genre?.sets?.some((s) => s.id === byLast)) return byLast;
     return genre?.sets?.[0]?.id ?? "";
   });
@@ -1401,6 +1072,10 @@ function AppInner() {
   const selectedSet = useMemo(
     () => genre?.sets?.find((s) => s.id === setId) ?? genre?.sets?.[0] ?? null,
     [genre, setId]
+  );
+
+  const [showFullLibrary, setShowFullLibrary] = useState(
+    !!persisted?.showFullLibrary
   );
 
   const availableBases = useMemo(() => {
@@ -1412,30 +1087,21 @@ function AppInner() {
 
   const [baseId, setBaseId] = useState(() => {
     const basesAll = selectedSet?.bases ?? [];
-    const fav = favorites?.[setId];
-    if (fav && basesAll.some((b) => b.id === fav)) return fav;
-
-    const byLast = lastSelection?.baseId;
+    const byLast = persisted?.lastSelection?.baseId;
     if (byLast && basesAll.some((b) => b.id === byLast)) return byLast;
-
     return availableBases?.[0]?.id ?? "";
   });
 
   useEffect(() => {
     const basesAll = selectedSet?.bases ?? [];
-    const fav = favorites?.[setId];
-    if (fav && basesAll.some((b) => b.id === fav)) {
-      setBaseId(fav);
-      return;
-    }
-    const byLast = lastSelection?.baseId;
+    const byLast = persisted?.lastSelection?.baseId;
     if (byLast && basesAll.some((b) => b.id === byLast)) {
       setBaseId(byLast);
       return;
     }
     setBaseId(availableBases?.[0]?.id ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setId, selectedSet?.bases, favorites, lastSelection, availableBases]);
+  }, [setId, selectedSet?.bases, availableBases]);
 
   const selectedBase = useMemo(() => {
     const all = selectedSet?.bases ?? [];
@@ -1459,6 +1125,10 @@ function AppInner() {
   );
   const [showNextPreview, setShowNextPreview] = useState(
     persisted?.showNextPreview ?? true
+  );
+
+  const [clientWording, setClientWording] = useState(
+    persisted?.clientWording ?? true
   );
 
   const current = useMemo(() => {
@@ -1538,53 +1208,7 @@ function AppInner() {
     return () => clearTimeout(t);
   }, [mode, autoOn, isOver, flow.length, rhythm]);
 
-  const isFavorite = favorites?.[setId] === baseId;
-  const toggleFavorite = () => {
-    setFavorites((prev) => {
-      const next = { ...(prev || {}) };
-      if (next[setId] === baseId) {
-        delete next[setId];
-        pushToast("Removed favorite for this set.");
-      } else {
-        next[setId] = baseId;
-        pushToast("Saved favorite: this will be the default base for this set.");
-      }
-      return next;
-    });
-  };
-
-  const duplicateAnchor = () => {
-    if (!selectedBase || !selectedSet) return;
-
-    const allNames = (selectedSet?.bases ?? [])
-      .map((b) => b?.name)
-      .filter(Boolean);
-    const nextName = makeDuplicateName(selectedBase.name || "Base Pose", allNames);
-
-    const copy = deepClone(selectedBase);
-    copy.id = makeId("my_base");
-    copy.name = nextName;
-    copy.curated = true;
-    copy.flow = (copy.flow || []).map((step) => ({
-      ...step,
-      uid: makeId("my_step"),
-    }));
-
-    setUserBasesBySet((prev) => {
-      const next = { ...(prev || {}) };
-      const arr = Array.isArray(next[selectedSet.id])
-        ? [...next[selectedSet.id]]
-        : [];
-      arr.push(copy);
-      next[selectedSet.id] = arr;
-      return next;
-    });
-
-    setTimeout(() => setBaseId(copy.id), 0);
-    pushToast("Duplicated. You are now on your copy.");
-  };
-
-  /* ✅ IMPORTANT: only reset flow when in PREP, never during session */
+  /* Reset flow when selection changes (prep only) */
   useEffect(() => {
     if (mode !== "prep") return;
     setIdx(0);
@@ -1597,63 +1221,32 @@ function AppInner() {
     [flow]
   );
 
-  const rehearsalPlan = useMemo(() => {
-    const sets = genre?.sets ?? [];
-    const usable = sets.slice(0, Math.min(5, sets.length));
-    const dayItems = usable.map((s, i) => ({
-      day: `Day ${i + 1}`,
-      text: `${s.name} — run 3 times`,
-    }));
+  const rehearsalPlan = useMemo(() => build7DayPlan(genre), [genre]);
 
-    if (usable.length >= 2) {
-      dayItems.push({
-        day: `Day ${usable.length + 1}`,
-        text: `Full session (${usable.map((x) => x.name).join(", ")}) once, slow`,
-      });
-      dayItems.push({
-        day: `Day ${usable.length + 2}`,
-        text: `Full session once, normal pace`,
-      });
-    } else if (usable.length === 1) {
-      dayItems.push({ day: "Day 2", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 3", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 4", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 5", text: "Repeat the same set — run 3 times" });
-      dayItems.push({ day: "Day 6", text: "Run the set once, slow" });
-      dayItems.push({ day: "Day 7", text: "Run the set once, normal pace" });
-    }
-
-    return dayItems.slice(0, 7);
-  }, [genre]);
-
+  /* Persist */
   useEffect(() => {
     const payload = {
       showFullLibrary,
-      favorites,
-      userBasesBySet,
       lastSelection: { genreId, setId, baseId },
       showRefImage,
       showNextPreview,
-      seenOnboarding: !showOnboarding
-        ? true
-        : persisted?.seenOnboarding ?? false,
+      seenHelp: !showHelp ? true : persisted?.seenHelp ?? false,
+      clientWording,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     showFullLibrary,
-    favorites,
-    userBasesBySet,
     genreId,
     setId,
     baseId,
     showRefImage,
     showNextPreview,
-    showOnboarding,
+    showHelp,
+    clientWording,
   ]);
 
   const beginSession = () => {
-    setLastSelection({ genreId, setId, baseId });
     setMode("session");
     restartFlow();
     pushToast("Session started. Use Next / Back.");
@@ -1671,17 +1264,15 @@ function AppInner() {
       localStorage.removeItem(STORAGE_KEY);
     } catch {}
     setShowFullLibrary(false);
-    setFavorites({});
-    setUserBasesBySet({});
-    setLastSelection(null);
     setGenreId(fallbackGenreId);
     setShowRefImage(true);
     setShowNextPreview(true);
+    setClientWording(true);
     setMode("prep");
     setIdx(0);
     setIsOver(false);
     setAutoOn(false);
-    setShowOnboarding(true);
+    setShowHelp(true);
     pushToast("App reset. Starting fresh.");
   };
 
@@ -1691,7 +1282,17 @@ function AppInner() {
     [current?.cue]
   );
 
-  /* ✅ FIX: Measure top/bottom bars so content never hides underneath */
+  const displayCue = useMemo(() => {
+    const raw = current?.cue ?? "";
+    return clientWording ? toClientSafeCue(raw) : String(raw || "");
+  }, [current?.cue, clientWording]);
+
+  const displayNextCue = useMemo(() => {
+    const raw = nextStep?.cue ?? "";
+    return clientWording ? toClientSafeCue(raw) : String(raw || "");
+  }, [nextStep?.cue, clientWording]);
+
+  /* Measure top/bottom bars so content never hides underneath */
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
 
@@ -1725,7 +1326,7 @@ function AppInner() {
     syncBars();
   }, [mode, isOver, syncBars]);
 
-  /* ✅ NEW: always land at the top when entering PREP */
+  /* always land at top when entering PREP */
   useEffect(() => {
     if (mode !== "prep") return;
     requestAnimationFrame(() => {
@@ -1737,7 +1338,7 @@ function AppInner() {
     });
   }, [mode]);
 
-  /* ✅ NEW: floating Top button */
+  /* floating Top button */
   const [showTopBtn, setShowTopBtn] = useState(false);
   useEffect(() => {
     const onScroll = () => setShowTopBtn(window.scrollY > 260);
@@ -1750,33 +1351,77 @@ function AppInner() {
     <>
       <Styles />
 
-      {mode === "prep" && showOnboarding && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="How this works">
+      {/* HELP MODAL */}
+      {mode === "prep" && showHelp && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-label="Help">
           <div className="modal">
             <div className="modalInner">
-              <div className="modalTitle">How this works (quick)</div>
+              <div className="modalTitle">Help (quick)</div>
               <div className="modalBody">
-                This tool shows pose cues step-by-step so you don’t need to memorize a full session.
+                This tool runs a pose session step-by-step so you don’t need to memorize a full shoot.
               </div>
               <ul className="modalList">
-                <li><strong>Genre</strong> = the type of session (women’s portraits, corporate portraits…).</li>
-                <li><strong>Set</strong> = the setup (stool, wall, table…).</li>
-                <li><strong>Base</strong> = the starting pose.</li>
-                <li>
-                  From the <strong>base pose</strong>, you’ll make <strong>small movements</strong> step-by-step (a flow).
-                </li>
+                <li><strong>Genre</strong> = the library (Women’s / Corporate Men’s).</li>
+                <li><strong>Set</strong> = the setup (stool, wall, table…)</li>
+                <li><strong>Base</strong> = the starting pose for that set.</li>
+                <li><strong>Flow</strong> = small movements from the base pose, one step at a time.</li>
                 <li>Press <strong>Begin session</strong>, then use <strong>Next</strong> / <strong>Back</strong>.</li>
               </ul>
               <div className="modalActions">
                 <button
-                  className="btn"
+                  className="btn btnPrimary"
                   onClick={() => {
-                    setShowOnboarding(false);
-                    pushToast("Help is always available via the “?” button.");
+                    setShowHelp(false);
+                    pushToast("Help closed.");
                   }}
                 >
-                  Got it
+                  Close
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SYSTEM MODAL (Scale-ready system deliverables) */}
+      {mode === "prep" && showSystem && (
+        <div className="overlay" role="dialog" aria-modal="true" aria-label="System">
+          <div className="modal">
+            <div className="modalInner">
+              <div className="modalTitle">The System (ONE scale-ready system)</div>
+
+              <div className="modalBody">
+                <strong>Purpose (1–2 sentences):</strong><br />
+                Run consistent, calm, step-by-step posing sessions without relying on memory, while training in 7 days so you can execute the same workflow for 10 clients unchanged.
+              </div>
+
+              <div className="modalBody" style={{ marginTop: 12 }}>
+                <strong>Step-by-step process (instructions):</strong>
+              </div>
+              <ul className="modalList">
+                <li><strong>Prep (2 minutes):</strong> choose Genre → Set → Base. Keep “Client wording” ON if you want calm, reassuring directions.</li>
+                <li><strong>Practice (7 days):</strong> follow the 7-day rehearsal plan shown on the Prep screen.</li>
+                <li><strong>Run session:</strong> press Begin session. Read the cue, then click Next. Keep movements small—base pose first, then micro-adjustments.</li>
+                <li><strong>Consistency rule:</strong> do not invent new steps. Follow the flow as written so results are repeatable.</li>
+              </ul>
+
+              <div className="modalBody" style={{ marginTop: 12 }}>
+                <strong>Templates / prompts (outputs):</strong>
+              </div>
+              <ul className="modalList">
+                <li><strong>Client reassurance line:</strong> “Perfect. Stay right there — we’ll do tiny adjustments step by step.”</li>
+                <li><strong>When changing framing:</strong> “Don’t move — this one is just me adjusting the framing.”</li>
+                <li><strong>When client is tense:</strong> “Great. Drop the shoulders, breathe out, and soften the hands.”</li>
+                <li><strong>End of set:</strong> “That’s it — you did really well. We’re moving to the next setup.”</li>
+              </ul>
+
+              <div className="modalBody" style={{ marginTop: 12 }}>
+                <strong>Handoff note (delegate tomorrow):</strong><br />
+                Any assistant can run this by selecting the correct Genre/Set/Base and pressing Begin session. They read each cue exactly, advance with Next, and avoid improvising. If unsure, keep “Client wording” ON and use the reassurance line above.
+              </div>
+
+              <div className="modalActions">
+                <button className="btn" onClick={() => setShowSystem(false)}>Close</button>
               </div>
             </div>
           </div>
@@ -1805,27 +1450,38 @@ function AppInner() {
 
       {mode === "prep" && (
         <div className="wrap">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
             <div className="pill">
               <span className="dot" />
               Prep
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
               <button
                 className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
-                onClick={() => setShowOnboarding(true)}
-                title="Help / How this works"
+                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
+                onClick={() => setShowHelp(true)}
+                title="Help"
                 aria-label="Open help"
               >
-                ?
+                Help
               </button>
+
               <button
                 className="btn"
-                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
+                onClick={() => setShowSystem(true)}
+                title="System"
+                aria-label="Open system"
+              >
+                System
+              </button>
+
+              <button
+                className="btn"
+                style={{ height: 36, borderRadius: 999, padding: "0 14px" }}
                 onClick={resetApp}
-                title="Reset app (clears saved state and duplicates)"
+                title="Reset app (clears saved state)"
                 aria-label="Reset app"
               >
                 Reset
@@ -1842,14 +1498,11 @@ function AppInner() {
             </div>
           ) : null}
 
-          {/* ✅ NEW: STICKY selector panel so Genre/Set/Base never disappear */}
           <div className="prepSticky" aria-label="Pose selection controls">
             <div className="prepStickyInner">
               <div className="grid">
                 <div>
-                  <div className="label">
-                    Genre <span className="helpIcon" title="Choose the pose library for your session.">i</span>
-                  </div>
+                  <div className="label">Genre</div>
                   <select className="control" value={genreId} onChange={(e) => setGenreId(e.target.value)}>
                     {GENRES.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -1857,13 +1510,11 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">Pick the library that matches your shoot.</div>
+                  <div className="helper">Pick the type of shoot this pose library belongs to.</div>
                 </div>
 
                 <div>
-                  <div className="label">
-                    Set <span className="helpIcon" title="Choose the setup (stool, wall, table…).">i</span>
-                  </div>
+                  <div className="label">Set</div>
                   <select className="control" value={setId} onChange={(e) => setSetId(e.target.value)}>
                     {(genre?.sets ?? []).map((s) => (
                       <option key={s.id} value={s.id}>
@@ -1871,13 +1522,11 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
-                  <div className="helper">This usually matches your lighting/background/prop setup.</div>
+                  <div className="helper">This matches your lighting/background/prop setup.</div>
                 </div>
 
                 <div>
-                  <div className="label">
-                    Base <span className="helpIcon" title="Choose the starting pose for this set.">i</span>
-                  </div>
+                  <div className="label">Base</div>
                   <select className="control" value={baseId} onChange={(e) => setBaseId(e.target.value)}>
                     {availableBases.map((b) => (
                       <option key={b.id} value={b.id}>
@@ -1887,26 +1536,13 @@ function AppInner() {
                   </select>
 
                   <div className="row">
-                    <label className="check" title="Off = curated bases only. On = all bases in this set." aria-label="Show full library">
+                    <label className="check" title="Off = curated bases only. On = all bases in this set.">
                       <input type="checkbox" checked={showFullLibrary} onChange={(e) => setShowFullLibrary(e.target.checked)} />
                       Show full library
                     </label>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span className="helper" style={{ marginTop: 0, fontSize: 13, fontWeight: 900 }}>
-                        Favorite
-                      </span>
-                      <button className="btn btnIcon" onClick={toggleFavorite} title="Sets the default base for this set next time." aria-label="Toggle favorite base for this set">
-                        {isFavorite ? "★" : "☆"}
-                      </button>
-                    </div>
                   </div>
 
                   <div className="footerActions">
-                    <button className="btn" onClick={duplicateAnchor} disabled={!selectedBase} title="Create a copy of this base." aria-label="Duplicate base">
-                      Duplicate
-                    </button>
-
                     <button
                       className="btn btnPrimary"
                       onClick={beginSession}
@@ -1928,14 +1564,13 @@ function AppInner() {
             </div>
           </div>
 
-          {/* Keep the rest of the page normal scroll */}
           <div className="card">
             <div className="cardInner">
               <div className="label" style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}>
-                Rehearsal plan ({rehearsalPlan.length} days)
+                7-day rehearsal plan
               </div>
               <p className="sub" style={{ marginTop: 6 }}>
-                A simple practice plan built from the sets in <strong>{genre?.name ?? "this genre"}</strong>.
+                Practice before shoots: each day is simple and repeatable. Built from <strong>{genre?.name ?? "this genre"}</strong>.
               </p>
 
               <div className="planGrid">
@@ -1968,7 +1603,7 @@ function AppInner() {
                 </div>
 
                 <div className="topControls">
-                  <label className="toggle" title="Automatically go to the next cue after the chosen time." aria-label="Toggle auto-advance">
+                  <label className="toggle" title="Automatically go to the next cue after the chosen time.">
                     <input type="checkbox" checked={autoOn} onChange={(e) => setAutoOn(e.target.checked)} disabled={isOver} />
                     Auto-advance
                   </label>
@@ -1989,17 +1624,22 @@ function AppInner() {
                     ))}
                   </select>
 
-                  <label className="toggle" title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."} aria-label="Toggle reference image">
+                  <label className="toggle" title="Client-safe wording (calm, reassuring) for verbal direction.">
+                    <input type="checkbox" checked={clientWording} onChange={(e) => setClientWording(e.target.checked)} />
+                    Client wording
+                  </label>
+
+                  <label className="toggle" title={hasAnyImagesInFlow ? "Show a reference sketch when available." : "No images available for this flow."}>
                     <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={!hasAnyImagesInFlow} />
                     Image
                   </label>
 
-                  <label className="toggle" title="Show the next cue preview." aria-label="Toggle next cue preview">
+                  <label className="toggle" title="Show the next cue preview.">
                     <input type="checkbox" checked={showNextPreview} onChange={(e) => setShowNextPreview(e.target.checked)} />
                     Next preview
                   </label>
 
-                  <button className="btn" onClick={exitSession} title="Return to prep screen" aria-label="Exit session">
+                  <button className="btn" onClick={exitSession} title="Return to prep screen">
                     Exit
                   </button>
                 </div>
@@ -2042,12 +1682,19 @@ function AppInner() {
 
                 {!isOver ? (
                   <div className="cueWrap">
-                    <div className={`cue ${cueTier}`}>{current?.cue ?? ""}</div>
+                    <div className={`cue ${cueTier}`}>{displayCue}</div>
+
+                    {/* Base → flow explanation */}
+                    {idx === 0 ? (
+                      <div className="miniHint">
+                        <strong>Base pose</strong> = the starting position. <strong>Flow</strong> = small movements from that base, one step at a time.
+                      </div>
+                    ) : null}
 
                     {showNextPreview && nextStep?.cue ? (
                       <div className="nextBox">
                         <div className="nextLabel">Next</div>
-                        <div className="nextCue">{nextStep.cue}</div>
+                        <div className="nextCue">{displayNextCue}</div>
                       </div>
                     ) : null}
 
@@ -2056,7 +1703,7 @@ function AppInner() {
                     </div>
                   </div>
                 ) : (
-                  <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+                  <div style={{ textAlign: "center", position: "relative", zIndex: 2 }}>
                     <div className="progLabel" style={{ fontSize: 14 }}>
                       Flow complete
                     </div>
