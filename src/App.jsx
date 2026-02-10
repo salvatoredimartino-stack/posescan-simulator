@@ -124,7 +124,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_seated_base2_step1",
                 label: "Base Pose 2",
-                cue: "Left foot raised, elbow on knee, torso forward, triangle, comp 4.",
+                cue: "Back foot raised, elbow on knee, torso forward, triangle, comp 4.",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
@@ -136,7 +136,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_seated_base2_step3",
                 label: "Pose 3",
-                cue: "Right thumb in back pocket, chest open. Comp 4",
+                cue: "Front thumb in back pocket, chest open. Comp 4",
                 img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
               },
               {
@@ -173,13 +173,13 @@ const BASE_GENRES = [
               {
                 uid: "womens_seated_base3_step1",
                 label: "Base Pose 3",
-                cue: "Open to camera, front hand on front thigh.",
+                cue: "Open to camera, front hand on front thigh, back elbow on knee.",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
               {
                 uid: "womens_seated_base3_step2",
                 label: "Pose 2",
-                cue: "Back hand to chin, soft smile, comp 4.",
+                cue: "Same pose, Back hand to chin, soft smile, comp 4.",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
               {
@@ -191,7 +191,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_seated_base3_step4",
                 label: "Pose 4",
-                cue: "Tilt head right, big smile, hands down< comp 3.",
+                cue: "Tilt head right, big smile, both hands in the middle< comp 3.",
                 img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
               },
             ],
@@ -260,7 +260,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_standing_base2_step1",
                 label: "Base Pose 2",
-                cue: "Rotate the body slightly, 45 to the camera. Lift back foot onto the box. Chin at 45°. Comp 4",
+                cue: "Rotate the body slightly, 45 to the camera. Lift back foot onto the box, front hand on front hip. Chin at 45°. Comp 4",
                 img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
               },
               {
@@ -278,7 +278,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_standing_base2_step4",
                 label: "Pose 4",
-                cue: "Keep rotating, look over the sholder. Comp 3",
+                cue: "Keep rotating, look over the sholder, hands down. Comp 3",
                 img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
               },
             ],
@@ -328,7 +328,7 @@ const BASE_GENRES = [
               {
                 uid: "womens_wall_base2_step2",
                 label: "Pose 2",
-                cue: "Face toward the wall. Hansds below breast. Comp 3.",
+                cue: "Face towards the wall. Hansds below breast. Comp 3.",
                 img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
               },
               {
@@ -398,6 +398,24 @@ const BASE_GENRES = [
                 label: "Pose 2",
                 cue: "Bring right hand in. ",
                 img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+                  },
+              {
+                uid: "womens_box_base1_step2",
+                label: "Pose 3",
+                cue: "Left hand inside hair. ",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+                  },
+              {
+                uid: "womens_box_base1_step2",
+                label: "Pose 4",
+                cue: "Trn the back to the box, front elbow on the box and back hand on the lap ",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
+                  },
+              {
+                uid: "womens_box_base1_step2",
+                label: "Pose 5",
+                cue: "Turn back and put both elbows on teh box, front hand to the chin. ",
+                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
               },
             ],
           },
@@ -422,7 +440,7 @@ const BASE_GENRES = [
               {
                 uid: "pbm_set1_base1_step1",
                 label: "Base Pose 1",
-                cue: "Sit on the stool at 45°. Raise one foot. Hands together. Sit upright, Comnp 4. Chin gently toward me.",
+                cue: "Sit on the stool at 45°. Raise back foot. Hands together. Sit upright, Comnp 4. Chin gently toward me.",
               },
               {
                 uid: "pbm_set1_base1_step2",
