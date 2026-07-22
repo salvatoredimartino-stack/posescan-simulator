@@ -76,377 +76,178 @@ const BASE_GENRES = [
           {
             id: "womens_seated_base1",
             name: "Base Pose 1",
+            num: 1,
             curated: true,
+            img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
             flow: [
-              {
-                uid: "womens_seated_base1_step1",
-                label: "Base Pose 1",
-                cue: "Sit on the edge of the stool, body turned 45 to the cvamera slightly to the side. Keep both feet on the floor and rest your hands flat and relaxed. Perfect — this is your base pose. From here we’ll make small changes step-by-step.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "womens_seated_base1_step2",
-                label: "Pose 2",
-                cue: "Stay just like that. Bring your hands gently between your legs and let your elbows relax in.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "womens_seated_base1_step3",
-                label: "Pose 3",
-                cue: "Rotate a touch more side-on. Keep your spine long and your shoulders soft.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "womens_seated_base1_step4",
-                label: "Pose 4",
-                cue: "Rotate More Over the shoulder Comp 2 — I’ll change the framing Comp 2. Stay still through the shoulders and hands.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "womens_seated_base1_step5",
-                label: "Pose 5",
-                cue: "Same body position. We’ll go horizontal Comp 2 — keep your chin gently forward and slightly down.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
-              {
-                uid: "womens_seated_base1_step6",
-                label: "Pose 6",
-                cue: "Hold the pose and breathe out Comp 3. Hold that expression.",
-                img: ASSET("poses/beauty/set1-seated/base1/step1.png"),
-              },
+              { uid: "w_s1_b1_p1", num: 1, cue: "Sit on the edge of the stool, 45° from the camera. Both feet down, hands flat on your lap." },
+              { uid: "w_s1_b1_p2", num: 2, cue: "Hands go inside your legs." },
+              { uid: "w_s1_b1_p3", num: 3, cue: "Rotate side on.", comp: 4 },
+              { uid: "w_s1_b1_p6", num: 6, cue: "Hold exactly that — I’m changing the framing.", comp: 2 },
+              { uid: "w_s1_b1_p7", num: 7, cue: "Stay still, I’m turning the camera horizontal.", comp: 4 },
+              { uid: "w_s1_b1_p8", num: 8, cue: "Same again — hold it.", comp: 2 },
             ],
           },
           {
-            id: "womens_seated_base2",
-            name: "Base Pose 2",
+            id: "womens_seated_base9",
+            name: "Base Pose 9",
+            num: 9,
             curated: true,
+            img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
             flow: [
-              {
-                uid: "womens_seated_base2_step1",
-                label: "Base Pose 2",
-                cue: "Back foot raised, elbow on knee, torso forward, triangle, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step2",
-                label: "Pose 2",
-                cue: "Same pose, Cup fingers softly, relax wrists. Comp 4",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step3",
-                label: "Pose 3",
-                cue: "Front thumb in back pocket, chest open. Comp 4",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step4",
-                label: "Pose 4",
-                cue: "Hands between legs in the middle, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step5",
-                label: "Pose 5",
-                cue: "Lean back slightly and tilt your head right, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step6",
-                label: "Pose 6",
-                cue: "Same pose, move front hand on hip, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
-              {
-                uid: "womens_seated_base2_step7",
-                label: "Pose 7",
-                cue: "front hand to back elbow, comp 4",
-                img: ASSET("poses/beauty/set1-seated/base2/step1.png"),
-              },
+              { uid: "w_s1_b9_p9", num: 9, cue: "Left foot up on the box. Left elbow rests on your left knee, right hand flat on your thigh, torso forward." },
+              { uid: "w_s1_b9_p10", num: 10, cue: "Cup your fingers." },
+              { uid: "w_s1_b9_p11", num: 11, cue: "Right hand back into your right pocket. Left elbow stays on the knee." },
+              { uid: "w_s1_b9_p12", num: 12, cue: "Hands in between your legs." },
+              { uid: "w_s1_b9_p13", num: 13, cue: "Same pose — tilt, and lean back.", comp: 4 },
+              { uid: "w_s1_b9_p14", num: 14, cue: "Elbow out, left elbow on the knee." },
+              { uid: "w_s1_b9_p15", num: 15, cue: "Same again — right hand forward onto your left elbow, left hand comes forward." },
             ],
           },
           {
-            id: "womens_seated_base3",
-            name: "Base Pose 3",
+            id: "womens_seated_base16",
+            name: "Base Pose 16",
+            num: 16,
             curated: true,
+            img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
             flow: [
-              {
-                uid: "womens_seated_base3_step1",
-                label: "Base Pose 3",
-                cue: "Open to camera, front hand on front thigh, back elbow on knee.",
-                img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
-              },
-              {
-                uid: "womens_seated_base3_step2",
-                label: "Pose 2",
-                cue: "Same pose, Back hand to chin, soft smile, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
-              },
-              {
-                uid: "womens_seated_base3_step3",
-                label: "Pose 3",
-                cue: "Same pose, big smile, comp 4.",
-                img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
-              },
-              {
-                uid: "womens_seated_base3_step4",
-                label: "Pose 4",
-                cue: "Tilt head right, big smile, both hands in the middle< comp 3.",
-                img: ASSET("poses/beauty/set1-seated/base3/step1.png"),
-              },
+              { uid: "w_s1_b16_p16", num: 16, cue: "Side pose — open up to the camera. Right hand on your thigh, left elbow on your left knee." },
+              { uid: "w_s1_b16_p17", num: 17, cue: "Same pose — left hand up to your chin." },
+              { uid: "w_s1_b16_p18", num: 18, cue: "Same pose — big smile." },
+              { uid: "w_s1_b16_p19", num: 19, cue: "Same pose with a tilt — big smile, hands down and crossed." },
             ],
           },
           {
-            id: "womens_seated_base4",
-            name: "Base Pose 4",
+            id: "womens_seated_base20",
+            name: "Base Pose 20",
+            num: 20,
             curated: true,
+            img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
             flow: [
-              {
-                uid: "womens_seated_base4_step1",
-                label: "Base Pose 4",
-                cue: "Body forward, legs across, arms staggered, comp 3.",
-                img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
-              },
-              {
-                uid: "womens_seated_base4_step2",
-                label: "Pose 2",
-                cue: "Right Hand goes to chin, other across loose, comp 3.",
-                img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
-              },
-              {
-                uid: "womens_seated_base4_step3",
-                label: "Pose 3",
-                cue: "Smoking wrist and soften the fingers.",
-                img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
-              },
-              {
-                uid: "womens_seated_base4_step4",
-                label: "Pose 4",
-                cue: "Hands inside the legs. Gentle smile. Small head tilt left.",
-                img: ASSET("poses/beauty/set1-seated/base4/step1.png"),
-              },
+              { uid: "w_s1_b20_p20", num: 20, cue: "Body forward, straight to the camera. Cross your legs, arms staggered on the knee." },
+              { uid: "w_s1_b20_p21", num: 21, cue: "Body stays forward — left hand up to your chin, right hand stays down." },
+              { uid: "w_s1_b20_p22", num: 22, cue: "Same pose — left hand like a smoking hand." },
+              { uid: "w_s1_b20_p23", num: 23, cue: "Both hands down, big smile, tilt your head." },
             ],
           },
         ],
       },
+
       {
         id: "womens_set2_standing",
         name: "SET 2 — STANDING",
         bases: [
           {
-            id: "womens_standing_base1",
-            name: "Base Pose 1",
+            id: "womens_standing_base79",
+            name: "Base Pose 79",
+            num: 79,
             curated: true,
+            img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
             flow: [
-              {
-                uid: "womens_standing_base1_step1",
-                label: "Base Pose 1",
-                cue: "Feet apart. Rock the hip gently. Hands on hips, one up on down. Comp 3",
-                img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
-              },
-              {
-                uid: "womens_standing_base1_step2",
-                label: "Pose 2",
-                cue: "Hold the pose — I’ll shoot from a slightly lower angle, comp 4.",
-                img: ASSET("poses/beauty/set2-standing/base1/step1.png"),
-              },
+              { uid: "w_s2_b79_p79", num: 79, cue: "Feet apart, rock your hip to one side. One shoulder up, one down. Both hands on your hips — one up, one down.", note: "Shoot low" },
+              { uid: "w_s2_b79_p80", num: 80, cue: "Hold that — I’m changing the framing.", comp: 3 },
             ],
           },
           {
-            id: "womens_standing_base2",
-            name: "Base Pose 2",
+            id: "womens_standing_base81",
+            name: "Base Pose 81",
+            num: 81,
             curated: true,
+            img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
             flow: [
-              {
-                uid: "womens_standing_base2_step1",
-                label: "Base Pose 2",
-                cue: "Rotate the body slightly, 45 to the camera. Lift back foot onto the box, front hand on front hip. Chin at 45°. Comp 4",
-                img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
-              },
-              {
-                uid: "womens_standing_base2_step2",
-                label: "Pose 2",
-                cue: "Front Hand on front Hip. Back hand down. Small tilt to the left. Keep the neck long. Comp 4",
-                img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
-              },
-              {
-                uid: "womens_standing_base2_step3",
-                label: "Pose 3",
-                cue: "Same pose, rotate side on, Comp 4",
-                img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
-              },
-              {
-                uid: "womens_standing_base2_step4",
-                label: "Pose 4",
-                cue: "Keep rotating, look over the sholder, hands down. Comp 3",
-                img: ASSET("poses/beauty/set2-standing/base2/step1.png"),
-              },
+              { uid: "w_s2_b81_p81", num: 81, cue: "Left foot up on the box. Right hand on your right hip, left hand down, chin 45° to the camera.", note: "Rotation series starts here" },
+              { uid: "w_s2_b81_p82", num: 82, cue: "Elbow tucked in, tilt a little to your left." },
+              { uid: "w_s2_b81_p83", num: 83, cue: "Chin back round to the camera." },
+              { uid: "w_s2_b81_p84", num: 84, cue: "Rotate and look back at me.", note: "Keep the breast line", comp: 3 },
             ],
           },
         ],
       },
+
       {
         id: "womens_set3_wall",
         name: "SET 3 — WALL",
         bases: [
           {
-            id: "womens_wall_base1",
-            name: "Base Pose 1",
+            id: "womens_wall_base72",
+            name: "Base Pose 72",
+            num: 72,
             curated: true,
+            img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
             flow: [
-              {
-                uid: "womens_wall_base1_step1",
-                label: "Base Pose 1",
-                cue: "Stand 45° to camera. Weight on the back foot, kick knee forward. Lean to the wall, Comp 2 to Comp 5.",
-                img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
-              },
-              {
-                uid: "womens_wall_base1_step2",
-                label: "Pose 2",
-                cue: "Hold it, easy smile, Comp 3.",
-                img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
-              },
-              {
-                uid: "womens_wall_base1_step3",
-                label: "Pose 3",
-                cue: "Cross the hands, back hand under front arm. Comp 4.",
-                img: ASSET("poses/beauty/set3-wall/base1/step1.png"),
-              },
+              { uid: "w_s3_b72_p72", num: 72, cue: "45° to the camera, feet apart. Weight on your back foot, kick the front knee forward, lean back." },
+              { uid: "w_s3_b72_p73", num: 73, cue: "Same pose — hold it.", comp: 3 },
+              { uid: "w_s3_b72_p74", num: 74, cue: "Hands across, left hand underneath.", comp: 3 },
             ],
           },
           {
-            id: "womens_wall_base2",
-            name: "Base Pose 2",
+            id: "womens_wall_base75",
+            name: "Base Pose 75",
+            num: 75,
             curated: true,
+            img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
             flow: [
-              {
-                uid: "womens_wall_base2_step1",
-                label: "Base Pose 2",
-                cue: "Rotate the body, back flat to the wall. Shift the weight on front leg. Arms still crossed. Comp 3",
-                img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
-              },
-              {
-                uid: "womens_wall_base2_step2",
-                label: "Pose 2",
-                cue: "Face towards the wall. Hansds below breast. Comp 3.",
-                img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
-              },
-              {
-                uid: "womens_wall_base2_step3",
-                label: "Pose 3",
-                cue: "Hold the pose Comp 4.",
-                img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
-              },
-              {
-                uid: "womens_wall_base2_step4",
-                label: "Pose 4",
-                cue: "Same pose, Hands down. Comp 4.",
-                img: ASSET("poses/beauty/set3-wall/base2/step1.png"),
-              },
+              { uid: "w_s3_b75_p75", num: 75, cue: "Change your weight from the back foot onto the front foot.", note: "Rotation" },
+              { uid: "w_s3_b75_p76", num: 76, cue: "Turn and face the wall." },
+              { uid: "w_s3_b75_p77", num: 77, cue: "Same pose — hold it.", comp: 4 },
+              { uid: "w_s3_b75_p78", num: 78, cue: "Hands down." },
             ],
           },
         ],
       },
+
       {
         id: "womens_set4_table",
         name: "SET 4 — TABLE",
         bases: [
           {
-            id: "womens_table_base1",
-            name: "Base Pose 1",
+            id: "womens_table_base",
+            name: "Base Pose",
             curated: true,
+            img: ASSET("poses/beauty/set4-table/base1/step1.png"),
             flow: [
-              {
-                uid: "womens_table_base1_step1",
-                label: "Base Pose 1",
-                cue: "Elbows on the table an in, hands flat symmetric. ",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "womens_table_base1_step2",
-                label: "Pose 2",
-                cue: "Go asymmetric: right elbow slightly out. Keep the neck long.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 3",
-                cue: "Left Hand up side of the chin. Small tilt left. Right hand flat, elbow in.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-                  },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 4",
-                cue: "Both elbows on the table, hands cup the face.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-                  },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 5",
-                cue: "Both hands on the front side, one hand on top another.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-                  },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 6",
-                cue: "Same pose, left Hand up inside the hair.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-                  },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 7",
-                cue: "Both elbows on teh table, both heds left the chin tucked in.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-                  },
-              {
-                uid: "womens_table_base1_step3",
-                label: "Pose 8",
-                cue: "Both elbows on teh table, self hug.",
-                img: ASSET("poses/beauty/set4-table/base1/step1.png"),
-              },
+              { uid: "w_s4_base", cue: "Sit behind the table. Arms on the table, crossed asymmetrically." },
+              { uid: "w_s4_p94", num: 94, cue: "Elbows tapered in, symmetrical." },
+              { uid: "w_s4_p95", num: 95, cue: "Go asymmetric — right elbow out." },
+              { uid: "w_s4_p96", num: 96, cue: "Hands up — right hand up, and tilt." },
+              { uid: "w_s4_p97", num: 97, cue: "Elbows together, hands framing your face." },
+              { uid: "w_s4_p99", num: 99, cue: "Hands out, touching across." },
+              { uid: "w_s4_p100", num: 100, cue: "Smoking hands — elbows in." },
+              { uid: "w_s4_p101", num: 101, cue: "Hands behind your hair, elbows across." },
+              { uid: "w_s4_p102", num: 102, cue: "Elbow one way, hands across." },
+              { uid: "w_s4_p103", num: 103, cue: "Body comes out, head to the left." },
+              { uid: "w_s4_p104", num: 104, cue: "Hand behind your hair, body sideways." },
+              { uid: "w_s4_p105", num: 105, cue: "Both hands up.", comp: 2 },
+              { uid: "w_s4_p106", num: 106, cue: "Hands tucked in.", comp: 2 },
+              { uid: "w_s4_p107", num: 107, cue: "Hug yourself — one hand off the table." },
+              { uid: "w_s4_p108", num: 108, cue: "Double hug." },
+              { uid: "w_s4_p109", num: 109, cue: "Elbow off the table, one hand up and one down, tilt right." },
             ],
           },
         ],
       },
+
       {
         id: "womens_set5_staggered_box",
         name: "SET 5 — STAGGERED SEATING (BOX)",
         bases: [
           {
-            id: "womens_box_base1",
-            name: "Base Pose 1",
+            id: "womens_box_base111",
+            name: "Base Pose 111",
+            num: 111,
             curated: true,
+            img: ASSET("poses/beauty/set5-box/base1/step1.png"),
             flow: [
-              {
-                uid: "womens_box_base1_step1",
-                label: "Base Pose 1",
-                cue: "left elbow on the box. Right hand on the elbow. Keep the body relaxed.",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
-              {
-                uid: "womens_box_base1_step2",
-                label: "Pose 2",
-                cue: "Bring right hand in. ",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-                  },
-              {
-                uid: "womens_box_base1_step2",
-                label: "Pose 3",
-                cue: "Left hand inside hair. ",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-                  },
-              {
-                uid: "womens_box_base1_step2",
-                label: "Pose 4",
-                cue: "Turn the back to the box, front elbow on the box and back hand on the lap ",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-                  },
-              {
-                uid: "womens_box_base1_step2",
-                label: "Pose 5",
-                cue: "Turn back and put both elbows on the box, front hand to the chin. ",
-                img: ASSET("poses/beauty/set5-box/base1/step1.png"),
-              },
+              { uid: "w_s5_p111", num: 111, cue: "Recline your body onto the box. Right elbow on the box, that hand down. Left hand rests on your arm." },
+              { uid: "w_s5_p112", num: 112, cue: "Arm goes onto the elbow, hand goes inside." },
+              { uid: "w_s5_p113", num: 113, cue: "Hand behind your hair." },
+              { uid: "w_s5_p114", num: 114, cue: "Triangle — elbow into the box, left arm onto your thigh." },
+              { uid: "w_s5_p115", num: 115, cue: "Elbows together, hands on your chin." },
+              { uid: "w_s5_p116", num: 116, cue: "Rotate your body around — both elbows onto the box." },
+              { uid: "w_s5_p117", num: 117, cue: "Both feet up on the box, arms hugging your knees." },
+              { uid: "w_s5_p118", num: 118, cue: "We’ll take the box away. Horizontal tilt.", note: "Box removed", img: ASSET("poses/beauty/set5-box/base2/step1.png") },
+              { uid: "w_s5_p119", num: 119, cue: "Big smile — tilt, and smile." },
+              { uid: "w_s5_p120", num: 120, cue: "One knee up, left elbow down — hug just the right one." },
             ],
           },
         ],
@@ -470,7 +271,7 @@ const BASE_GENRES = [
               {
                 uid: "pbm_set1_base1_step1",
                 label: "Base Pose 1",
-                cue: "Sit on the stool at 45°. Raise back foot. Hands together. Sit upright, Comnp 4. Chin gently toward me.",
+                cue: "Sit on the stool at 45°. Raise back foot. Hands together. Sit upright, Comp 4. Chin gently toward me.",
               },
               {
                 uid: "pbm_set1_base1_step2",
@@ -515,6 +316,12 @@ const RHYTHMS = [
 ];
 
 const STORAGE_KEY = "pose_operator_state_v8";
+
+const SPEECH_RATES = [
+  { id: "slow", label: "Slow", rate: 0.8 },
+  { id: "normal", label: "Normal", rate: 0.95 },
+  { id: "brisk", label: "Brisk", rate: 1.15 },
+];
 
 /* =========================================
    HELPERS
@@ -564,6 +371,172 @@ function clientLine(stepIndex) {
     "Perfect. Don’t move.",
   ];
   return lines[stepIndex % lines.length];
+}
+
+/* =========================================
+   DEVICE-LOCAL REFERENCE IMAGES
+   -----------------------------------------
+   Photographs from a purchased guide are licensed to one person, so they must
+   never enter the repo or the deployed bundle. They live only in this browser's
+   IndexedDB, on this device, imported by hand. Nothing here is ever uploaded.
+   ========================================= */
+const IDB_NAME = "poseflow";
+const IDB_STORE = "refimages";
+
+function idbOpen() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains(IDB_STORE)) {
+        req.result.createObjectStore(IDB_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function idbTx(db, mode) {
+  return db.transaction(IDB_STORE, mode).objectStore(IDB_STORE);
+}
+
+async function idbPutMany(entries) {
+  const db = await idbOpen();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, "readwrite");
+    const store = tx.objectStore(IDB_STORE);
+    for (const [key, blob] of entries) store.put(blob, key);
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+  db.close();
+}
+
+async function idbReadAll() {
+  const db = await idbOpen();
+  const out = await new Promise((resolve, reject) => {
+    const store = idbTx(db, "readonly");
+    const keysReq = store.getAllKeys();
+    const valsReq = store.getAll();
+    let keys = null;
+    let vals = null;
+    const done = () => {
+      if (keys && vals) {
+        const m = new Map();
+        keys.forEach((k, i) => m.set(Number(k), vals[i]));
+        resolve(m);
+      }
+    };
+    keysReq.onsuccess = () => { keys = keysReq.result; done(); };
+    valsReq.onsuccess = () => { vals = valsReq.result; done(); };
+    keysReq.onerror = () => reject(keysReq.error);
+    valsReq.onerror = () => reject(valsReq.error);
+  });
+  db.close();
+  return out;
+}
+
+async function idbClearAll() {
+  const db = await idbOpen();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, "readwrite");
+    tx.objectStore(IDB_STORE).clear();
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+  db.close();
+}
+
+/* "pose-094.jpg" -> 94 ; "94.jpg" -> 94 */
+function poseNumFromFilename(name) {
+  const m = String(name).match(/(\d{1,3})(?!.*\d)/);
+  if (!m) return null;
+  const n = parseInt(m[1], 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+function useDeviceImages() {
+  const [urls, setUrls] = useState(() => new Map());
+  const [ready, setReady] = useState(false);
+  const urlsRef = useRef(new Map());
+
+  const revokeAll = useCallback(() => {
+    for (const u of urlsRef.current.values()) URL.revokeObjectURL(u);
+    urlsRef.current = new Map();
+  }, []);
+
+  const load = useCallback(async () => {
+    try {
+      const blobs = await idbReadAll();
+      revokeAll();
+      const next = new Map();
+      for (const [num, blob] of blobs) next.set(num, URL.createObjectURL(blob));
+      urlsRef.current = next;
+      setUrls(next);
+    } catch {
+      /* IndexedDB blocked (private mode). App still runs on bundled sketches. */
+    } finally {
+      setReady(true);
+    }
+  }, [revokeAll]);
+
+  useEffect(() => {
+    load();
+    return () => revokeAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const importFiles = useCallback(
+    async (fileList) => {
+      const entries = [];
+      const skipped = [];
+      for (const f of Array.from(fileList || [])) {
+        const n = poseNumFromFilename(f.name);
+        if (n == null) { skipped.push(f.name); continue; }
+        entries.push([n, f]);
+      }
+      if (entries.length) await idbPutMany(entries);
+      await load();
+      return { added: entries.length, skipped };
+    },
+    [load]
+  );
+
+  const clearAll = useCallback(async () => {
+    await idbClearAll();
+    revokeAll();
+    setUrls(new Map());
+  }, [revokeAll]);
+
+  return { urls, ready, importFiles, clearAll };
+}
+
+/* =========================================
+   SPEECH (Web Speech API)
+   ========================================= */
+const speechSupported = () =>
+  typeof window !== "undefined" && "speechSynthesis" in window;
+
+function useVoices() {
+  const [voices, setVoices] = useState([]);
+
+  useEffect(() => {
+    if (!speechSupported()) return;
+    const load = () => {
+      const list = window.speechSynthesis.getVoices() || [];
+      setVoices(list.filter((v) => String(v.lang || "").startsWith("en")));
+    };
+    load();
+    window.speechSynthesis.addEventListener?.("voiceschanged", load);
+    // Safari sometimes populates late without firing the event.
+    const t = setTimeout(load, 400);
+    return () => {
+      window.speechSynthesis.removeEventListener?.("voiceschanged", load);
+      clearTimeout(t);
+    };
+  }, []);
+
+  return voices;
 }
 
 /* =========================================
@@ -788,6 +761,37 @@ function Styles() {
         transition: width .18s ease;
       }
 
+      .countdown{
+        margin-top: 8px;
+        display:flex;
+        align-items:center;
+        gap: 10px;
+      }
+      .countBar{
+        flex:1;
+        height: 6px;
+        border-radius: 999px;
+        background: rgba(15,23,42,.06);
+        border: 1px solid var(--line);
+        overflow:hidden;
+      }
+      .countFill{
+        height:100%;
+        width: 0%;
+        background: var(--ink);
+        opacity: .55;
+        border-radius: 999px;
+        transition: width .12s linear;
+      }
+      .countNum{
+        font-size: 12px;
+        font-weight: 900;
+        color: var(--muted);
+        min-width: 30px;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
       .topControls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
       .toggle{
         display:flex; align-items:center; gap:8px; font-size: 13px; color: var(--muted);
@@ -835,6 +839,58 @@ function Styles() {
         }
       }
 
+      .importRow{
+        display:flex;
+        align-items:center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .importBtn{ cursor:pointer; display:inline-flex; align-items:center; }
+      .coverage{ font-size: 13px; color: var(--muted); }
+      .coverage strong{ color: var(--ink); font-weight: 950; }
+      .importMsg{
+        margin-top: 10px;
+        font-size: 13px;
+        color: var(--muted);
+        background: rgba(15,23,42,.04);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 8px 12px;
+      }
+
+      .cueMeta{
+        display:flex;
+        align-items:center;
+        flex-wrap:wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .poseNum{
+        font-size: 12px;
+        font-weight: 950;
+        color: var(--ink);
+        letter-spacing: .01em;
+      }
+      .poseOf{ font-weight: 800; color: var(--muted); }
+      .badge{
+        font-size: 11px;
+        font-weight: 900;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .badgeComp{
+        background: rgba(79,70,229,.10);
+        border-color: rgba(79,70,229,.28);
+        color: #4338ca;
+      }
+      .badgeNote{
+        background: rgba(15,23,42,.05);
+        color: var(--muted);
+      }
+
       .refPanel{
         border-radius: 22px;
         border:1px solid var(--line);
@@ -845,6 +901,20 @@ function Styles() {
         align-items:center;
         justify-content:center;
         min-height: 240px;
+        position: relative;
+      }
+      .refTag{
+        position:absolute;
+        left: 12px; right: 12px; bottom: 12px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(15,23,42,.82);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .01em;
+        text-align:center;
+        pointer-events:none;
       }
       .refPanel img{
         width: 100%;
@@ -1083,6 +1153,24 @@ function AppInner() {
     persisted?.showClientWording ?? true
   );
 
+  /* Reference photographs stored on this device only */
+  const deviceImages = useDeviceImages();
+  const [importMsg, setImportMsg] = useState(null);
+
+  /* Speech */
+  const voices = useVoices();
+  const canSpeak = speechSupported();
+  const [speakOn, setSpeakOn] = useState(persisted?.speakOn ?? false);
+  const [speechRateId, setSpeechRateId] = useState(
+    persisted?.speechRateId ?? "normal"
+  );
+  const [voiceURI, setVoiceURI] = useState(persisted?.voiceURI ?? "");
+  const speechRate = useMemo(
+    () =>
+      SPEECH_RATES.find((r) => r.id === speechRateId) ?? SPEECH_RATES[1],
+    [speechRateId]
+  );
+
   const current = useMemo(() => {
     if (!flow.length) return null;
     return flow[clamp(idx, 0, flow.length - 1)] ?? null;
@@ -1139,14 +1227,29 @@ function AppInner() {
     setIdx(pi);
   }, [flow.length, idx, isOver]);
 
-  useEffect(() => {
-    if (mode !== "session") return;
-    if (!autoOn) return;
-    if (isOver) return;
-    if (!flow.length) return;
+  /* Auto-advance + countdown.
+     `idx` MUST be in the deps: without it the effect never re-runs after the
+     timer fires, so auto-advance would move exactly one step and then stop. */
+  const [remainingMs, setRemainingMs] = useState(null);
 
-    const ms = (rhythm?.seconds ?? 8) * 1000;
-    const t = setTimeout(() => {
+  useEffect(() => {
+    if (mode !== "session" || !autoOn || isOver || !flow.length) {
+      setRemainingMs(null);
+      return;
+    }
+
+    const total = (rhythm?.seconds ?? 8) * 1000;
+    const startedAt = Date.now();
+    setRemainingMs(total);
+
+    const tick = setInterval(() => {
+      const left = total - (Date.now() - startedAt);
+      if (left > 0) {
+        setRemainingMs(left);
+        return;
+      }
+      clearInterval(tick);
+      setRemainingMs(0);
       setIdx((prev) => {
         const ni = prev + 1;
         if (ni >= flow.length) {
@@ -1156,10 +1259,111 @@ function AppInner() {
         }
         return ni;
       });
-    }, ms);
+    }, 100);
 
-    return () => clearTimeout(t);
-  }, [mode, autoOn, isOver, flow.length, rhythm]);
+    return () => clearInterval(tick);
+  }, [mode, autoOn, isOver, flow.length, rhythm, idx]);
+
+  const countdownPct = useMemo(() => {
+    if (remainingMs == null) return 0;
+    const total = (rhythm?.seconds ?? 8) * 1000;
+    return clamp(Math.round((remainingMs / total) * 100), 0, 100);
+  }, [remainingMs, rhythm]);
+
+  /* Speak the current cue */
+  const speak = useCallback(
+    (text) => {
+      if (!canSpeak) return;
+      const line = String(text ?? "").trim();
+      if (!line) return;
+
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(line);
+      u.rate = speechRate?.rate ?? 0.95;
+      u.pitch = 1;
+      const v = voices.find((x) => x.voiceURI === voiceURI);
+      if (v) {
+        u.voice = v;
+        u.lang = v.lang;
+      }
+      window.speechSynthesis.speak(u);
+    },
+    [canSpeak, speechRate, voices, voiceURI]
+  );
+
+  const stopSpeaking = useCallback(() => {
+    if (!canSpeak) return;
+    window.speechSynthesis.cancel();
+  }, [canSpeak]);
+
+  /* Which step we've already read out. Stops the cue being spoken twice when
+     the toggle primes audio and this effect then fires for the same step, and
+     stops a re-read when only the voice or speed changes. */
+  const spokenKeyRef = useRef(null);
+
+  useEffect(() => {
+    if (!speakOn) return;
+    if (mode !== "session") return;
+    if (isOver) {
+      stopSpeaking();
+      return;
+    }
+    const key = current?.uid ?? String(idx);
+    if (spokenKeyRef.current === key) return;
+    spokenKeyRef.current = key;
+    speak(normalizeCue(current?.cue ?? ""));
+  }, [speakOn, mode, isOver, idx, current?.uid, current?.cue, speak, stopSpeaking]);
+
+  /* Never leave a voice running behind us */
+  useEffect(() => {
+    if (mode !== "session" || !speakOn) stopSpeaking();
+  }, [mode, speakOn, stopSpeaking]);
+
+  useEffect(() => () => stopSpeaking(), [stopSpeaking]);
+
+  /* Keep the screen awake during a session.
+     Without this the phone locks between shots and you land on the passcode
+     screen instead of your next cue. */
+  const wakeLockRef = useRef(null);
+
+  useEffect(() => {
+    if (mode !== "session") return;
+    if (typeof navigator === "undefined" || !navigator.wakeLock) return;
+
+    let cancelled = false;
+
+    const acquire = async () => {
+      if (document.visibilityState !== "visible") return;
+      if (wakeLockRef.current) return;
+      try {
+        const lock = await navigator.wakeLock.request("screen");
+        if (cancelled) {
+          lock.release().catch(() => {});
+          return;
+        }
+        wakeLockRef.current = lock;
+        lock.addEventListener?.("release", () => {
+          wakeLockRef.current = null;
+        });
+      } catch {
+        /* Denied (low battery, unsupported). Session still works. */
+      }
+    };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") acquire();
+    };
+
+    acquire();
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVisibility);
+      wakeLockRef.current?.release?.().catch(() => {});
+      wakeLockRef.current = null;
+    };
+  }, [mode]);
 
   /* Only reset flow when in PREP */
   useEffect(() => {
@@ -1169,10 +1373,44 @@ function AppInner() {
     setAutoOn(false);
   }, [genreId, setId, baseId, mode]);
 
-  const hasAnyImagesInFlow = useMemo(
-    () => (flow || []).some((s) => !!s?.img),
-    [flow]
+  /* Image priority:
+     1. a photograph imported to this device for this exact pose number
+     2. a sketch the step carries itself (setup genuinely changed)
+     3. the base sketch, labelled so it isn't mistaken for the current step */
+  const deviceImg = useMemo(
+    () => (current?.num != null ? deviceImages.urls.get(current.num) ?? null : null),
+    [current?.num, deviceImages.urls]
   );
+
+  const currentImg = useMemo(
+    () => deviceImg ?? current?.img ?? selectedBase?.img ?? null,
+    [deviceImg, current?.img, selectedBase?.img]
+  );
+
+  const hasAnyImagesInFlow = useMemo(
+    () =>
+      !!selectedBase?.img ||
+      (flow || []).some((s) => !!s?.img || deviceImages.urls.has(s?.num)),
+    [selectedBase?.img, flow, deviceImages.urls]
+  );
+
+  const imgIsBaseReference = useMemo(() => {
+    if (!currentImg) return false;
+    if (deviceImg) return false;
+    if (idx === 0) return false;
+    return !current?.img && currentImg === selectedBase?.img;
+  }, [currentImg, deviceImg, current?.img, selectedBase?.img, idx]);
+
+  /* How much of this genre is covered by imported photographs. */
+  const deviceCoverage = useMemo(() => {
+    const nums = new Set();
+    for (const s of genre?.sets ?? [])
+      for (const b of s.bases ?? [])
+        for (const st of b.flow ?? []) if (st?.num != null) nums.add(st.num);
+    let have = 0;
+    for (const n of nums) if (deviceImages.urls.has(n)) have++;
+    return { have, total: nums.size };
+  }, [genre, deviceImages.urls]);
 
   const rehearsalPlan = useMemo(() => {
     const sets = genre?.sets ?? [];
@@ -1208,6 +1446,9 @@ function AppInner() {
       showRefImage,
       showNextPreview,
       showClientWording,
+      speakOn,
+      speechRateId,
+      voiceURI,
       seenOnboarding: !showOnboarding
         ? true
         : persisted?.seenOnboarding ?? false,
@@ -1222,6 +1463,9 @@ function AppInner() {
     showRefImage,
     showNextPreview,
     showClientWording,
+    speakOn,
+    speechRateId,
+    voiceURI,
     showOnboarding,
   ]);
 
@@ -1234,6 +1478,7 @@ function AppInner() {
   };
 
   const exitSession = () => {
+    stopSpeaking();
     setMode("prep");
     setIsOver(false);
     setAutoOn(false);
@@ -1253,6 +1498,10 @@ function AppInner() {
     setShowRefImage(true);
     setShowNextPreview(true);
     setShowClientWording(true);
+    stopSpeaking();
+    setSpeakOn(false);
+    setSpeechRateId("normal");
+    setVoiceURI("");
     setMode("prep");
     setIdx(0);
     setIsOver(false);
@@ -1360,7 +1609,8 @@ function AppInner() {
               </div>
               <ul className="modalList">
                 <li><strong>Next / Back</strong> changes the cue.</li>
-                <li><strong>Auto-advance</strong> moves forward on a timer.</li>
+                <li><strong>Auto-advance</strong> moves forward on a timer, with a countdown bar showing seconds left.</li>
+                <li><strong>Speak cues</strong> reads each cue out loud, so you can practise with the camera up instead of reading the screen. Pick a voice and speed, or press <strong>Say again</strong> to repeat.</li>
                 <li><strong>Client wording</strong> gives short phrases you can say while posing.</li>
                 <li><strong>Image</strong> shows the reference image when available.</li>
               </ul>
@@ -1520,6 +1770,68 @@ function AppInner() {
                 className="label"
                 style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}
               >
+                Reference photographs
+              </div>
+              <p className="sub" style={{ marginTop: 6 }}>
+                Stored on this device only — never uploaded, never part of the
+                published site. Files are matched to poses by the number in the
+                filename (<code>pose-094.jpg</code> → Pose 94).
+              </p>
+
+              <div className="importRow">
+                <label className="btn btnPrimary importBtn">
+                  Import images
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const files = e.target.files;
+                      if (!files?.length) return;
+                      const { added, skipped } = await deviceImages.importFiles(files);
+                      e.target.value = "";
+                      setImportMsg(
+                        `Imported ${added} image${added === 1 ? "" : "s"}.` +
+                          (skipped.length
+                            ? ` Skipped ${skipped.length} with no pose number in the filename.`
+                            : "")
+                      );
+                      pushToast(`Imported ${added} image${added === 1 ? "" : "s"}.`);
+                    }}
+                  />
+                </label>
+
+                <div className="coverage">
+                  <strong>{deviceCoverage.have}</strong> of {deviceCoverage.total}{" "}
+                  poses in {genre?.name ?? "this genre"} have a photograph.
+                </div>
+
+                {deviceCoverage.have > 0 ? (
+                  <button
+                    className="btn"
+                    onClick={async () => {
+                      await deviceImages.clearAll();
+                      setImportMsg(null);
+                      pushToast("Removed all imported images from this device.");
+                    }}
+                    title="Delete every imported photograph from this device"
+                  >
+                    Remove all
+                  </button>
+                ) : null}
+              </div>
+
+              {importMsg ? <div className="importMsg">{importMsg}</div> : null}
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="cardInner">
+              <div
+                className="label"
+                style={{ fontSize: 14, fontWeight: 950, color: "var(--ink)" }}
+              >
                 7-day rehearsal plan
               </div>
               <p className="sub" style={{ marginTop: 6 }}>
@@ -1555,6 +1867,20 @@ function AppInner() {
                   <div className="bar">
                     <div className="barFill" style={{ width: `${progressPct}%` }} />
                   </div>
+
+                  {autoOn && !isOver && remainingMs != null ? (
+                    <div className="countdown" aria-live="off">
+                      <div className="countBar">
+                        <div
+                          className="countFill"
+                          style={{ width: `${countdownPct}%` }}
+                        />
+                      </div>
+                      <div className="countNum">
+                        {Math.ceil(remainingMs / 1000)}s
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="topControls">
@@ -1578,6 +1904,82 @@ function AppInner() {
                       </option>
                     ))}
                   </select>
+
+                  <label
+                    className="toggle"
+                    title={
+                      canSpeak
+                        ? "Read each cue out loud so you can practise with the camera up."
+                        : "This browser has no speech synthesis."
+                    }
+                    aria-label="Toggle spoken cues"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={speakOn && canSpeak}
+                      disabled={!canSpeak}
+                      onChange={(e) => {
+                        const on = e.target.checked;
+                        setSpeakOn(on);
+                        if (on) {
+                          // Speaking inside the click unlocks audio on iOS/Safari.
+                          spokenKeyRef.current = current?.uid ?? String(idx);
+                          speak(normalizeCue(current?.cue ?? ""));
+                        } else {
+                          spokenKeyRef.current = null;
+                          stopSpeaking();
+                        }
+                      }}
+                    />
+                    Speak cues
+                  </label>
+
+                  {speakOn && canSpeak ? (
+                    <>
+                      <select
+                        className="control"
+                        style={{ height: 42, width: 150, marginTop: 0 }}
+                        value={speechRateId}
+                        onChange={(e) => setSpeechRateId(e.target.value)}
+                        title="How fast the cue is read out."
+                        aria-label="Select speaking speed"
+                      >
+                        {SPEECH_RATES.map((r) => (
+                          <option key={r.id} value={r.id}>
+                            Voice: {r.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {voices.length ? (
+                        <select
+                          className="control"
+                          style={{ height: 42, width: 190, marginTop: 0 }}
+                          value={voiceURI}
+                          onChange={(e) => setVoiceURI(e.target.value)}
+                          title="Which system voice reads the cue."
+                          aria-label="Select voice"
+                        >
+                          <option value="">Default voice</option>
+                          {voices.map((v) => (
+                            <option key={v.voiceURI} value={v.voiceURI}>
+                              {v.name}
+                            </option>
+                          ))}
+                        </select>
+                      ) : null}
+
+                      <button
+                        className="btn"
+                        onClick={() => speak(normalizeCue(current?.cue ?? ""))}
+                        disabled={isOver}
+                        title="Say the current cue again"
+                        aria-label="Repeat current cue"
+                      >
+                        Say again
+                      </button>
+                    </>
+                  ) : null}
 
                   <label className="toggle" title={hasAnyImagesInFlow ? "Show the reference image when available." : "No images available for this flow."} aria-label="Toggle reference image">
                     <input type="checkbox" checked={showRefImage} onChange={(e) => setShowRefImage(e.target.checked)} disabled={hasAnyImagesInFlow ? false : true} />
@@ -1638,6 +2040,27 @@ function AppInner() {
                   <div className="cueWrap">
                     {!isOver ? (
                       <>
+                        <div className="cueMeta">
+                          <span className="poseNum">
+                            {current?.num != null
+                              ? `Pose ${current.num}`
+                              : "Base pose"}
+                            <span className="poseOf"> · {stepNow} of {flow.length}</span>
+                          </span>
+
+                          {/* Camera instructions — never spoken aloud. */}
+                          {current?.comp != null ? (
+                            <span className="badge badgeComp" title="Composition">
+                              Comp {current.comp}
+                            </span>
+                          ) : null}
+                          {current?.note ? (
+                            <span className="badge badgeNote" title="Camera note">
+                              {current.note}
+                            </span>
+                          ) : null}
+                        </div>
+
                         <div className={`cue ${cueTier}`}>{normalizeCue(current?.cue ?? "")}</div>
 
                         {showClientWording ? (
@@ -1649,7 +2072,10 @@ function AppInner() {
 
                         {showNextPreview && nextStep?.cue ? (
                           <div className="nextBox">
-                            <div className="nextLabel">Next</div>
+                            <div className="nextLabel">
+                              Next{nextStep?.num != null ? ` · Pose ${nextStep.num}` : ""}
+                              {nextStep?.comp != null ? ` · Comp ${nextStep.comp}` : ""}
+                            </div>
                             <div className="nextCue">{normalizeCue(nextStep.cue)}</div>
                           </div>
                         ) : null}
@@ -1677,9 +2103,14 @@ function AppInner() {
                   </div>
 
                   {/* ONE image only */}
-                  {showRefImage && hasAnyImagesInFlow && current?.img ? (
+                  {showRefImage && hasAnyImagesInFlow && currentImg ? (
                     <div className="refPanel" aria-label="Reference image">
-                      <img src={current.img} alt="Reference pose" draggable={false} />
+                      <img src={currentImg} alt="Reference pose" draggable={false} />
+                      {imgIsBaseReference ? (
+                        <div className="refTag" title="This sketch is the base pose for this set, not a picture of the current step.">
+                          Base pose reference — not this step
+                        </div>
+                      ) : null}
                     </div>
                   ) : null}
                 </div>
