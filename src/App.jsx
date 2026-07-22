@@ -1016,35 +1016,32 @@ function Styles() {
         .cueWrap{
           width: 100%;
           max-width: 100%;
-          /* prevent long text from pushing image away */
-          max-height: 44vh;
+          /* Text gets what it needs up to a cap; the photo takes the rest. */
+          flex: 0 1 auto;
+          min-height: 0;
+          max-height: 38vh;
           overflow: auto;
           padding-right: 6px;
         }
 
-        /* Small hint: discoverability */
-        .cueWrap::after{
-          content: "Image below ↓";
-          display: block;
-          margin-top: 12px;
-          font-size: 13px;
-          font-weight: 900;
-          color: var(--muted);
-        }
 
-        /* Make image secondary (smaller) */
+        /* The photo takes all remaining height and is always shown whole.
+           height:100% + object-fit:contain means it scales to fit rather than
+           being clipped by the panel's overflow. */
         .refPanel{
           width: 100%;
-          max-height: 30vh;
-          min-height: 0;
+          flex: 1 1 auto;
+          min-height: 34vh;
+          max-height: none;
           overflow: hidden;
-          padding: 10px;
+          padding: 8px;
         }
 
         .refPanel img{
           width: 100%;
-          height: auto;
-          max-height: 26vh;
+          height: 100%;
+          min-height: 0;
+          max-height: none;
           object-fit: contain;
           display: block;
         }
