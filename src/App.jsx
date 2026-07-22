@@ -561,7 +561,7 @@ function Styles() {
       }
 
       *{ box-sizing:border-box; }
-      html, body{ height:100%; }
+      html, body{ min-height:100%; }
       body{
         margin:0;
         background:var(--bg);
@@ -570,7 +570,11 @@ function Styles() {
         overflow-y: auto;
       }
 
-      .wrap{ max-width: 980px; margin: 0 auto; padding: 18px 16px 44px; }
+      .wrap{
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 18px 16px calc(64px + env(safe-area-inset-bottom));
+      }
 
       .pill{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--line); background:rgba(255,255,255,.85); border-radius:999px; font-size:12px; color:var(--muted); box-shadow: 0 2px 10px rgba(15,23,42,.06); }
       .dot{ width:8px; height:8px; border-radius:999px; background:#f59e0b; }
@@ -1000,6 +1004,14 @@ function Styles() {
          - Desktop untouched
          -------------------------------- */
       @media (max-width: 859px){
+        /* The selection panel stacks to one column on a phone, which makes it
+           taller than the viewport. Sticky positioning then pins it and nothing
+           below (import card, rehearsal plan) can be scrolled to. */
+        .prepSticky{
+          position: static;
+          box-shadow: var(--shadow2);
+        }
+
         /* Ensure text uses full width and doesn't get "column" boxed */
         .cueWrap{
           width: 100%;
@@ -1516,6 +1528,8 @@ function AppInner() {
     [current?.cue]
   );
 
+  const importCardRef = useRef(null);
+
   /* Measure top/bottom bars */
   const topBarRef = useRef(null);
   const bottomBarRef = useRef(null);
@@ -1651,6 +1665,20 @@ function AppInner() {
               <button
                 className="btn"
                 style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
+                onClick={() =>
+                  importCardRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  })
+                }
+                title="Jump to reference photographs"
+                aria-label="Jump to reference photographs"
+              >
+                Images
+              </button>
+              <button
+                className="btn"
+                style={{ height: 34, borderRadius: 999, padding: "0 12px" }}
                 onClick={() => setShowHelp(true)}
                 title="Help"
                 aria-label="Open help"
@@ -1764,7 +1792,7 @@ function AppInner() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card" ref={importCardRef} style={{ scrollMarginTop: 12 }}>
             <div className="cardInner">
               <div
                 className="label"
