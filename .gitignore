@@ -143,3 +143,4 @@ vite.config.ts.timestamp-*
 reference-images/
 *.pose-pack/
 pose-images.zip
+flow-images.zip
