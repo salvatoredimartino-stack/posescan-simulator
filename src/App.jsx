@@ -408,6 +408,72 @@ const BASE_GENRES = [
   },
 
   {
+    id: "headshots_session",
+    name: "Headshots Session",
+    imgPrefix: "flow",
+    sets: [
+      {
+        id: "hs_sitting",
+        name: "SITTING",
+        bases: [
+          {
+            id: "hs_sitting_base",
+            name: "Headshot Flow",
+            curated: true,
+            flow: [
+              { uid: "hs_p1", num: 1, title: "Cover Girl", cue: "Seat her facing camera. Bring her feet forward to lower her knees out of frame.", details: { expression: "Drop her chin to open her eyes. Relaxing the mouth and lifting the chin creates a fashion look.", composition: "Top of hairline to top of hips. Top of head to slightly above hips. Move in closer. Use lens angle to alter composition.", angles: "For someone long and lean, shoot low and square on. Experiment with your angles – below the eyeline, above her face, at chin level. Notice how the angle and height of the lens changes the composition.", tip: "This magazine-style face shot is a simple way to warm up your client, so it’s a great pose to begin with. Frame asymmetrically, so it doesn’t look like a passport photo." } },
+              { uid: "hs_p3", num: 3, title: "Rotation", cue: "Seat her 45-degrees to camera with feet flat on the floor. Clasp hands gently in lap with one facing up, one facing down.", details: { expression: "This is her natural, relaxed expression.", composition: "Crop at or just below the knees.", angles: "Shooting below the eyeline, square up the angle. When going much lower below her eyeline, open the shoulders and project the chin up.", tip: "Put a little bump in the shoulder to give it action and engagement. Just be careful you don't close off the neck. Make sure there is an inch or two showing." } },
+              { uid: "hs_p9", num: 9, title: "Cover Girl 2", cue: "Have her face camera. Scoot her to the edge of the seat so she can slightly hinge forward at her hips and project the chin forward.", details: { expression: "This is all about her gorgeous face. Experiment with different levels of smiling.", composition: "Above the head just to her hips.", angles: "Start just below eye level square on. Experiment with zooming in and out. Bring the angle up and tilt the camera forward.", tip: "Shoot on a wide lens to slim the face." } },
+              { uid: "hs_p10", num: 10, title: "Cover Girl with Hands", cue: "Have her face camera. Scoot her to the edge of the seat so she can slightly hinge forward at the hips and project her chin forward.", details: { expression: "Experiment with different levels of smiling – from a baby smile to a big grin.", composition: "Above the head just to her hips.", angles: "Shoot just below the eyes. Then a tiny bit above the eyes and slightly angled down. Also, shoot from further back.", tip: "Fabric like tulle is wonderful for framing the face." } },
+              { uid: "hs_p13", num: 13, title: "Bring in the Hands", cue: "With the chair angled just beyond 45-degrees to camera, sit her upright with the near shoulder dropped to lengthen the neck. Tilt chin slightly, projecting it toward her shoulder and camera.", details: { expression: "Begin with her natural expression and then bring in a beautiful smile.", composition: "Above the head to the knee. Above the head to just below the waist.", angles: "Shoot from just a touch above her eyeline and angled forward. Also, shoot from further back.", tip: "We want fabric to flow with natural motion in our photographs, so gathering it up in the hands makes a big difference." } },
+              { uid: "hs_p17", num: 17, title: "On the 45", cue: "Turn her 45 degrees to camera. Walk her feet out a little, to bring the knees lower than the hips.", details: { expression: "This is her natural, relaxed expression with just a hint of a smile.", composition: "Above the head to just below the elbow. Above the head to just above the knee.", angles: "Experiment with how close camera is to her. Go behind the light and sit on an apple box. Shoot from just below her eyeline and angled slightly forward.", tip: "Move your client and you to find their best angles – where they look comfortable and where they look like they believe it and own the pose, looking gorgeous, comfortable, and relaxed." } },
+              { uid: "hs_p19", num: 19, title: "Look Back", cue: "Face her directly to the side and at the edge of her seat. Slide the front elbow back along her torso.", details: { expression: "Begin with a natural, relaxed expression. Then, light up with a smile.", composition: "Above the head to below the hip. Just above the head to above the elbow. Above the head to below the elbow.", angles: "Below her eyeline. Bring the angle down to connect to the chin. Experiment with leaning back and coming forward.", tip: "As she rotates, pay attention to how much space she has in the neck, so she doesn’t lose it. Bringing her forward, she can engage her shoulder without losing her neck." } },
+            ],
+          },
+        ],
+      },
+      {
+        id: "hs_standing",
+        name: "STANDING",
+        bases: [
+          {
+            id: "hs_standing_base",
+            name: "Headshot Flow",
+            curated: true,
+            flow: [
+              { uid: "hs_p22", num: 22, title: "Cover Girl 4", cue: "With feet shoulder width apart, bring hands behind the hipline. Rock onto one hip for a perfect S-bend shape.", details: { expression: "This is her natural, relaxed expression.", composition: "Above the head to below the hips. Above the head to above the knees. Top of the head to above the hips. Top of the head to mid-hip. Top of the hairline to below the breast.", angles: "Camera is below her eyes at chin level or lower. We can angle forward as it moves up or have it square on and low. Experiment with shooting closer in and moving farther back.", tip: "Rock her from one hip to the other to see which is more flexible or comfortable to rest on. Putting the weight on one hip brings in a beautiful, asymmetrical shape." } },
+              { uid: "hs_p23", num: 23, title: "Rotation", cue: "Step one foot forward, bringing the hips 45 degrees to camera. The arm on the same side comes across, resting on the opposite hip.", details: { expression: "This is her natural, relaxed expression.", composition: "Above the head to mid-thigh. Above the head to just below the waist.", angles: "Shoot just below the chin and square on. Experiment with shooting closer and shooting farther away.", tip: "With a client who is tall and lean, have her bend sideways to bring shape into the body and define the hip lines. 24.Farther Rotation" } },
+              { uid: "hs_p28", num: 28, title: "Cover Girl 5", cue: "Bring her feet to shoulder width apart, so it is easy to move freely and stay balanced and grounded. Have her reach down, picking up part of her dress.", details: { expression: "Just a little smile.", composition: "Above the head to mid-thigh. Top of the head to above the waist.", angles: "Camera is at her eyeline and slightly angled down.", tip: "Picking up the dress as though she is going to run with it helps shape her arms around her body." } },
+              { uid: "hs_p31", num: 31, title: "On the 45", cue: "With one foot forward face her 45 degrees to camera. Use mirror posing to direct movement.", details: { expression: "Start with an easy smile and then bring it up to a laugh that goes along with this fun movement.", composition: "Above the head to just below the knee. Above the head to mid-thigh.", angles: "Camera is at her eyeline and slightly angled down.", tip: "There are not many reasons to be standing on your own without actually posing, so bringing in simple movements with a skirt or dress helps to keep this pose looking natural. 32.Forward Shimmy" } },
+              { uid: "hs_p33", num: 33, title: "Cover Girl 6", cue: "With feet shoulder width apart, tuck her hands high in the waistline and bring them forward. Drop shoulders down and elbows back.", details: { expression: "Start with her natural, relaxed expression and then bring in a touch of smile.", composition: "Above the head to just below the waist. Above the head to just above the knee.", angles: "Just below the eyes.", tip: "I’m always giving hands something to do because it makes them look natural. Natural hands look incredible." } },
+              { uid: "hs_p34", num: 34, title: "Rotation", cue: "Turn her body 45 degrees from camera with feet shoulder width apart. Pop right hip out.", details: { expression: "Start with the natural relaxed expression. Soften it, and then give a big, beautiful smile.", composition: "Above the head to the knee. Above the head to below the knee.", angles: "Camera is just below the eyes.", tip: "When you give anyone a fun movement, such as flicking a dress with their hip, you are sure to get a big, natural smile." } },
+            ],
+          },
+        ],
+      },
+      {
+        id: "hs_wall",
+        name: "WALL",
+        bases: [
+          {
+            id: "hs_wall_base",
+            name: "Headshot Flow",
+            curated: true,
+            flow: [
+              { uid: "hs_p40", num: 40, title: "Basic Lean", cue: "With feet shoulder width apart, turn her 45 degrees from the wall. Bring one hip forward by leaning her front shoulder down to the elbow against the wall.", details: { expression: "This is her natural, relaxed expression.", composition: "Above the head to mid-thigh.", angles: "With someone tall, you can shoot nice and low. Camera is level with her breastbone and slightly tilted down.", tip: "When posing people standing by the wall, I want to make sure I can get at least my arm between them and the wall so they have room to kick their hip forward." } },
+              { uid: "hs_p41", num: 41, title: "Arms Crossed", cue: "With feet shoulder width apart, turn her 45 degrees from the wall. Wrap the arm farthest from camera across the body, resting her hand on the side of her waist.", details: { expression: "This is her natural, relaxed expression.", composition: "Above the head to mid-thigh.", angles: "Camera is level with her breastbone and slightly tilted down.", tip: "Make sure when you're shooting from the side that you can see where the forearm goes as it wraps around the body. Don’t cut it off awkwardly. 42.Face the Wall & Reverse" } },
+              { uid: "hs_p45", num: 45, title: "Shape & Expression", cue: "Facing forward with one foot stepped back and the body 45 degrees to camera, place her weight on the back foot as she hinges forward at the waist.", details: { expression: "Begin with a natural, relaxed expression. Light up with a smile.", composition: "Above the head to mid-thigh. Above the head to top of the thigh. Just above the head to the waist.", angles: "Start nice and close. Then, experiment with moving farther away and around. Open her body up and close it down as you try different angles. Camera is just above her eyeline and slightly down.", tip: "Decide how much arm and shoulder to show as you come in nice and tight. Widen the frame to include more of her shape as she engages more of her body in the pose." } },
+              { uid: "hs_p46", num: 46, title: "Angles & Expression", cue: "Facing forward with one foot stepped back and the body 45 degrees to camera, her front arm leans against the wall – tucked behind with a little bend. Come up on the front toe, engaging the knee.", details: { expression: "We move from her natural, relaxed expression to some big, gorgeous smiles.", composition: "Above the head to the top of the thigh.", angles: "Camera is just above eyeline and slightly tilted down. Experiment with how near and far you are to her.", tip: "Wall poses are perfect for powerful personal branding shots. The wall is going to win every single time." } },
+              { uid: "hs_p47", num: 47, title: "One Shoulder Lean", cue: "With feet parallel to the wall, brush the wall with one shoulder. Shift her weight to the outside foot, creating a slight bend at the knee of the other leg.", details: { expression: "Start with her natural, relaxed expression and move to a big, beautiful smile.", composition: "Above the head to above the hip. Above the head to above the knee.", angles: "Camera is level with chin and tilted slightly down.", tip: "Creating space between the body and the arms allows light through, accentuating those gorgeous curves." } },
+              { uid: "hs_p49", num: 49, title: "Personal Branding & Look Back", cue: "With feet shoulder width apart, lean her back so both shoulders gently touch the wall. Shift her weight to the back foot.", details: { expression: "Start with her natural, relaxed expression and move to a big smile.", composition: "Above the head to mid-thigh.", angles: "Camera is at eye-level and slightly tilted down. Move around the subject to capture the look back.", tip: "When shooting against the wall, be sure to rotate around your subject to capture a variety of angles and to see how the light falls from different positions. I like to go at least 90 degrees around, if not a full 180 degrees." } },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     id: "corporate_mens_poses",
     name: "Corporate Men’s Poses",
     sets: [
